@@ -1,0 +1,10 @@
+{
+  "signin": "تسجيل الدخول",
+  "corporate_id": "الهوية الشركية",
+  "emp_id": "هوية الموظف",
+  "password": "كلمة المرور",
+  "corporate_id_placeholder": "ادخل الهوية الشركية",
+  "emp_id_placeholder": "ادخل هوية الموظف",
+  "password_placeholder": "ادخل كلمة المرور",
+  "dashboard": "لوحة القيادة"
+}

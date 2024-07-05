@@ -1,0 +1,10 @@
+{
+  "signin": "Sign In",
+  "corporate_id":"Corporate ID",
+  "emp_id":"Employer ID",
+  "password":"Password",
+  "corporate_id_placeholder":"Enter Corporate ID",
+  "emp_id_placeholder":"Enter Eployee ID",
+  "password_placeholder":"Enter Password",
+  "dashboard":"Dashboard"
+}
