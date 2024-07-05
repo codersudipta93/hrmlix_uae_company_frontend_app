@@ -12,8 +12,11 @@ import CustomButton from './CustomButton';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
 const CustomHeader = (props) => {
+
+ 
+
     return (
-        <TouchableOpacity onPress={props.onPress} style={[{ paddingHorizontal: 12, backgroundColor: props.backgroundColor ? props.backgroundColor : colors.white, alignItems: 'center', justifyContent: 'center', height: 75, borderWidth: props.requireBorder ? 1 : 0, borderColor: props.borderColor ? props.borderColor : null }, props.style]}>
+        <View onPress={props.onPress} style={[{ paddingHorizontal: 12, backgroundColor: props.backgroundColor ? props.backgroundColor : colors.white, alignItems: 'center', justifyContent: 'center', height: 75, borderWidth: props.requireBorder ? 1 : 0, borderColor: props.borderColor ? props.borderColor : null }, props.style]}>
 
             <View style={{ width: '60%', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
                 <Text style={[{ fontFamily: FontFamily.semibold,   color: colors.black, fontSize: sizes.h3, textAlign: 'center' }, props.buttonTextStyle]}>{props.buttonText}</Text>
@@ -29,24 +32,24 @@ const CustomHeader = (props) => {
                     />
                 </TouchableOpacity> */}
                 {props.searchIcon == true ?
-                    <View style={{ marginRight: 11 }}>
+                    <TouchableOpacity style={{ marginRight: 11 }}>
                         <IonIcon
                             name="search"
                             size={20}
                             color="#8A8E9C"
                         />
-                    </View> : null}
-                <View style={{ borderWidth: 1.5, borderRadius: 50, borderColor: colors.primary }}>
+                    </TouchableOpacity> : null}
+                <TouchableOpacity onPress={props.onPressUser} style={{ borderWidth: 1.5, borderRadius: 50, borderColor: colors.primary }}>
                     <Image
                         style={props.iconStyle}
                         source={props.icon}
                     />
-                </View>
+                </TouchableOpacity>
             </View>
 
 
 
-        </TouchableOpacity>
+        </View>
     )
 }
 

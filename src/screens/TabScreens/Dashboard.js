@@ -53,15 +53,24 @@ import LeaveApplicationIcon from '../../assets/icons/LeaveApplicationIcon';
 import NoticePeriod from '../../assets/icons/NoticePeriod';
 import NewEmp from '../../assets/icons/NewEmp';
 import Clock from '../../assets/icons/Clock';
+import SideMenu from '../../component/SideMenu';
 
 const Dashboard = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
-
   const { t, i18n } = useTranslation();
+  const sampleData = [1, 1, 1];
 
-  const sampleData = [1, 1, 1]
+  const [menuVisible, setMenuVisible] = useState(false);
+
+  const openMenu = () => {
+    setMenuVisible(true);
+  };
+
+  const closeMenu = () => {
+    setMenuVisible(false);
+  };
 
 
   useEffect(() => {
@@ -221,6 +230,7 @@ const Dashboard = props => {
           iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
           icon={LOCAL_IMAGES.user}
           searchIcon={true}
+          onPressUser={()=>{openMenu()}}
         />
 
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -436,7 +446,7 @@ const Dashboard = props => {
         </ScrollView>
       </View>
 
-
+      <SideMenu visible={menuVisible} onClose={closeMenu} />
     </SafeAreaView>
   )
 }
@@ -446,7 +456,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5F7FB'
   },
-
+ 
   card: {
     backgroundColor: 'white',
     padding: 12,
