@@ -17,21 +17,42 @@ import { colors } from '../constants/Theme';
 import { LOCAL_ICONS } from '../constants/PathConfig';
 import * as Animatable from 'react-native-animatable';
 
-import { getData, setData, deleteData } from '../../Service/localStorage';
+import { getData, setData, deleteData } from '../Service/localStorage';
 import { useDispatch, useSelector } from 'react-redux';
+import {_setUserData, _setToken} from '../Store/Reducers/ProjectReducer';
 
 const Splash = props => {
     const isFocused = useIsFocused();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (isFocused == true) {
-            setTimeout(() => {
-                props.navigation.navigate('Signin');
-                
-            }, 1000);
+            setTimeout(()=>{
+                _checkLoginStaus()
+            },2000)
         }
     }, [isFocused]);
 
+    const _checkLoginStaus = () =>{
+        getData('userDetails').then((userRes) => {
+            console.log('userRes', userRes)
+            if (userRes) {
+                _dataStoreToRedux(JSON.parse(userRes));
+            } else {
+              props.navigation.replace('TabNavigator');
+            }
+          })
+    }
+
+    const _dataStoreToRedux = (res) => {
+        if (res != null) {
+          console.log("data fetched from local db for auto login ===>", res)
+          console.log('response_data -->', res?.token)
+          dispatch(_setUserData(res?.userDetails))
+          dispatch(_setToken(res?.token))
+          props.navigation.replace('TabNavigator');
+        }
+      };
 
     return (
         <View style={styles.container}>

@@ -4,7 +4,8 @@ import { LocalData } from '../../constants';
 const date = new Date();
 
 const initialState = {
-  
+  userDetails: "",
+  token: "",
 };
 
 export const projectReducer = createSlice({
@@ -12,6 +13,13 @@ export const projectReducer = createSlice({
   initialState,
   reducers: {
 
+    _setUserData: (state, action) => {
+      state.userDetails = action.payload;
+    },
+
+    _setToken: (state, action) => {
+      state.token = action.payload;
+    },
     
     
   },
@@ -19,7 +27,8 @@ export const projectReducer = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
-  
+  _setUserData,
+  _setToken
 } = projectReducer.actions;
 
 export default projectReducer.reducer;

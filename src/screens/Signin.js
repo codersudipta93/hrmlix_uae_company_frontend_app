@@ -6,8 +6,6 @@ import {
   View,
   Dimensions,
   BackHandler,
-  Pressable,
-  ActivityIndicator,
   Image,
   Text,
   TouchableOpacity,
@@ -15,12 +13,10 @@ import {
   ScrollView,
   I18nManager
 } from 'react-native';
-import FloatingLabelInput from '../component/FloatingLabelInput';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
-
-import RNRestart from 'react-native-restart';
-import { useTranslation } from 'react-i18next'; //for translation service
-
+import RNRestart from 'react-native-restart'; // for app restart
+import { useTranslation } from 'react-i18next'; // for translation service
+//Theme import
 import {
   colors,
   height,
@@ -28,18 +24,30 @@ import {
   width,
   FontFamily
 } from '../constants/Theme';
-import CustomButton from '../component/CustomButton';
+//Asset 
 import { LOCAL_ICONS, LOCAL_IMAGES } from '../constants/PathConfig';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+//Component
+import FloatingLabelInput from '../component/FloatingLabelInput';
+import CustomButton from '../component/CustomButton';
 import LanguageModal from '../component/LanguageModal';
+//Common functions
 import { HelperFunctions } from '../constants';
+//API Service 
+import { postApi } from '../Service/service';
+//Local Storage
 import { getData, setData, deleteData } from '../Service/localStorage';
+//Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { _setUserData, _setToken } from '../Store/Reducers/ProjectReducer';
 
 const Signin = props => {
   const isFocused = useIsFocused();
-
+  const dispatch = useDispatch(); //Redux
+  //Translation and RTL
   const [isRTL, setIsRTL] = useState(false);
   const { t, i18n } = useTranslation();
+
   const [languageModalVisibleStatus, setlanguageModalVisibleStatus] = useState(false);
   const [languages, setLanguages] = useState([{ label: 'English', value: 'en', selected: true }, { label: 'Arabic', value: 'ar', selected: false }]);
   const [selectedLanguage, setLanguage] = useState("");
@@ -47,8 +55,8 @@ const Signin = props => {
   const [corporateId, setCorporateId] = useState('');
   const [empId, setEmpId] = useState('');
   const [password, setPassword] = useState('');
-
-
+  const [waitLoaderStatus, setWaitLoaderStatus] = useState(false);
+  
   useEffect(() => {
     getData('defaultLanguage').then((lngRes) => {
       console.log('default Language', lngRes);
@@ -62,7 +70,7 @@ const Signin = props => {
           I18nManager.forceRTL(false);
           I18nManager.allowRTL(false);
           setData("defaultLanguage", 'en');
-          
+
           let oldLanguagesArr = HelperFunctions.copyArrayOfObj(languages);
           for (let i = 0; i < oldLanguagesArr.length; i++) {
             if (oldLanguagesArr[i].value == 'en') {
@@ -114,30 +122,9 @@ const Signin = props => {
     })
   }, []);
 
-  useEffect(() => {
-    //console.log("selectedLanguage : ", selectedLanguage);
-    // if (selectedLanguage == 'ar') {
-    //   console.log("if i ma call")
-    //   i18n.changeLanguage('ar');
-    //   setIsRTL(true);
-    //   I18nManager.forceRTL(!isRTL);
-    //   I18nManager.allowRTL(!isRTL);
-    //   setData("defaultLanguage", 'ar');
-    // } else {
-    //   console.log("else i ma call")
-    //   i18n.changeLanguage('en');
-    //   setIsRTL(false);
-    //   I18nManager.forceRTL(false);
-    //   //I18nManager.allowRTL(false);
-    //   setData("defaultLanguage", 'en');
-    // }
-  }, [selectedLanguage]);
 
 
-
-
-
-
+  //Back button functionality
   useFocusEffect(
     React.useCallback(() => {
       const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
@@ -161,9 +148,62 @@ const Signin = props => {
   };
 
 
+  const _signin = () => {
+    if (!corporateId.trim()) {
+      HelperFunctions.showToastMsg("Please enter Corporate ID")
+    } else if (!empId.trim()) {
+      HelperFunctions.showToastMsg("Please User ID")
+    } else if (!password.trim()) {
+      HelperFunctions.showToastMsg("Please enter Password")
+    } else {
+
+      let paramData = { "corporate_id": corporateId, "userid": empId, "password": password }
+      setWaitLoaderStatus(true);
+      postApi("company_signin", paramData)
+        .then((resp) => {
+          console.log(resp);
+          setWaitLoaderStatus(false);
+          if (resp?.status == 'success') {
+            saveData(resp);
+          } else if (resp?.status == 'val_err') {
+            let message = ""
+            for (const key in resp.val_msg) {
+              if (resp.val_msg[key].message) {
+                message = resp.val_msg[key].message;
+                break;
+              }
+            }
+            HelperFunctions.showToastMsg(message);
+          } else {
+            HelperFunctions.showToastMsg(resp.message);
+          }
+
+        }).catch((err) => {
+          console.log(err);
+          setWaitLoaderStatus(false);
+          HelperFunctions.showToastMsg(err.message);
+        })
+    }
+  }
+
+  //Save data to redux and local storage
+
+  const saveData = (response_data) => {
+    if (response_data?.curr_user_data && response_data?.token) {
+      let data = {
+        "userDetails": response_data.curr_user_data,
+        "token": response_data?.token,
+      }
+      dispatch(_setUserData(response_data?.curr_user_data));
+      dispatch(_setToken(response_data?.token));
+      setData("userDetails", JSON.stringify(data));
+      props.navigation.replace('TabNavigator');
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={'handled'}>
         <View style={[styles.headerSection]}>
           <TouchableOpacity style={styles.langInput}
             onPress={() => {
@@ -208,19 +248,22 @@ const Signin = props => {
           />
 
           <CustomButton
+            isLoading={waitLoaderStatus}
             backgroundColor={colors.primary}
             buttonText={t('signin')}
             buttonTextStyle={{ textAlign: 'center', letterSpacing: 1.2, fontFamily: FontFamily.medium, color: '#fff', fontSize: sizes.h6 }}
             requireBorder={false}
             borderColor={colors.white}
-            style={{ width: '100%', borderRadius: 8 }}
-            onPress={() => { props.navigation.replace('TabNavigator'); }}
+            style={{ width: '100%', borderRadius: 8, opacity: !corporateId.trim() || !corporateId.trim() || !password.trim() ? 0.5 : 1 }}
+            onPress={() => {
+              corporateId.trim() && corporateId.trim() && password.trim() ? _signin() : null;
+            }}
           />
         </View>
       </ScrollView>
 
       <LanguageModal
-       // positionRight={0}
+        // positionRight={0}
         languages={languages}
         onClose={() => { setlanguageModalVisibleStatus(!languageModalVisibleStatus) }}
         isVisible={languageModalVisibleStatus}
@@ -258,6 +301,8 @@ const Signin = props => {
 
         }}
       />
+
+      {/* <Loader isLoading={false} /> */}
     </SafeAreaView>
   )
 }
@@ -284,7 +329,7 @@ const styles = StyleSheet.create({
     fontSize: sizes.h1 + 6,
     paddingTop: 50,
     paddingBottom: 50,
-    lineHeight:4
+    lineHeight: 4
   },
   langInput: {
     flexDirection: 'row',

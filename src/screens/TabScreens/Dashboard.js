@@ -207,7 +207,7 @@ const Dashboard = props => {
           </View>
 
           <View style={{ width: '45%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            <Clock/>
+            <Clock />
             {/* <Image source={LOCAL_ICONS.calendarCheck} style={{ height: 19, width: 19, tintColor: colors.primary, marginBottom: 12 }} /> */}
             <View style={{ marginLeft: 10 }}>
               <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.h6, textAlign: 'left' }}>Time</Text>
@@ -230,7 +230,7 @@ const Dashboard = props => {
           iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
           icon={LOCAL_IMAGES.user}
           searchIcon={true}
-          onPressUser={()=>{openMenu()}}
+          onPressUser={() => { openMenu() }}
         />
 
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5F7FB'
   },
- 
+
   card: {
     backgroundColor: 'white',
     padding: 12,

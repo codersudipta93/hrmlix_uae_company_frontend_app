@@ -63,11 +63,79 @@ const HelperFunctions = {
     return result;
   },
 
-  copyArrayOfObj(data){
+  copyArrayOfObj(data) {
     return JSON.parse(JSON.stringify(data));
   },
 
-  
+  getCurrentYear() {
+    const currentDate = new Date();
+    return currentDate.getFullYear();
+  },
+
+  getCurrentMonth() {
+    const currentDate = new Date();
+    return currentDate.getMonth() + 1;
+  },
+
+  getMonthName(index) {
+    let months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    return months[index-1]
+  },
+
+  getCurrentDatenumber (){
+    const currentDate = new Date();
+    return currentDate.getDate();
+},
+
+  getAllDatesAndDays(month, year) {
+    // Initialize an empty array to store the results
+    let result = [];
+
+    // Get the current date
+    let currentDate = new Date();
+
+    // Helper function to get the day name from the day of the week number
+    const getDayName = (dayOfWeek) => {
+      const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      return daysOfWeek[dayOfWeek];
+    };
+
+    // Loop through each day of the month
+    for (let day = 1; day <= 31; day++) {
+      // Create a new Date object for the current day in the loop
+      let date = new Date(year, month - 1, day); // month - 1 because months are zero-indexed in JavaScript
+
+      // Check if the date is still within the same month and year
+      if (date.getMonth() + 1 !== month) {
+        break; // Break the loop if we've gone past the last day of the month
+      }
+
+      // Get the day of the week as a number (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+      let dayOfWeek = date.getDay();
+
+      // Create an object with the date, day name, and selected key
+      let dateObject = {
+        date: day,
+        dayName: getDayName(dayOfWeek),
+        selected: false // Default value for the selected key
+      };
+
+      // Check if the current date matches the date in the loop
+      if (date.toDateString() === currentDate.toDateString()) {
+        dateObject.selected = true; // Set selected to true for the current date
+      }
+
+      // Add the object to the result array
+      result.push(dateObject);
+    }
+
+    return result;
+  },
+
 
   networkStatus(props) {
     setInterval(() => {
@@ -91,14 +159,9 @@ const HelperFunctions = {
     }, 1000)
   },
 
-  
-
   jsonParse(data) {
     return JSON.parse(data)
   },
-
- 
-  
 
 }
 
