@@ -7,7 +7,6 @@ import {
   ImageBackground,
   StatusBar,
   Image,
-
   FlatList,
   RefreshControl,
   Pressable,
@@ -24,6 +23,9 @@ import React, {
   useState,
   useRef
 } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 
 import {
   colors,
@@ -35,33 +37,34 @@ import {
 
 import { LOCAL_IMAGES, LOCAL_ICONS, AllSourcePath } from '../../constants/PathConfig';
 import { HelperFunctions } from '../../constants';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+
 import { getData, setData, deleteData } from '../../Service/localStorage';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Header } from 'react-native/Libraries/NewAppScreen';
 import CustomHeader from '../../component/Header';
-
+import SideMenu from '../../component/SideMenu';
 
 import { useTranslation } from 'react-i18next'; //for translation service
+
 import Totalemp from '../../assets/icons/Totalemp';
 import LeaveApplicationIcon from '../../assets/icons/LeaveApplicationIcon';
 import NoticePeriod from '../../assets/icons/NoticePeriod';
 import NewEmp from '../../assets/icons/NewEmp';
 import Clock from '../../assets/icons/Clock';
-import SideMenu from '../../component/SideMenu';
+
 
 const Dashboard = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
-  const { t, i18n } = useTranslation();
-  const sampleData = [1, 1, 1];
 
+  const {userDetails,token} = useSelector(state => state.project);
+
+  const { t, i18n } = useTranslation();
+
+  const sampleData = [1, 1, 1];
   const [menuVisible, setMenuVisible] = useState(false);
 
   const openMenu = () => {
@@ -82,11 +85,8 @@ const Dashboard = props => {
 
 
   useEffect(() => {
-
+    console.log(userDetails)
   }, []);
-
-
-
 
 
   useFocusEffect(

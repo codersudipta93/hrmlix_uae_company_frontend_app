@@ -248,8 +248,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 28,
     height: 28,
-    right: -10,
-    top: 15,
+    right: -8,
+    top: 0,
     bottom: 0,
     borderRadius: 40,
     //top: 50px;

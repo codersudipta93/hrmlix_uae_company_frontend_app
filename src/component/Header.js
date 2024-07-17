@@ -18,8 +18,8 @@ const CustomHeader = (props) => {
     return (
         <View onPress={props.onPress} style={[{ paddingHorizontal: 12, backgroundColor: props.backgroundColor ? props.backgroundColor : colors.white, alignItems: 'center', justifyContent: 'center', height: 75, borderWidth: props.requireBorder ? 1 : 0, borderColor: props.borderColor ? props.borderColor : null }, props.style]}>
 
-            <View style={{ width: '60%', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-                <Text style={[{ fontFamily: FontFamily.semibold,   color: colors.black, fontSize: sizes.h3, textAlign: 'center' }, props.buttonTextStyle]}>{props.buttonText}</Text>
+            <View style={{ width: '60%', justifyContent: 'flex-end', alignItems: 'flex-start' }}>
+                <Text style={[{ fontFamily: FontFamily.semibold,   color: colors.black, fontSize: sizes.h3, textAlign: 'left' }, props.buttonTextStyle]}>{props.buttonText}</Text>
             </View>
             <View style={{ width: '40%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
 

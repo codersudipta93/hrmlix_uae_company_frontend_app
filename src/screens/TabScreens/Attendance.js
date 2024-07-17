@@ -119,7 +119,6 @@ const Attendance = props => {
       const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
       return () => {
         backHandler.remove();
-
       };
       return () => { };
     }, [])
@@ -144,7 +143,7 @@ const Attendance = props => {
     }));
     setCalenderdata(updatedDates);
     setSelectedDate(item?.date);
-    
+
 
   }
 
@@ -171,12 +170,12 @@ const Attendance = props => {
     let year = HelperFunctions.getCurrentYear();
     let datesAndDays = HelperFunctions.getAllDatesAndDays(month, year);
     setCalenderdata(datesAndDays);
-    
+
     setselectedMonth(month);
   };
 
   const ListRender = ({ index, item }) => (
-    <View style={[styles.listCard, { paddingVertical: 22, marginBottom: 0, borderRadius: 0, borderTopRightRadius: index == 0 ? 8 : 0, borderTopLeftRadius: index == 0 ? 8 : 0, borderBottomLeftRadius: sampleData.length - 1 == index ? 8 : 0, borderBottomRightRadius: sampleData.length - 1 == index ? 8 : 0 }]}>
+    <Pressable onPress={() => { props.navigation.navigate('EployeeAttendanceView') }} style={[styles.listCard, { paddingVertical: 22, marginBottom: 0, borderRadius: 0, borderTopRightRadius: index == 0 ? 8 : 0, borderTopLeftRadius: index == 0 ? 8 : 0, borderBottomLeftRadius: sampleData.length - 1 == index ? 8 : 0, borderBottomRightRadius: sampleData.length - 1 == index ? 8 : 0 }]}>
       <View style={{ width: '60%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
         <View style={{ justifyContent: 'center', alignItems: 'center', height: 35, width: 35, backgroundColor: '#007AFF', borderRadius: 50 }}>
           <Image source={LOCAL_IMAGES.user} style={{ height: '100%', width: '100%', borderRadius: 50, objectFit: 'cover' }} />
@@ -186,16 +185,16 @@ const Attendance = props => {
             <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>Brent Farrell DVM</Text>
             <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left', marginTop: 6 }}>ID: 2589756</Text>
           </View>
-          <Image source={LOCAL_ICONS.newIcon} style={{ height: 25, width: 35, marginBottom: 15, marginLeft: 8 }} />
+          {/* <Image source={LOCAL_ICONS.newIcon} style={{ height: 25, width: 35, marginBottom: 15, marginLeft: 8 }} /> */}
 
         </View>
       </View>
-      <View style={{ paddingLeft: 12, width: '40%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+      {/* <View style={{ paddingLeft: 12, width: '40%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
         <Pressable onPress={() => { console.log('delete action') }}>
           <Action />
         </Pressable>
-      </View>
-    </View>
+      </View> */}
+    </Pressable>
   );
 
 

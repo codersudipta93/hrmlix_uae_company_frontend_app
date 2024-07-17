@@ -39,7 +39,8 @@ const Splash = props => {
             if (userRes) {
                 _dataStoreToRedux(JSON.parse(userRes));
             } else {
-              props.navigation.replace('TabNavigator');
+
+              props.navigation.replace('Signin');
             }
           })
     }

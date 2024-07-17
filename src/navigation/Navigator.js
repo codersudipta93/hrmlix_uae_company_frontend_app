@@ -7,7 +7,8 @@ const Stack = createNativeStackNavigator();
 
 import {
   Splash,
-  Signin
+  Signin,
+  EployeeAttendanceView
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -25,8 +26,9 @@ function Navigator() {
           animation: 'simple_push'
       }}/>
        
-        <Stack.Screen name="Signin" component={Signin} />
-       
+       <Stack.Screen name="Signin" component={Signin} />
+       <Stack.Screen name="EployeeAttendanceView" component={EployeeAttendanceView} />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

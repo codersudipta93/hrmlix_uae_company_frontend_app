@@ -1,7 +1,7 @@
 // import Toast from 'react-native-simple-toast';
 import NetInfo from "@react-native-community/netinfo";
 import Snackbar from 'react-native-snackbar';
-
+import moment from 'moment';
 
 const HelperFunctions = {
 
@@ -83,13 +83,15 @@ const HelperFunctions = {
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
-    return months[index-1]
+    return months[index - 1]
   },
 
-  getCurrentDatenumber (){
+  getCurrentDatenumber() {
     const currentDate = new Date();
     return currentDate.getDate();
-},
+  },
+
+
 
   getAllDatesAndDays(month, year) {
     // Initialize an empty array to store the results
@@ -119,8 +121,11 @@ const HelperFunctions = {
 
       // Create an object with the date, day name, and selected key
       let dateObject = {
+        year: year,
+        month: month,
         date: day,
         dayName: getDayName(dayOfWeek),
+        formatedDate: moment([year, month - 1, day]).format('YYYY-MM-DD'),
         selected: false // Default value for the selected key
       };
 
@@ -136,7 +141,41 @@ const HelperFunctions = {
     return result;
   },
 
+  getColorCode(type) {
+    if (type == 'P') {
+      return { bgColor: '#F0F7EF', textColor: "#60B057" }
+    } else if (type == 'A') {
+      return { bgColor: '#FFEFEF', textColor: "#FC6860" }
+    } else {
+      return { bgColor: '#decafc', textColor: "#9d5bff" }
+    }
+  },
 
+  getTypeFullName(attendanceCode, singleShiftStatus) {
+    if (attendanceCode == 'P' && singleShiftStatus == true) {
+      return "Full Shift (Present)"
+    } else if (attendanceCode == 'A' && singleShiftStatus == true) {
+      return "Full Shift (Absent)"
+    } else if (attendanceCode == 'P' && singleShiftStatus == false) {
+      return "Break Shift (Present)"
+    } else if (attendanceCode == 'A' && singleShiftStatus == false) {
+      return "Break Shift (Absent)"
+    } else if (attendanceCode == 'L' && singleShiftStatus == true) {
+      return "Full day Leave"
+    } else if (attendanceCode == 'L' && singleShiftStatus == false) {
+      return "Break Shift (Leave)"
+    }else if (attendanceCode == 'WO' && singleShiftStatus == true) {
+      return "Week Off (WO)"
+    } else if (attendanceCode == 'PDL' && singleShiftStatus == true) {
+      return "Full day PDL"
+    } else if (attendanceCode == 'PDL' && singleShiftStatus == false) {
+      return "Break Shift (PDL)"
+    }
+  },
+
+  
+
+  
   networkStatus(props) {
     setInterval(() => {
       NetInfo.addEventListener(state => {
