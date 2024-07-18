@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TextInput, Animated, StyleSheet, Text, I18nManager } from 'react-native';
+import { View, TextInput, Animated, StyleSheet, Text, I18nManager,Keyboard } from 'react-native';
 import {
     colors,
     height,
@@ -16,7 +16,12 @@ const FloatingLabelInput = ({
     editableStatus,
     secureTextEntryStatus,
     inputStyle,
-    customLabelStyle
+    customLabelStyle,
+    inputContainerColor,
+    labelBg,
+    labelColor,
+    inputColor,
+    placeholderColor
 }) => {
 
     const [isFocused, setIsFocused] = useState(false);
@@ -67,12 +72,12 @@ const FloatingLabelInput = ({
         }),
         color: animatedIsFocused.interpolate({
             inputRange: [0, 1],
-            outputRange: ['#D0DEEE', '#FFFFFF'],
+            outputRange: [placeholderColor ? placeholderColor :'#D0DEEE', labelColor ? labelColor :'#FFFFFF'],
         }),
         paddingHorizontal: 4,
         backgroundColor: labelBackgroundColor.interpolate({
             inputRange: [0, 1],
-            outputRange: ['transparent', '#0E1F33'],
+            outputRange: [animatedIsFocused ? labelBg?labelBg:'#0E1F33':'transparent', labelBg?labelBg:'#0E1F33'],
         }),
     };
 
@@ -80,12 +85,12 @@ const FloatingLabelInput = ({
         height: containerHeight,
         borderColor: borderColor.interpolate({
             inputRange: [0, 1],
-            outputRange: ['#555', '#60B057'], // Set the desired color here
+            outputRange: [inputContainerColor ? inputContainerColor :'#555', '#60B057'], // Set the desired color here
         }),
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 6,
-        marginBottom: 30,
+        marginBottom: 20,
         justifyContent: 'center',
         width: '100%',
     };
@@ -99,7 +104,7 @@ const FloatingLabelInput = ({
             </View>
 
             <TextInput
-                style={[styles.input]}
+                style={[styles.input,{color:inputColor?inputColor:'#D0DEEE'}]}
                 editable={editableStatus ? editableStatus : true}
                 secureTextEntry={secureTextEntryStatus}
                 value={value}
@@ -109,6 +114,7 @@ const FloatingLabelInput = ({
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 blurOnSubmit
+                underlineColorAndroid="transparent"
             />
         </Animated.View>
     );

@@ -58,13 +58,12 @@ const EployeeAttendanceView = props => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const dispatch = useDispatch();
-
     const { t, i18n } = useTranslation();
-
-    const sampleData = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     const [monthCalenderData, setmonthCalenderData] = useState([]);
 
     //const [attendanceData, setAttedancedata] = usestate()
+    const [paramdata, setParamdata] = useState("");
+    const [filterData, setFilterData] = useState("");
 
     useEffect(() => {
         if (isFocused == true) {
@@ -75,54 +74,38 @@ const EployeeAttendanceView = props => {
 
 
     useEffect(() => {
-        let datesAndDays = HelperFunctions.getAllDatesAndDays(6, 2024);
-        //console.log(datesAndDays);
+
+        if (props?.route?.params) {
+            console.log("paramData ===>")
+            console.log(props?.route?.params?.paramData);
+            setParamdata(props?.route?.params?.paramData);
+            setFilterData(props?.route?.params?.filterData)
+        }
 
 
-        //console.log(LocalData?.AttendanceData);
-        let attendance = LocalData?.AttendanceData
+        let datesAndDays = HelperFunctions.getAllDatesAndDays(props?.route?.params?.filterData?.seletedMonth, props?.route?.params?.filterData?.seletedYear);
+
+        let attendance = props?.route?.params?.paramData?.attendance
         for (let i = 0; i < datesAndDays.length; i++) {
-            console.log(attendance.length)
+            
             for (let a = 0; a < attendance.length; a++) {
                 //console.log(a)
                 if (datesAndDays[i].formatedDate == attendance[a].attendance_date.toString()) {
                     datesAndDays[i].attendanceObj = attendance[a];
-                    console.log('found')
                 }
             }
         }
-        console.log("final data ====>")
-        console.log(datesAndDays)
+        
         setmonthCalenderData(datesAndDays);
     }, []);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            //const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-            return () => {
-                //backHandler.remove();
-
-            };
-            return () => { };
-        }, [])
-    );
-
-    const handleBackButton = () => {
-        Alert.alert('Hold on!', 'Are you sure you want to go back?', [
-            {
-                text: 'Cancel',
-                onPress: () => null,
-                style: 'cancel',
-            },
-            { text: 'YES', onPress: () => BackHandler.exitApp() },
-        ]);
-        return true;
-    };
-
+    const _openFilter = () => {
+        props.navigation.navigate('FilterEmployeePage')
+    }
 
 
     const ListRender = ({ index, item }) => (
-        <View style={{ paddingTop: 8, paddingBottom: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flex: 1 }}>
+        <View style={{ paddingTop: index == 0 ? 12 : 8, paddingBottom: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flex: 1 }}>
 
             <View style={{ paddingRight: 0, paddingLeft: 12, paddingRight: 25 }}>
                 <View style={{ backgroundColor: colors.white, flex: 1, borderRadius: 4, flexDirection: 'column', justifyContent: 'flex-stat', alignItems: 'center' }}>
@@ -136,53 +119,36 @@ const EployeeAttendanceView = props => {
             <View style={{ flex: 1, paddingRight: 12 }}>
                 {item?.attendanceObj ? <>
                     {item?.attendanceObj?.leave_type == 'present' || item?.attendanceObj?.leave_type == 'full_day' ?
-                        
-                        
                         <View style={{ paddingLeft: 12, flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
                             <View style={{ backgroundColor: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).bgColor, width: '100%', padding: 5, paddingVertical: 20, borderRadius: 8, justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md }}>{ HelperFunctions.getTypeFullName(item?.attendanceObj?.first_half,true)}</Text>
+                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md }}>{HelperFunctions.getTypeFullName(item?.attendanceObj?.first_half, true)}</Text>
                             </View>
                         </View>
-                       
-                       :
+
+                        :
                         <View style={{ paddingLeft: 12, flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
-                            <View style={{ backgroundColor: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).bgColor, width: '100%', padding: 5, paddingVertical: 20, borderRadius: 8, justifyContent: 'space-between', alignItems: 'flex-start',flexDirection:'row',paddingRight:12 }}>
-                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md }}>{ HelperFunctions.getTypeFullName(item?.attendanceObj?.first_half,false)}</Text>
-                                <Shift/>
+                            <View style={{ backgroundColor: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).bgColor, width: '100%', padding: 5, paddingVertical: 20, borderRadius: 8, justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'row', paddingRight: 12 }}>
+                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md }}>{HelperFunctions.getTypeFullName(item?.attendanceObj?.first_half, false)}</Text>
+                                <Shift />
                             </View>
-                            <View style={{ marginTop: 5, backgroundColor:HelperFunctions.getColorCode(item?.attendanceObj?.second_half).bgColor, width: '100%', padding: 5, paddingVertical: 20, borderRadius: 8, justifyContent: 'space-between', alignItems: 'flex-start',flexDirection:'row',paddingRight:12  }}>
-                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.second_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md }}>{ HelperFunctions.getTypeFullName(item?.attendanceObj?.second_half,false)}</Text>
-                                <Shift/>
+                            <View style={{ marginTop: 5, backgroundColor: HelperFunctions.getColorCode(item?.attendanceObj?.second_half).bgColor, width: '100%', padding: 5, paddingVertical: 20, borderRadius: 8, justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'row', paddingRight: 12 }}>
+                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.second_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md }}>{HelperFunctions.getTypeFullName(item?.attendanceObj?.second_half, false)}</Text>
+                                <Shift />
                             </View>
                         </View>
                     }
-                </> : 
-                <View style={{ paddingLeft: 12, flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <View style={{ backgroundColor: '#fff3de', width: '100%', padding: 5, paddingVertical: 20, borderRadius: 8, justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: '#FFAC10', fontFamily: FontFamily.medium, fontSize: sizes.md }}>No Log Entry</Text>
+                </> :
+                    <View style={{ paddingLeft: 12, flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
+                        <View style={{ backgroundColor: '#fff3de', width: '100%', padding: 5, paddingVertical: 20, borderRadius: 8, justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: '#FFAC10', fontFamily: FontFamily.medium, fontSize: sizes.md,lineHeight:16 }}>No Entry Log</Text>
+                        </View>
                     </View>
-                </View>
                 }
             </View>
         </View>
     );
 
-    // 'H',
-    // 'OT',
-    // 'L',
-    // 'ERL',
-    // 'SKL',
-    // 'MDL',
-    // 'MTL',
-    // 'PTL',
-    // 'ANL',
-    // 'AWP',
-    // 'UWP',
-    // 'LE1',
-    // 'LE2',
-    // 'LP1',
-    // 'LP2',
-    // 'WO',
+
 
     return (
         <SafeAreaView style={styles.main}>
@@ -196,27 +162,49 @@ const EployeeAttendanceView = props => {
                     searchIcon={true}
                 />
 
-                <ScrollView showsVerticalScrollIndicator={false}>
+                <View showsVerticalScrollIndicator={false}>
 
-                    <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 12 }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-                            <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5 }}>Brent Farrell DVM</Text>
-                            <TouchableOpacity style={{ padding: 6, paddingHorizontal: 10 }}>
-                                <Filter />
+                    <View style={{ flexDirection: 'column', justifyContent: 'space-between', marginTop: 0 }}>
+                        <View style={{ borderWidth: 1, paddingVertical: 16, paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#1E2538' }}>
+
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ marginRight: 12 }}>
+                                    <Image source={{uri:'https://uaedemo.hrmlix.com/assets/images/user.jpg'}} style={{ height: 35, width: 35, borderRadius: 50, objectFit: 'cover' }} />
+                                </View>
+                                <View>
+                                    <Text style={{ fontFamily: FontFamily.semibold, color: colors.white, fontSize: sizes.h6 }}>{paramdata?.emp_first_name} {paramdata?.emp_last_name}</Text>
+                                    <Text style={{ fontFamily: FontFamily.regular, color: '#C8C8C8', fontSize: sizes.md, textAlign: 'left', marginTop: 6 }}>ID: {paramdata?.emp_id}</Text>
+                                    <View style={{ marginTop: 12, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', }}>
+                                        <Image
+                                            style={{
+                                                height: 14,
+                                                width: 14,
+                                                tintColor: '#C8C8C8',
+                                            }}
+                                            source={LOCAL_ICONS.calender}
+                                        />
+                                        <Text style={{ marginLeft: 4, fontFamily: FontFamily.medium, color: '#C8C8C8', fontSize: sizes.md, textTransform: 'uppercase' }}>June, 2024</Text>
+                                    </View>
+                                </View>
+
+                            </View>
+                            <TouchableOpacity onPress={() => { _openFilter() }} style={{ padding: 6, paddingHorizontal: 10 }}>
+                                <Filter color={colors.white} />
                             </TouchableOpacity>
                         </View>
+                        < View style={{ paddingHorizontal: 14 }}>
 
-                        <FlatList
-                            showsVerticalScrollIndicator={false}
-                            data={monthCalenderData}
-                            renderItem={ListRender}
-                            contentContainerStyle={{ marginBottom: 30 }}
-                        />
+                            <FlatList
+                                showsVerticalScrollIndicator={false}
+                                data={monthCalenderData}
+                                renderItem={ListRender}
+                                contentContainerStyle={{ marginBottom: 30 }}
+                            />
 
-
+                        </View>
 
                     </View>
-                </ScrollView>
+                </View>
             </View>
 
 

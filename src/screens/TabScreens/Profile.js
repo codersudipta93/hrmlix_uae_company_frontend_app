@@ -40,6 +40,7 @@ import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { getData, setData, deleteData } from '../../Service/localStorage';
 import { useDispatch, useSelector } from 'react-redux';
+import { _setUserData, _setToken } from '../../Store/Reducers/ProjectReducer';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EditIcon from '../../assets/icons/EditIcon';
@@ -52,11 +53,14 @@ import Document from '../../assets/icons/Document';
 import Logout from '../../assets/icons/Logout';
 import Arrow from '../../assets/icons/Arrow';
 
+
 const Profile = props => {
 
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
+
+  const {userDetails,token} = useSelector(state => state.project);
 
   const [menuName, setMenuName] = useState("");
 
@@ -89,6 +93,34 @@ const Profile = props => {
     return true;
   };
 
+  const _logout =() =>{
+    if (token) {
+      Acknoledge_logout()
+    } else {
+      props.navigation.navigate('Signin')
+    }
+  }
+
+  const Acknoledge_logout = () => {
+    Alert.alert('Logout', 'Are you sure you want to logout from this app?', [
+      {
+        text: 'Cancel',
+        onPress: () => null,
+        style: 'cancel',
+      },
+      {
+        text: 'YES', onPress: () => {
+          dispatch(_setUserData(""));
+          dispatch(_setToken(""));
+          deleteData();
+
+          HelperFunctions.showToastMsg('Successfully logout');
+          props.navigation.navigate('Signin');
+        }
+      },
+    ]);
+    return true;
+  };
 
   return (
     <SafeAreaView style={styles.main}>
@@ -183,7 +215,7 @@ const Profile = props => {
             <Pressable style={styles.listSeg2} onPress={() => {
               menuName == 'settings' ? setMenuName('') : setMenuName('settings')
             }}>
-              <Arrow size={50} color={menuName == 'settings' ? colors.primary : '#404040'} style={{ transform: [{ rotate: menuName == 'settings' ? '0deg' : '-90deg' }] }} />
+              <Arrow size={32} color={menuName == 'settings' ? colors.primary : '#404040'} style={{ transform: [{ rotate: menuName == 'settings' ? '0deg' : '-90deg' }] }} />
             </Pressable>
           </Pressable>
 
@@ -208,11 +240,11 @@ const Profile = props => {
             <Pressable style={styles.listSeg2} onPress={() => {
               menuName == 'appsettings' ? setMenuName('') : setMenuName('appsettings')
             }}>
-              <Arrow size={50} color={menuName == 'appsettings' ? colors.primary : '#404040'} style={{ transform: [{ rotate: menuName == 'appsettings' ? '0deg' : '-90deg' }] }} />
+              <Arrow size={32} color={menuName == 'appsettings' ? colors.primary : '#404040'} style={{ transform: [{ rotate: menuName == 'appsettings' ? '0deg' : '-90deg' }] }} />
             </Pressable>
           </Pressable>
 
-          <Pressable style={[styles.listItem, { paddingLeft: 12, paddingBottom: 45 }]}>
+          <Pressable onPress={()=>{_logout()}} style={[styles.listItem, { paddingLeft: 12, paddingBottom: 45 }]}>
             <Logout />
             <View>
               <Text style={styles.itemText}>Logout</Text>

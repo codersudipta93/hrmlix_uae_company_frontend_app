@@ -46,7 +46,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from 'react-native/Libraries/NewAppScreen';
 import CustomHeader from '../../component/Header';
 
-
+import { postApi } from '../../Service/service';
 import { useTranslation } from 'react-i18next'; //for translation service
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Delete from '../../assets/icons/Delete';
@@ -56,6 +56,7 @@ const Employees = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
+  const { userDetails, token } = useSelector(state => state.project);
 
   const { t, i18n } = useTranslation();
 
@@ -71,7 +72,42 @@ const Employees = props => {
 
 
   useEffect(() => {
+    console.log("api")
+    let paramData = {
+      "pageno": 1,
+      "search_month": "6",
+      "search_year": "2024",
+      "attendance_type": "time",
+      "branch_id": "",
+      "designation_id": "",
+      "department_id": "",
+      "hod_id": "",
+      "client_id": ""
+    }
+    postApi("company/get-attendance-data", paramData, token)
+      .then((resp) => {
+        console.log(resp);
 
+        if (resp?.status == 'success') {
+
+        } else if (resp?.status == 'val_err') {
+          let message = ""
+          for (const key in resp.val_msg) {
+            if (resp.val_msg[key].message) {
+              message = resp.val_msg[key].message;
+              break;
+            }
+          }
+          HelperFunctions.showToastMsg(message);
+        } else {
+          HelperFunctions.showToastMsg(resp.message);
+        }
+
+      }).catch((err) => {
+        console.log(err);
+
+        HelperFunctions.showToastMsg(err.message);
+      })
   }, []);
 
   useFocusEffect(
@@ -79,7 +115,6 @@ const Employees = props => {
       const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
       return () => {
         backHandler.remove();
-
       };
       return () => { };
     }, [])
@@ -137,7 +172,7 @@ const Employees = props => {
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 12 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
               <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5 }}>Employees List</Text>
-              <TouchableOpacity style={{  padding: 6, paddingHorizontal: 10 }}>
+              <TouchableOpacity style={{ padding: 6, paddingHorizontal: 10 }}>
                 <Filter />
               </TouchableOpacity>
             </View>

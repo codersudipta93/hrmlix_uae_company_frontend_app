@@ -5,7 +5,7 @@ import { AllSourcePath } from '../constants/PathConfig';
 //== Post without token API
 const postApi = (endpoint, data, token, deviceToken) => {
   console.log(endpoint, "api called =====>")
-  //console.log("Endpoint", AllSourcePath.API_BASE_URL_DEV + endpoint);
+  console.log("Endpoint", AllSourcePath.API_BASE_URL_DEV + endpoint);
   console.log("Resquested params =========> ", data)
   console.log("Token", token)
   //console.log("Devicetoken", deviceToken)
@@ -18,7 +18,7 @@ const postApi = (endpoint, data, token, deviceToken) => {
         headers: {
           'Accept': "*",
           "Content-Type": "application/json",
-          'Token': token,
+          'x-access-token': token
          // 'device-token': deviceToken
         }
       }).then((response) => {

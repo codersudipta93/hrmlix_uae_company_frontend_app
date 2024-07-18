@@ -115,11 +115,11 @@ const Dashboard = props => {
   const announcementListRender = ({ index, item }) => (
     <View style={styles.listCard}>
       <View style={{ justifyContent: 'center', alignItems: 'center', padding: 12, paddingHorizontal: 16, backgroundColor: '#007AFF', borderRadius: 8 }}>
-        <Text style={{ fontFamily: FontFamily.medium, color: colors.white, fontSize: sizes.h5 }}>02</Text>
-        <Text style={{ fontFamily: FontFamily.medium, color: colors.white, fontSize: sizes.h5, marginTop: 1 }}>Jun</Text>
+        <Text style={{ fontFamily: FontFamily.medium, color: colors.white, fontSize: sizes.h6 }}>02</Text>
+        <Text style={{ fontFamily: FontFamily.medium, color: colors.white, fontSize: sizes.md, marginTop: 1 }}>Jun</Text>
       </View>
-      <View style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: 14 }}>
-        <Text style={{ fontFamily: FontFamily.regular, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>Ivan Infotech has announce 5% bonus to the Employees.</Text>
+      <View style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: 14,paddingRight:50}}>
+        <Text style={{ fontFamily: FontFamily.regular, color: '#4E525E', fontSize: sizes.md+1, textAlign: 'left' }}>Ivan Infotech has announce 5% bonus to the Employees.</Text>
       </View>
     </View>
   );
@@ -127,16 +127,16 @@ const Dashboard = props => {
   const ListRender = ({ index, item }) => (
     <View style={[styles.listCard, { paddingVertical: 18, marginBottom: 0, borderRadius: 0, borderTopRightRadius: index == 0 ? 8 : 0, borderTopLeftRadius: index == 0 ? 8 : 0, borderBottomLeftRadius: sampleData.length - 1 == index ? 8 : 0, borderBottomRightRadius: sampleData.length - 1 == index ? 8 : 0 }]}>
       <View style={{ width: '60%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-        <View style={{ justifyContent: 'center', alignItems: 'center', height: 35, width: 35, backgroundColor: '#007AFF', borderRadius: 50 }}>
+        <View style={{ justifyContent: 'center', alignItems: 'center', height: 30, width: 30, backgroundColor: '#007AFF', borderRadius: 50 }}>
           <Image source={LOCAL_IMAGES.user} style={{ height: '100%', width: '100%', borderRadius: 50, objectFit: 'cover' }} />
         </View>
         <View style={{ paddingLeft: 12 }}>
-          <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>Brent Farrell DVM</Text>
-          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left', marginTop: 6 }}>UI/UX Designer</Text>
+          <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.md, textAlign: 'left' }}>Brent Farrell DVM</Text>
+          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md-1, textAlign: 'left', marginTop: 6 }}>UI/UX Designer</Text>
         </View>
       </View>
       <View style={{ paddingLeft: 12, width: '40%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left', lineHeight: 19 }}>02 Aug 2024</Text>
+        <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md-1, textAlign: 'left', lineHeight: 19 }}>02 Aug 2024</Text>
       </View>
     </View>
   );
@@ -150,11 +150,11 @@ const Dashboard = props => {
         </View>
         <View style={{ paddingLeft: 12 }}>
           <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>Brent Farrell DVM</Text>
-          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left', marginTop: 6 }}>UI/UX Designer</Text>
+          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md-1, textAlign: 'left', marginTop: 6 }}>UI/UX Designer</Text>
         </View>
       </View>
       <View style={{ paddingLeft: 12, width: '40%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <Text style={{ fontFamily: FontFamily.regular, color: '#60B057', fontSize: sizes.md, textAlign: 'left', marginTop: 6 }}>Today</Text>
+        <Text style={{ fontFamily: FontFamily.regular, color: '#60B057', fontSize: sizes.md-1, textAlign: 'left', marginTop: 6 }}>Today</Text>
       </View>
     </View>
   );
@@ -168,7 +168,7 @@ const Dashboard = props => {
         </View>
         <View style={{ paddingLeft: 12 }}>
           <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>Brent Farrell DVM</Text>
-          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left', marginTop: 4 }}>UI/UX Designer</Text>
+          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md-1, textAlign: 'left', marginTop: 4 }}>UI/UX Designer</Text>
           <Text style={{ fontFamily: FontFamily.regular, color: '#60B057', fontSize: sizes.md, textAlign: 'left', marginTop: 4 }}>Today</Text>
         </View>
       </View>
@@ -179,13 +179,13 @@ const Dashboard = props => {
     <View style={[styles.card, { width: 290, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }]}>
       <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
         <View style={{ paddingLeft: 12, width: '60%' }}>
-          <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>Anjali Mukherjee</Text>
-          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left', marginTop: 4 }}>UI/UX Designer</Text>
+          <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.md, textAlign: 'left' }}>Anjali Mukherjee</Text>
+          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.sm+1, textAlign: 'left', marginTop: 4 }}>UI/UX Designer</Text>
         </View>
         <View style={{ width: '40%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-          <View style={{ justifyContent: 'center', alignItems: 'center', height: 6, width: 6, backgroundColor: '#FFAC10', borderRadius: 50 }}>
+          <View style={{ justifyContent: 'center', alignItems: 'center', height: 4, width: 4, backgroundColor: '#FFAC10', borderRadius: 50 }}>
           </View>
-          <Text style={{ marginLeft: 6, fontFamily: FontFamily.semibold, color: '#FFAC10', fontSize: sizes.h6, textAlign: 'left' }}>Tech interview</Text>
+          <Text style={{ marginLeft: 6, fontFamily: FontFamily.semibold, color: '#FFAC10', fontSize: sizes.md, textAlign: 'left' }}>Tech interview</Text>
         </View>
       </View>
       <View style={{ width: '100%' }}>
@@ -194,24 +194,24 @@ const Dashboard = props => {
 
           <View style={{ width: '45%' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-              <Image source={LOCAL_ICONS.calendarCheck} style={{ height: 19, width: 19, tintColor: colors.primary, marginBottom: 12 }} />
-              <View style={{ marginLeft: 10 }}>
-                <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.h6, textAlign: 'left' }}>Date</Text>
-                <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left', marginTop: 2 }}>Jun 7, 2024</Text>
+              <Image source={LOCAL_ICONS.calendarCheck} style={{ height: 14, width: 14, tintColor: colors.primary, marginBottom: 12 }} />
+              <View style={{ marginLeft: 8 }}>
+                <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left' }}>Date</Text>
+                <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.md, textAlign: 'left', marginTop: 2 }}>Jun 7, 2024</Text>
               </View>
             </View>
           </View>
 
           <View style={{ width: '10%', justifyContent: 'center', alignItems: 'center' }}>
-            <View style={{ width: 1.2, height: 34, backgroundColor: '#E7EAF1' }}></View>
+            <View style={{ width: 1, height: 34, backgroundColor: '#E7EAF1' }}></View>
           </View>
 
-          <View style={{ width: '45%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ width: '45%', flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start' }}>
             <Clock />
             {/* <Image source={LOCAL_ICONS.calendarCheck} style={{ height: 19, width: 19, tintColor: colors.primary, marginBottom: 12 }} /> */}
-            <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.h6, textAlign: 'left' }}>Time</Text>
-              <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left', marginTop: 2 }}>10:30 AM</Text>
+            <View style={{ marginLeft: 8 }}>
+              <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left' }}>Time</Text>
+              <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.md, textAlign: 'left', marginTop: 2 }}>10:30 AM</Text>
             </View>
           </View>
         </View>
@@ -227,7 +227,7 @@ const Dashboard = props => {
         <CustomHeader
           buttonText={t('dashboard')}
           style={{ flexDirection: 'row' }}
-          iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
+          iconStyle={{ height: 28, width: 28, borderRadius: 50 }}
           icon={LOCAL_IMAGES.user}
           searchIcon={true}
           onPressUser={() => { openMenu() }}
@@ -240,7 +240,7 @@ const Dashboard = props => {
               <View style={styles.cardSection1}>
                 <View style={styles.cardIconContainer}>
                   {/* <Image source={LOCAL_ICONS.employees} style={{ height: 19, width: 26, tintColor: '#DF8C29' }} /> */}
-                  <Totalemp height={20.5} width={26.5} />
+                  <Totalemp height={18.5} width={24.5} />
                 </View>
                 <View><Text style={styles.cardBigLabel}>560</Text></View>
               </View>
@@ -323,13 +323,13 @@ const Dashboard = props => {
             }}>
 
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontFamily: FontFamily.regular, color: colors.green, fontSize: sizes.h6 }}>Current Plan</Text>
-                <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5, marginTop: 6 }}>Plan 1</Text>
+                <Text style={{ fontFamily: FontFamily.regular, color: colors.green, fontSize: sizes.h6-1 }}>Current Plan</Text>
+                <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.md, marginTop: 6 }}>Plan 1</Text>
               </View>
               <View style={{ width: 1.2, height: 42, backgroundColor: '#E7EAF1' }}></View>
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontFamily: FontFamily.regular, color: colors.yellow, fontSize: sizes.h6 }}>Credit Balance</Text>
-                <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5, marginTop: 6 }}>6002</Text>
+                <Text style={{ fontFamily: FontFamily.regular, color: colors.yellow, fontSize: sizes.h6-1 }}>Credit Balance</Text>
+                <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.md, marginTop: 6 }}>6002</Text>
               </View>
 
             </View>
@@ -337,8 +337,8 @@ const Dashboard = props => {
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 30 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5 }}>Announcement</Text>
-              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 6, paddingHorizontal: 10 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.h6 - 1 }}>View All</Text></TouchableOpacity>
+              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Announcement</Text>
+              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text></TouchableOpacity>
             </View>
 
             <FlatList
@@ -352,8 +352,8 @@ const Dashboard = props => {
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 30 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5, lineHeight: 21 }}>Upcoming Birthday</Text>
-              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 6, paddingHorizontal: 10 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.h6 - 1 }}>View All</Text></TouchableOpacity>
+            <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Upcoming Birthday</Text>
+              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text></TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
               <FlatList
@@ -368,8 +368,8 @@ const Dashboard = props => {
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 30 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5, lineHeight: 21 }}>Employee On Leave</Text>
-              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 6, paddingHorizontal: 10 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.h6 - 1 }}>View All</Text></TouchableOpacity>
+            <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6,lineHeight:21 }}>Employee On Leave</Text>
+              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text></TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
               <FlatList
@@ -384,8 +384,8 @@ const Dashboard = props => {
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5 }}>Work Anniversary</Text>
-              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 6, paddingHorizontal: 10 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.h6 - 1 }}>View All</Text></TouchableOpacity>
+            <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Work Anniversary</Text>
+              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text></TouchableOpacity>
             </View>
 
             <FlatList
@@ -399,8 +399,8 @@ const Dashboard = props => {
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5 }}>Upcoming Appraisal</Text>
-              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 6, paddingHorizontal: 10 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.h6 - 1 }}>View All</Text></TouchableOpacity>
+              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Upcoming Appraisal</Text>
+              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text></TouchableOpacity>
             </View>
 
             <FlatList
@@ -414,8 +414,8 @@ const Dashboard = props => {
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5 }}>Upcoming Holiday</Text>
-              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 6, paddingHorizontal: 10 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.h6 - 1 }}>View All</Text></TouchableOpacity>
+              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Upcoming Holiday</Text>
+              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text></TouchableOpacity>
             </View>
 
             <FlatList
@@ -429,8 +429,8 @@ const Dashboard = props => {
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 30 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5, lineHeight: 21 }}>Recruitment Progress</Text>
-              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 6, paddingHorizontal: 10 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.h6 - 1 }}>View All</Text></TouchableOpacity>
+              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6, lineHeight: 21 }}>Recruitment Progress</Text>
+              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text></TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
               <FlatList
@@ -485,9 +485,9 @@ const styles = StyleSheet.create({
     padding: 12
   },
   cardSection1: { flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' },
-  cardIconContainer: { height: 53, width: 53, borderRadius: 50, backgroundColor: '#F9F5F5', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' },
-  cardBigLabel: { fontFamily: FontFamily.semibold, fontSize: sizes.h1 + 1, color: '#000000', marginLeft: 15 },
-  cardLabel: { fontFamily: FontFamily.semibold, fontSize: sizes.h6, color: '#2B2B2B', marginTop: 15, textAlign: 'left' },
+  cardIconContainer: { height: 45, width: 45, borderRadius: 50, backgroundColor: '#F9F5F5', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' },
+  cardBigLabel: { fontFamily: FontFamily.semibold, fontSize: sizes.h4, color: '#000000', marginLeft: 10 },
+  cardLabel: { fontFamily: FontFamily.semibold, fontSize: sizes.md, color: '#2B2B2B', marginTop: 15, textAlign: 'left' },
   backgroundImage: {
     width: 40, // Adjust as needed
     height: 30, // Adjust as needed

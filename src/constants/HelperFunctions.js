@@ -152,30 +152,58 @@ const HelperFunctions = {
   },
 
   getTypeFullName(attendanceCode, singleShiftStatus) {
-    if (attendanceCode == 'P' && singleShiftStatus == true) {
-      return "Full Shift (Present)"
-    } else if (attendanceCode == 'A' && singleShiftStatus == true) {
-      return "Full Shift (Absent)"
-    } else if (attendanceCode == 'P' && singleShiftStatus == false) {
-      return "Break Shift (Present)"
-    } else if (attendanceCode == 'A' && singleShiftStatus == false) {
-      return "Break Shift (Absent)"
-    } else if (attendanceCode == 'L' && singleShiftStatus == true) {
-      return "Full day Leave"
-    } else if (attendanceCode == 'L' && singleShiftStatus == false) {
-      return "Break Shift (Leave)"
-    }else if (attendanceCode == 'WO' && singleShiftStatus == true) {
-      return "Week Off (WO)"
-    } else if (attendanceCode == 'PDL' && singleShiftStatus == true) {
-      return "Full day PDL"
-    } else if (attendanceCode == 'PDL' && singleShiftStatus == false) {
-      return "Break Shift (PDL)"
+    switch (attendanceCode) {
+      case 'PDL':
+        return "Paid (PDL)";
+      case 'A':
+        return "Absent (A)";
+      case 'P':
+        return "Present (P)";
+      case 'L':
+        return "Late (L)";
+      case 'H':
+        return "Holiday (H)";
+      case 'OT':
+        return "Over Time (OT)";
+      case 'CSL':
+        return "Casual Leave (CSL)";
+      case 'PVL':
+        return "Privilege Leave (PVL)";
+      case 'ERL':
+        return "Earned Leave (ERL)";
+      case 'SKL':
+        return "Sick Leave (SKL)";
+      case 'MDL':
+        return "Medical Leave (MDL)";
+      case 'MTL':
+        return "Maternity Leave (MTL)";
+      case 'PTL':
+        return "Paternity Leave (PTL)";
+      case 'ANL':
+        return "Annual Leave (ANL)";
+      case 'AWP':
+        return "Approved Without Pay (AWP)";
+      case 'UWP':
+        return "Unapproved Without Pay (UWP)";
+      case 'LE1':
+        return "Leave Earned (LE1)";
+      case 'LE2':
+        return "Leave Earned (LE2)";
+      case 'LP1':
+        return "Leave Paid (LP1)";
+      case 'LP2':
+        return "Leave Paid (LP2)";
+      case 'WO':
+        return "Weekly Off (WO)";
+      default:
+        return "Unknown attendance code";
     }
+
   },
 
-  
 
-  
+
+
   networkStatus(props) {
     setInterval(() => {
       NetInfo.addEventListener(state => {

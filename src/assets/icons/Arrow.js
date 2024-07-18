@@ -4,8 +4,8 @@ import Svg, { G, Circle, Path } from "react-native-svg"
 function Arrow(props) {
     return (
         <Svg
-            width={24}
-            height={24}
+            width={props?.size? props?.size : 25}
+            height={props?.size? props?.size :25}
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

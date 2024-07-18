@@ -12,4 +12,5 @@ export {default as Profile} from './TabScreens/Profile';
 
 //Individual screen
 
-export {default as EployeeAttendanceView} from './EployeeAttendanceView'
+export {default as EployeeAttendanceView} from './EployeeAttendanceView';
+export {default as FilterEmployeePage} from './FilterEmployeePage';

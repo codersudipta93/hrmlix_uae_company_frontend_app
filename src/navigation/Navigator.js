@@ -8,7 +8,8 @@ const Stack = createNativeStackNavigator();
 import {
   Splash,
   Signin,
-  EployeeAttendanceView
+  EployeeAttendanceView,
+  FilterEmployeePage
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -28,7 +29,8 @@ function Navigator() {
        
        <Stack.Screen name="Signin" component={Signin} />
        <Stack.Screen name="EployeeAttendanceView" component={EployeeAttendanceView} />
-        
+       <Stack.Screen name="FilterEmployeePage" component={FilterEmployeePage} />
+       
       </Stack.Navigator>
     </NavigationContainer>
   );

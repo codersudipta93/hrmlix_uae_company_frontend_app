@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
-  I18nManager
+  I18nManager,
+  Keyboard
 } from 'react-native';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import RNRestart from 'react-native-restart'; // for app restart
@@ -156,15 +157,15 @@ const Signin = props => {
     } else if (!password.trim()) {
       HelperFunctions.showToastMsg("Please enter Password")
     } else {
-
-      let paramData = { "corporate_id": corporateId, "userid": empId, "password": password }
+      Keyboard.dismiss()
+      let paramData = { "corporate_id": corporateId, "userid": empId, "password": password };
       setWaitLoaderStatus(true);
       postApi("company_signin", paramData)
         .then((resp) => {
           console.log(resp);
           setWaitLoaderStatus(false);
           if (resp?.status == 'success') {
-            saveData(resp);
+            _saveData(resp);
           } else if (resp?.status == 'val_err') {
             let message = ""
             for (const key in resp.val_msg) {
@@ -188,7 +189,7 @@ const Signin = props => {
 
   //Save data to redux and local storage
 
-  const saveData = (response_data) => {
+  const _saveData = (response_data) => {
     if (response_data?.curr_user_data && response_data?.token) {
       let data = {
         "userDetails": response_data.curr_user_data,
