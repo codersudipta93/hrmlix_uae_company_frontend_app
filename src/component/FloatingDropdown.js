@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Animated, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
+import { ScrollView, View, Animated, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
 import {
     colors,
     height,
@@ -8,10 +8,11 @@ import {
     FontFamily
 } from '../constants/Theme'; // Adjust the import path as per your project structure
 import Arrow from '../assets/icons/Arrow';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 
 const FloatingDropdown = ({
-    label,
-    value,
+    labelName,
+    selectedValueData,
     options,
     onSelect,
     editableStatus = true,
@@ -21,19 +22,21 @@ const FloatingDropdown = ({
     placeholderColor,
     inputContainerColor,
     inputMargin,
-    children,
-    onPress
+    listLabelKeyName = ['label'],
+    multiSelect = false,
+    bracketAfterPositionIndex // user for bracket seprator
 }) => {
     const [isFocused, setIsFocused] = useState(false);
-    const animatedIsFocused = useRef(new Animated.Value(value ? 1 : 0)).current;
+    const animatedIsFocused = useRef(new Animated.Value(selectedValueData ? 1 : 0)).current;
     const containerHeight = useRef(new Animated.Value(60)).current;
     const labelBackgroundColor = useRef(new Animated.Value(0)).current;
     const borderColor = useRef(new Animated.Value(0)).current;
     const [showOptions, setShowOptions] = useState(false);
 
     useEffect(() => {
+        console.log(selectedValueData)
         Animated.timing(animatedIsFocused, {
-            toValue: isFocused || value ? 1 : 0,
+            toValue: isFocused || selectedValueData != '' ? 1 : 0,
             duration: 200,
             useNativeDriver: false,
         }).start();
@@ -55,7 +58,7 @@ const FloatingDropdown = ({
             duration: 200,
             useNativeDriver: false,
         }).start();
-    }, [isFocused, value]);
+    }, [isFocused, selectedValueData]);
 
     const labelStyle = {
         position: 'absolute',
@@ -95,7 +98,7 @@ const FloatingDropdown = ({
 
     const handleSelectOption = (option) => {
         onSelect(option);
-        setShowOptions(false);
+        multiSelect == true ? setShowOptions(true) : setShowOptions(false);
     };
 
     return (
@@ -104,46 +107,103 @@ const FloatingDropdown = ({
             onPress={() => {
                 if (editableStatus) {
                     if (isFocused == true) {
-                        setIsFocused(value ? true : false);
+                        setIsFocused(selectedValueData != '' ? true : false);
                     } else {
                         setIsFocused(true);
                     }
 
                     setShowOptions(!showOptions);
                 }
+
             }}
-            // onPress={onPress}
+
             style={[styles.touchable, { cursor: editableStatus ? 'text' : 'default' }]}
         >
-            <Animated.View style={[containerStyle]}>
+            <Animated.View style={[containerStyle,{borderColor:isFocused == true || selectedValueData != "" ? "#60B057" : '#CACDD4'}]}>
                 <View style={{ paddingHorizontal: 5 }}>
                     <Animated.Text style={[labelStyle]}>
-                        {label}
+                        {labelName}
                     </Animated.Text>
                 </View>
                 <View style={[styles.fakeInput, { color: inputColor || '#D0DEEE' }]}>
-                    <View>
-                        {value ?
-                            <Text style={{ color: inputColor ? inputColor : '#D0DEEE' }}>{value}</Text>
-                            :
-                            <Text style={{ color: 'Select Month' }}>{isFocused ? "Select " + label : ""}</Text>
-                        }
-                    </View>
-                    <Arrow size={18} color={ isFocused == true || value != null ? "#60B057": '#404040'} style={{ transform: [{ rotate: '0deg' }] }} />
+                    {multiSelect == true ?
+                        <View>
+                            {selectedValueData != '' ?
+                                <View style={{ flexDirection: 'row' }}>
+                                    {selectedValueData.length > 1 ? <>
+                                        {listLabelKeyName.map((value, index) => {
+                                            return (
+                                                <Text style={[styles.optionText, { color: inputColor, fontFamily: FontFamily.semibold, textTransform:'capitalize' }]}>{index > bracketAfterPositionIndex ? '(' + selectedValueData[0][value] + ')' : selectedValueData[0][value]} </Text>
+                                            )
+                                        })}
+
+                                        <Text style={[styles.optionText, { color: inputColor || '#D0DEEE', fontFamily: FontFamily.semibold, textTransform:'capitalize' }]}>
+                                            + {(selectedValueData.length - 1) + ' more'}
+                                        </Text>
+
+                                    </> :
+
+                                        <>
+                                            {listLabelKeyName.map((value, index) => {
+                                                return (
+                                                    <Text style={[styles.optionText, { color: inputColor, fontFamily: FontFamily.semibold, textTransform:'capitalize' }]}>{index > bracketAfterPositionIndex ? '(' + selectedValueData[0][value] + ')' : selectedValueData[0][value]} </Text>
+                                                )
+                                            })}
+                                        </>
+                                    }
+                                </View>
+                                :
+                                <Text style={[styles.optionText, { color: 'grey' }]}>{isFocused ? "Select " + labelName : ""}</Text>
+                            }
+                        </View> :
+
+                        <View>
+                            {selectedValueData != '' ?
+                                <View style={{ flexDirection: 'row' }}>
+                                    {listLabelKeyName.map((value, index) => {
+                                        return (
+
+                                            <Text style={[styles.optionText, { color: inputColor, fontFamily: FontFamily.semibold, textTransform:'capitalize' }]}>{index > bracketAfterPositionIndex ? '(' + selectedValueData[value] + ')' : selectedValueData[value]} </Text>
+                                        )
+                                    })}
+                                    {/* <Text style={[styles.optionText, { color: inputColor || '#D0DEEE', fontFamily: FontFamily.semibold }]}>{selectedValueData}</Text> */}
+                                </View>
+                                :
+                                <Text style={[styles.optionText, { color: 'grey' }]}>{isFocused ? "Select " + labelName : ""}</Text>
+                            }
+                        </View>
+                    }
+                    <Arrow size={18} color={isFocused == true || selectedValueData != "" ? "#60B057" : '#404040'} style={{ transform: [{ rotate: '0deg' }] }} />
                 </View>
             </Animated.View>
-            {children}
+
             {showOptions && (
                 <View style={styles.optionsContainer}>
                     <FlatList
+                        showsVerticalScrollIndicator={false}
+                        nestedScrollEnabled
                         data={options}
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
                             <TouchableOpacity
-                                style={styles.optionItem}
-                                onPress={() => handleSelectOption(item.value)}
+                                style={[styles.optionItem, { marginLeft: 0 }]}
+                                onPress={() => handleSelectOption(item)}
                             >
-                                <Text style={styles.optionText}>{item.label}</Text>
+                                {multiSelect == true ?
+                                    <IonIcon
+                                        name={item.selected ? "checkbox-outline" : "square-outline"}
+                                        size={18}
+                                        color={item?.selected == true ? colors.primary : '#333'}
+                                    />
+                                    : null}
+
+                                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                    {listLabelKeyName.map((key, index) => {
+                                        return (
+                                            <Text style={[styles.optionText, { textTransform: 'capitalize', color: item?.selected == true ? colors.primary : '#333' }]}> {index > bracketAfterPositionIndex ? item[key] != "" ? ' (' + item[key] + ')' : "" : item[key]}</Text>
+                                        )
+                                    })}
+                                </View>
                             </TouchableOpacity>
                         )}
                     />
@@ -159,10 +219,10 @@ const styles = StyleSheet.create({
     },
     fakeInput: {
         height: 42,
-        flexDirection:'row',
+        flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems:'center',
-        fontSize: 14,
+        alignItems: 'center',
+        fontSize: 13,
         paddingHorizontal: 6,
         fontFamily: FontFamily.semibold,
     },
@@ -186,10 +246,15 @@ const styles = StyleSheet.create({
     optionItem: {
         paddingVertical: 10,
         paddingHorizontal: 15,
+        paddingLeft: 10,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
     },
     optionText: {
-        fontSize: 16,
+        fontSize: sizes.h6,
         color: '#333',
+        textTransform: 'none'
     },
 });
 

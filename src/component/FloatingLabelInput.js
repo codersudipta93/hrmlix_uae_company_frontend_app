@@ -68,7 +68,7 @@ const FloatingLabelInput = ({
         }),
         fontSize: animatedIsFocused.interpolate({
             inputRange: [0, 1],
-            outputRange: [14, 12],
+            outputRange: [13, 12],
         }),
         color: animatedIsFocused.interpolate({
             inputRange: [0, 1],
@@ -123,7 +123,7 @@ const FloatingLabelInput = ({
 const styles = StyleSheet.create({
     input: {
         height: 42,
-        fontSize: 14,
+        fontSize: 13,
         color: '#D0DEEE',
         paddingHorizontal: 6,
         fontFamily: FontFamily.semibold,

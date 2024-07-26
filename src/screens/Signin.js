@@ -53,9 +53,9 @@ const Signin = props => {
   const [languages, setLanguages] = useState([{ label: 'English', value: 'en', selected: true }, { label: 'Arabic', value: 'ar', selected: false }]);
   const [selectedLanguage, setLanguage] = useState("");
 
-  const [corporateId, setCorporateId] = useState('');
-  const [empId, setEmpId] = useState('');
-  const [password, setPassword] = useState('');
+  const [corporateId, setCorporateId] = useState('ivn123');
+  const [empId, setEmpId] = useState('user001');
+  const [password, setPassword] = useState('qwer1234');
   const [waitLoaderStatus, setWaitLoaderStatus] = useState(false);
   
   useEffect(() => {

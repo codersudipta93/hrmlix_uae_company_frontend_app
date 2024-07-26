@@ -9,18 +9,18 @@ import {
 } from '../constants/Theme';
 const MonthModal = ({ visible, onClose, selectedIndex }) => {
     const months = [
-        { id: 1, name: 'January', monthIndex:1 },
-        { id: 2, name: 'February', monthIndex:2 },
-        { id: 3, name: 'March', monthIndex:3 },
-        { id: 4, name: 'April', monthIndex:4 },
-        { id: 5, name: 'May' , monthIndex:5},
-        { id: 6, name: 'June', monthIndex:6 },
-        { id: 7, name: 'July', monthIndex:7 },
-        { id: 8, name: 'August', monthIndex:8 },
-        { id: 9, name: 'September', monthIndex:9 },
-        { id: 10, name: 'October', monthIndex:10 },
-        { id: 11, name: 'November', monthIndex:11 },
-        { id: 12, name: 'December', monthIndex:12 },
+        { id: 1, name: 'January', monthIndex:0 },
+        { id: 2, name: 'February', monthIndex:1 },
+        { id: 3, name: 'March', monthIndex:2 },
+        { id: 4, name: 'April', monthIndex:3 },
+        { id: 5, name: 'May' , monthIndex:4},
+        { id: 6, name: 'June', monthIndex:5 },
+        { id: 7, name: 'July', monthIndex:6 },
+        { id: 8, name: 'August', monthIndex:7 },
+        { id: 9, name: 'September', monthIndex:8 },
+        { id: 10, name: 'October', monthIndex:9 },
+        { id: 11, name: 'November', monthIndex:10 },
+        { id: 12, name: 'December', monthIndex:11 },
     ];
 
     const columns = 3; // Number of items per row
@@ -32,7 +32,7 @@ const MonthModal = ({ visible, onClose, selectedIndex }) => {
             {item.map(month => (
                 <View key={month.id} style={styles.column}>
                     <TouchableOpacity onPress={() => onClose(month)} style={[styles.item,{backgroundColor: selectedIndex == month.monthIndex ? colors.primary : '#f0f0f0'}]}>
-                        <Text style={[styles.itemText,{color: month.id == selectedIndex ? '#fff':'#4E525E'}]}>{month.name}</Text>
+                        <Text style={[styles.itemText,{color: month.monthIndex == selectedIndex ? '#fff':'#4E525E'}]}>{month.name}</Text>
                     </TouchableOpacity>
                 </View>
             ))}

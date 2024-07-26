@@ -46,6 +46,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from 'react-native/Libraries/NewAppScreen';
 import CustomHeader from '../component/Header';
 
+import { postApi } from '../Service/service';
+
 
 import { useTranslation } from 'react-i18next'; //for translation service
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -55,15 +57,19 @@ import Attendance from './TabScreens/Attendance';
 import Shift from '../assets/icons/Shift';
 
 const EployeeAttendanceView = props => {
+
+    const dispatch = useDispatch();
+    const { userDetails, token } = useSelector(state => state.project);
+
     const isFocused = useIsFocused();
     const route = useRoute();
-    const dispatch = useDispatch();
+
     const { t, i18n } = useTranslation();
     const [monthCalenderData, setmonthCalenderData] = useState([]);
 
     //const [attendanceData, setAttedancedata] = usestate()
-    const [paramdata, setParamdata] = useState("");
-    const [filterData, setFilterData] = useState("");
+    const [empData, setempData] = useState("");
+    const [filterdata, setFilterData] = useState("");
 
     useEffect(() => {
         if (isFocused == true) {
@@ -78,38 +84,105 @@ const EployeeAttendanceView = props => {
         if (props?.route?.params) {
             console.log("paramData ===>")
             console.log(props?.route?.params?.paramData);
-            setParamdata(props?.route?.params?.paramData);
-            setFilterData(props?.route?.params?.filterData)
+            setempData(props?.route?.params?.empData);
+            setFilterData(props?.route?.params?.filterdata);
         }
 
+       
+        // let datesAndDays = HelperFunctions.getAllDatesAndDays(parseInt(props?.route?.params?.filterdata?.search_month), props?.route?.params?.filterdata?.search_year);
 
-        let datesAndDays = HelperFunctions.getAllDatesAndDays(props?.route?.params?.filterData?.seletedMonth, props?.route?.params?.filterData?.seletedYear);
-
-        let attendance = props?.route?.params?.paramData?.attendance
-        for (let i = 0; i < datesAndDays.length; i++) {
-            
-            for (let a = 0; a < attendance.length; a++) {
-                //console.log(a)
-                if (datesAndDays[i].formatedDate == attendance[a].attendance_date.toString()) {
-                    datesAndDays[i].attendanceObj = attendance[a];
-                }
-            }
-        }
+        // let attendance = props?.route?.params?.paramData?.attendance
+        // for (let i = 0; i < datesAndDays.length; i++) {
+        //     for (let a = 0; a < attendance.length; a++) {
+        //         //console.log(a)
+        //         if (datesAndDays[i].formatedDate == attendance[a].attendance_date.toString()) {
+        //             datesAndDays[i].attendanceObj = attendance[a];
+        //         }
+        //     }
+        // }
         
-        setmonthCalenderData(datesAndDays);
+        // setmonthCalenderData(datesAndDays);
+
     }, []);
 
+
+
+    useEffect(() => {
+        let data = { ...filterdata };
+        data.attendance_type = data?.attendance_type != "" ? data?.attendance_type?.value : "time";
+        data.branch_id = data?.branch_id != "[]" ? data?.branch_id : "";
+        data.hod_id = data?.hod_id != "[]" ? data?.hod_id : "";
+        data.designation_id = data?.designation_id != "[]" ? data?.designation_id : "";
+        data.client_id = data?.client_id != "[]" ? data?.client_id : "";
+        data.department_id = data?.department_id != "[]" ? data?.department_id : "";
+        data.searchkey = empData?.emp_id
+
+        if (filterdata != null) {
+         // setIsLoading(true)
+          postApi("company/get-attendance-data", data, token)
+            .then((resp) => {
+              console.log(JSON.stringify(resp));
+              if (resp?.status == 'success') {
+                 setempData(resp?.employees?.docs[0]);
+
+                //   let datesAndDays = HelperFunctions.getAllDatesAndDays(parseInt(props?.route?.params?.filterdata?.search_month), props?.route?.params?.filterdata?.search_year);
+
+                //   let attendance = props?.route?.params?.paramData?.attendance
+                //   for (let i = 0; i < datesAndDays.length; i++) {
+                //       for (let a = 0; a < attendance.length; a++) {
+                //           //console.log(a)
+                //           if (datesAndDays[i].formatedDate == attendance[a].attendance_date.toString()) {
+                //               datesAndDays[i].attendanceObj = attendance[a];
+                //           }
+                //       }
+                //   }
+
+                //   setmonthCalenderData(datesAndDays);
+
+
+                // setEmpdata(resp?.employees);
+                // setIsLoading(false)
+              } else {
+                HelperFunctions.showToastMsg(resp.message);
+                //setIsLoading(false)
+              }
+    
+            }).catch((err) => {
+              console.log(err);
+              //setIsLoading(false)
+              HelperFunctions.showToastMsg(err.message);
+            })
+        }
+
+    },[filterdata])
+
     const _openFilter = () => {
-        props.navigation.navigate('FilterEmployeePage')
+        let pData = {
+            "pageno": 1,
+            "search_month": { label: HelperFunctions.getMonthName(filterdata?.search_month), value: (filterdata?.search_month).toString() },
+            "search_year": { label: (filterdata?.search_year).toString(), value: (filterdata?.search_year).toString() },
+            "attendance_type": filterdata?.attendance_type,
+            "branchData": props?.route?.params?.paramData?.branchData ? props?.route?.params?.paramData?.branchData : [],
+            "designationData": props?.route?.params?.paramData?.designationData ? props?.route?.params?.paramData?.designationData : [],
+            "departmentData": props?.route?.params?.paramData?.departmentData ? props?.route?.params?.paramData?.departmentData : [],
+            "hodData": props?.route?.params?.paramData?.hodData ? props?.route?.params?.paramData?.hodData : [],
+            "clientData": props?.route?.params?.paramData?.clientData ? props?.route?.params?.paramData?.clientData : [],
+            "search_day": filterdata?.search_day,
+            "searchkey":props?.route?.params?.paramData?.searchkey
+          }
+      
+          console.log("filter data paramData ====> ", pData)
+          console.log("filter data paramData ======================= ")
+          props.navigation.navigate('FilterEmployeePage', { paramData: pData, from:'attendanceView_page' })
     }
 
 
     const ListRender = ({ index, item }) => (
         <View style={{ paddingTop: index == 0 ? 12 : 8, paddingBottom: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flex: 1 }}>
 
-            <View style={{ paddingRight: 0, paddingLeft: 12, paddingRight: 25 }}>
+            <View style={{ paddingRight: 0, paddingLeft: 12, paddingRight: 12 }}>
                 <View style={{ backgroundColor: colors.white, flex: 1, borderRadius: 4, flexDirection: 'column', justifyContent: 'flex-stat', alignItems: 'center' }}>
-                    <Text style={{ letterSpacing: 0.4, color: '#8A8E9C', fontFamily: FontFamily.regular, fontSize: sizes.md + 1 }}>{HelperFunctions.getMonthName(item.month)}</Text>
+                    <Text style={{ letterSpacing: 0.4, color: '#8A8E9C', fontFamily: FontFamily.regular, fontSize: sizes.md + 1 }}>{HelperFunctions.getMonthName(item.month-1)}</Text>
                     <Text style={{ letterSpacing: 0.4, color: '#4E525E', fontFamily: FontFamily.bold, fontSize: sizes.h5, paddingVertical: 2 }}>{item.date ? item.date <= 9 ? 0 : null : null}{item.date}</Text>
                     <Text style={{ letterSpacing: 0.4, color: '#8A8E9C', fontFamily: FontFamily.regular, fontSize: sizes.md + 1 }}>{item.dayName}</Text>
                 </View>
@@ -121,18 +194,17 @@ const EployeeAttendanceView = props => {
                     {item?.attendanceObj?.leave_type == 'present' || item?.attendanceObj?.leave_type == 'full_day' ?
                         <View style={{ paddingLeft: 12, flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
                             <View style={{ backgroundColor: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).bgColor, width: '100%', padding: 5, paddingVertical: 20, borderRadius: 8, justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md }}>{HelperFunctions.getTypeFullName(item?.attendanceObj?.first_half, true)}</Text>
+                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md, paddingLeft:8 }}>{HelperFunctions.getTypeFullName(item?.attendanceObj?.first_half, true)}</Text>
                             </View>
                         </View>
-
                         :
                         <View style={{ paddingLeft: 12, flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
                             <View style={{ backgroundColor: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).bgColor, width: '100%', padding: 5, paddingVertical: 20, borderRadius: 8, justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'row', paddingRight: 12 }}>
-                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md }}>{HelperFunctions.getTypeFullName(item?.attendanceObj?.first_half, false)}</Text>
+                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.first_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md, paddingLeft:8 }}>{HelperFunctions.getTypeFullName(item?.attendanceObj?.first_half, false)}</Text>
                                 <Shift />
                             </View>
                             <View style={{ marginTop: 5, backgroundColor: HelperFunctions.getColorCode(item?.attendanceObj?.second_half).bgColor, width: '100%', padding: 5, paddingVertical: 20, borderRadius: 8, justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: 'row', paddingRight: 12 }}>
-                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.second_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md }}>{HelperFunctions.getTypeFullName(item?.attendanceObj?.second_half, false)}</Text>
+                                <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: HelperFunctions.getColorCode(item?.attendanceObj?.second_half).textColor, fontFamily: FontFamily.medium, fontSize: sizes.md, paddingLeft:8 }}>{HelperFunctions.getTypeFullName(item?.attendanceObj?.second_half, false)}</Text>
                                 <Shift />
                             </View>
                         </View>
@@ -140,7 +212,7 @@ const EployeeAttendanceView = props => {
                 </> :
                     <View style={{ paddingLeft: 12, flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
                         <View style={{ backgroundColor: '#fff3de', width: '100%', padding: 5, paddingVertical: 20, borderRadius: 8, justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: '#FFAC10', fontFamily: FontFamily.medium, fontSize: sizes.md,lineHeight:16 }}>No Entry Log</Text>
+                            <Text style={{ letterSpacing: 0.4, marginLeft: 4, color: '#FFAC10', fontFamily: FontFamily.medium, fontSize: sizes.md,lineHeight:16, paddingLeft:8 }}>No Entry Log</Text>
                         </View>
                     </View>
                 }
@@ -162,7 +234,7 @@ const EployeeAttendanceView = props => {
                     searchIcon={true}
                 />
 
-                <View showsVerticalScrollIndicator={false}>
+                <ScrollView showsVerticalScrollIndicator={false}>
 
                     <View style={{ flexDirection: 'column', justifyContent: 'space-between', marginTop: 0 }}>
                         <View style={{ borderWidth: 1, paddingVertical: 16, paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#1E2538' }}>
@@ -172,8 +244,8 @@ const EployeeAttendanceView = props => {
                                     <Image source={{uri:'https://uaedemo.hrmlix.com/assets/images/user.jpg'}} style={{ height: 35, width: 35, borderRadius: 50, objectFit: 'cover' }} />
                                 </View>
                                 <View>
-                                    <Text style={{ fontFamily: FontFamily.semibold, color: colors.white, fontSize: sizes.h6 }}>{paramdata?.emp_first_name} {paramdata?.emp_last_name}</Text>
-                                    <Text style={{ fontFamily: FontFamily.regular, color: '#C8C8C8', fontSize: sizes.md, textAlign: 'left', marginTop: 6 }}>ID: {paramdata?.emp_id}</Text>
+                                    <Text style={{ fontFamily: FontFamily.semibold, color: colors.white, fontSize: sizes.h6 }}>{empData?.emp_first_name} {empData?.emp_last_name}</Text>
+                                    <Text style={{ fontFamily: FontFamily.regular, color: '#C8C8C8', fontSize: sizes.md, textAlign: 'left', marginTop: 6 }}>ID: {empData?.emp_id}</Text>
                                     <View style={{ marginTop: 12, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', }}>
                                         <Image
                                             style={{
@@ -183,7 +255,7 @@ const EployeeAttendanceView = props => {
                                             }}
                                             source={LOCAL_ICONS.calender}
                                         />
-                                        <Text style={{ marginLeft: 4, fontFamily: FontFamily.medium, color: '#C8C8C8', fontSize: sizes.md, textTransform: 'uppercase' }}>June, 2024</Text>
+                                        <Text style={{ marginLeft: 4, fontFamily: FontFamily.medium, color: '#C8C8C8', fontSize: sizes.md, textTransform: 'uppercase' }}>{HelperFunctions.getMonthName(filterdata?.search_month)}, {filterdata?.search_year}</Text>
                                     </View>
                                 </View>
 
@@ -192,7 +264,7 @@ const EployeeAttendanceView = props => {
                                 <Filter color={colors.white} />
                             </TouchableOpacity>
                         </View>
-                        < View style={{ paddingHorizontal: 14 }}>
+                        <View style={{ paddingHorizontal: 14}}>
 
                             <FlatList
                                 showsVerticalScrollIndicator={false}
@@ -204,7 +276,7 @@ const EployeeAttendanceView = props => {
                         </View>
 
                     </View>
-                </View>
+                </ScrollView>
             </View>
 
 

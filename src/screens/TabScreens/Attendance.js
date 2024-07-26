@@ -69,36 +69,146 @@ const Attendance = props => {
 
   const [selectedDate, setSelectedDate] = useState();
   const [selectedMonth, setselectedMonth] = useState();
+  const [selectedYear, setselectedYear] = useState();
 
-  const sampleData = [1,1,1,1,1]
+  const sampleData = [1, 1, 1, 1, 1]
   const [monthModalVisible, setMonthModalVisible] = useState(false);
 
   const [empData, setEmpdata] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [filterdata, setFilterData] = useState(null)
 
   useEffect(() => {
     if (isFocused == true) {
       console.log(i18n.language);
-      console.log(I18nManager.isRTL)
+      console.log(I18nManager.isRTL);
     }
   }, [isFocused]);
 
 
   useEffect(() => {
-    if(isFocused){
-    let month = HelperFunctions.getCurrentMonth(); //(1-based index)
-    let year = HelperFunctions.getCurrentYear();
-    let datesAndDays = HelperFunctions.getAllDatesAndDays(month, year);
+    if (isFocused) {
+      let month = HelperFunctions.getCurrentMonth(); //(1-based index)
+      let year = HelperFunctions.getCurrentYear();
+      let datesAndDays = HelperFunctions.getAllDatesAndDays(month, year);
 
-    setSelectedDate(HelperFunctions.getCurrentDatenumber());
-    setselectedMonth(month);
+      setSelectedDate(HelperFunctions.getCurrentDatenumber());
+      setselectedMonth(month);
+      setselectedYear(year);
+      setCalenderdata(datesAndDays);
+      console.log(datesAndDays);
 
-    setCalenderdata(datesAndDays);
-    console.log(datesAndDays);
-    //setcurrentDateIndex(datesAndDays.findIndex(item => item.selected))
-  }
+      _updatefilterData(HelperFunctions.getCurrentDatenumber(), month, year, 'default')
+
+
+
+    }
 
   }, [isFocused]);
+
+
+  const _openFilter = () => {
+    //alert(filterdata?.search_month)
+    let pData = {
+      "pageno": 1,
+      "search_month": { label: HelperFunctions.getMonthName(filterdata?.search_month), value: (filterdata?.search_month).toString() },
+      "search_year": { label: (filterdata?.search_year).toString(), value: (filterdata?.search_year).toString() },
+      "attendance_type": filterdata?.attendance_type,
+      "branchData": props?.route?.params?.paramData?.branchData ? props?.route?.params?.paramData?.branchData : [],
+      "designationData": props?.route?.params?.paramData?.designationData ? props?.route?.params?.paramData?.designationData : [],
+      "departmentData": props?.route?.params?.paramData?.departmentData ? props?.route?.params?.paramData?.departmentData : [],
+      "hodData": props?.route?.params?.paramData?.hodData ? props?.route?.params?.paramData?.hodData : [],
+      "clientData": props?.route?.params?.paramData?.clientData ? props?.route?.params?.paramData?.clientData : [],
+      "search_day": filterdata?.search_day,
+      "searchkey": props?.route?.params?.paramData?.searchkey
+    }
+
+    console.log("filter data paramData ====> ", pData)
+    console.log("filter data paramData ======================= ")
+    props.navigation.navigate('FilterEmployeePage', { paramData: pData, from: 'attendance_page' })
+  }
+
+  const _updatefilterData = (dd, mm, yyyy, type) => {
+
+    if (props?.route?.params) {
+      let pdata = props?.route?.params?.paramData;
+      setselectedMonth(pdata?.search_month?.value);
+      setselectedYear(pdata?.search_year?.value);
+
+      let apiParam = {
+        "pageno": 1,
+        "search_month": type == "MONTH_CHANGE" ? (mm).toString() : pdata?.search_month?.value,
+        "search_year": pdata?.search_year?.value,
+        "search_day": type == "DATE_CHANGE" ? dd.toString() : dd.toString(),
+        "attendance_type": pdata?.attendance_type,
+        "branch_id": JSON.stringify(pdata?.branchData.map(item => item._id)),
+        "designation_id": JSON.stringify(pdata?.designationData.map(item => item._id)),
+        "department_id": JSON.stringify(pdata?.departmentData.map(item => item._id)),
+        "hod_id": JSON.stringify(pdata?.hodData.map(item => item._id)),
+        "client_id": JSON.stringify(pdata?.clientData.map(item => item._id)),
+        "searchkey": props?.route?.params?.paramData?.searchkey
+      }
+      setFilterData(apiParam);
+
+    } else {
+
+      let apiParam = {
+        "pageno": 1,
+        "search_month": (mm).toString(),
+        "search_year": (HelperFunctions.getCurrentYear()).toString(),
+        "search_day": dd.toString(),
+        "attendance_type": { label: "time", value: 'time' },
+        "branch_id": JSON.stringify([]),
+        "designation_id": JSON.stringify([]),
+        "department_id": JSON.stringify([]),
+        "hod_id": JSON.stringify([]),
+        "client_id": JSON.stringify([]),
+        "searchkey": ""
+      }
+      setFilterData(apiParam);
+    }
+  }
+
+  const _gotoAttendanceView = (item) => {
+    console.log(item)
+    props.navigation.navigate('EployeeAttendanceView', { empData: item, filterdata: filterdata })
+  }
+
+
+  useEffect(() => {
+    console.log(filterdata);
+    let data = { ...filterdata };
+    data.attendance_type = data?.attendance_type != "" ? data?.attendance_type?.value : "time";
+    data.branch_id = data?.branch_id != "[]" ? data?.branch_id : "";
+    data.hod_id = data?.hod_id != "[]" ? data?.hod_id : "";
+    data.designation_id = data?.designation_id != "[]" ? data?.designation_id : "";
+    data.client_id = data?.client_id != "[]" ? data?.client_id : "";
+    data.department_id = data?.department_id != "[]" ? data?.department_id : "";
+
+    if (filterdata != null) {
+      setIsLoading(true)
+      postApi("company/get-attendance-data", data, token)
+        .then((resp) => {
+          //console.log(resp);
+          if (resp?.status == 'success') {
+            setEmpdata(resp?.employees);
+            setIsLoading(false)
+          } else {
+            HelperFunctions.showToastMsg(resp.message);
+            setIsLoading(false)
+          }
+
+        }).catch((err) => {
+          console.log(err);
+          setIsLoading(false)
+          HelperFunctions.showToastMsg(err.message);
+        })
+    }
+
+  }, [filterdata]);
+
+
 
   // Reference for FlatList
   const flatListRef = useRef(null);
@@ -150,6 +260,7 @@ const Attendance = props => {
     }));
     setCalenderdata(updatedDates);
     setSelectedDate(item?.date);
+    _updatefilterData(item?.date, selectedMonth, HelperFunctions.getCurrentYear(), 'DATE_CHANGE')
   }
 
 
@@ -177,10 +288,16 @@ const Attendance = props => {
     setCalenderdata(datesAndDays);
 
     setselectedMonth(month);
+
+    _updatefilterData(selectedDate, month, HelperFunctions.getCurrentYear(), 'MONTH_CHANGE')
   };
 
+  const notfoundRender = ({ index, item }) => (
+    <Text style={{ color: 'red' }}>Data not found</Text>
+  );
+
   const ListRender = ({ index, item }) => (
-    <Pressable onPress={() => { props.navigation.navigate('EployeeAttendanceView', { paramData: item, filterData: { seletedMonth: 7, seletedYear: 2024 } }) }} style={[styles.listCard, { paddingVertical: 15, marginBottom: 0, borderRadius: 0, borderTopRightRadius: index == 0 ? 8 : 0, borderTopLeftRadius: index == 0 ? 8 : 0, borderBottomLeftRadius: sampleData.length - 1 == index ? 8 : 0, borderBottomRightRadius: sampleData.length - 1 == index ? 8 : 0 }]}>
+    <Pressable onPress={() => { _gotoAttendanceView(item) }} style={[styles.listCard, { paddingVertical: 15, marginBottom: 0, borderRadius: 0, borderTopRightRadius: index == 0 ? 8 : 0, borderTopLeftRadius: index == 0 ? 8 : 0, borderBottomLeftRadius: sampleData.length - 1 == index ? 8 : 0, borderBottomRightRadius: sampleData.length - 1 == index ? 8 : 0 }]}>
       <View style={{ width: '60%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
         <View style={{ justifyContent: 'center', alignItems: 'center', height: 32, width: 32, backgroundColor: '#007AFF', borderRadius: 50 }}>
           <Image source={{ uri: 'https://uaedemo.hrmlix.com/assets/images/user.jpg' }} style={{ height: '100%', width: '100%', borderRadius: 50, objectFit: 'cover' }} />
@@ -203,49 +320,10 @@ const Attendance = props => {
   );
 
   const placeholderRenderList = ({ index, item }) => (
-     <SkeletonLoader width={width} height={80} borderRadius={10} style={{marginBottom: 6,}} />
-);
+    <SkeletonLoader width={width} height={80} borderRadius={10} style={{ marginBottom: 6, }} />
+  );
 
 
-  const _openFilter = () => {
-    props.navigation.navigate('FilterEmployeePage')
-  }
-
-
-  useEffect(() => {
-    setIsLoading(true)
-    if (isFocused == true) {
-    console.log("api")
-    let paramData = {
-      "pageno": 1,
-      "search_month": "6",
-      "search_year": "2024",
-      "attendance_type": "time",
-      "branch_id": "",
-      "designation_id": "",
-      "department_id": "",
-      "hod_id": "",
-      "client_id": ""
-    }
-    postApi("company/get-attendance-data", paramData, token)
-      .then((resp) => {
-        console.log(resp);
-
-        if (resp?.status == 'success') {
-          setEmpdata(resp?.employees);
-          setIsLoading(false)
-        } else {
-          HelperFunctions.showToastMsg(resp.message);
-          setIsLoading(false)
-        }
-
-      }).catch((err) => {
-        console.log(err);
-        setIsLoading(false)
-        HelperFunctions.showToastMsg(err.message);
-      })
-    }
-  }, [isFocused]);
 
   return (
     <SafeAreaView style={styles.main}>
@@ -261,11 +339,13 @@ const Attendance = props => {
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ marginTop: 18 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 15, marginBottom:12 }}>
-              <View style={{flex:1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>{HelperFunctions.getMonthName(selectedMonth)}<Text style={{fontSize: sizes.h6+1}}>{selectedDate}</Text></Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 15, marginBottom: 12 }}>
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>
+                  {/* {HelperFunctions.getMonthName(selectedMonth)} */}
+                  <Text style={{ fontSize: sizes.h6 + 1 }}>{selectedYear}</Text></Text>
               </View>
-              <Pressable onPress={() => { toggleModal(!monthModalVisible) }} style={{flex:1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', }}>
+              <Pressable onPress={() => { toggleModal(!monthModalVisible) }} style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', }}>
                 <Image
                   style={{
                     height: 14,
@@ -301,20 +381,24 @@ const Attendance = props => {
 
 
             {isLoading ? (
-            
+
               <FlatList
                 data={sampleData}
                 renderItem={placeholderRenderList} // Adjust rendering logic as per your data structure
-                
+
               />
             ) : (
               // Show actual data
-              <FlatList
-                showsVerticalScrollIndicator={false}
-                data={empData?.docs}
-                renderItem={ListRender}
-                contentContainerStyle={{ marginBottom: 30 }}
-              />
+              empData?.docs != "" ?
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  data={empData?.docs}
+                  renderItem={ListRender}
+                  contentContainerStyle={{ marginBottom: 30 }}
+                />
+                : <View style={{marginTop:180,justifyContent:'center',alignItems:'center'}}>
+                  <Text style={{ color: '#868F9A' }}>Data not found</Text>
+                </View>
             )}
 
 
@@ -411,6 +495,6 @@ const styles = StyleSheet.create({
   listItem: {
     paddingHorizontal: 12,
     marginBottom: 10
-},
+  },
 });
 export default Attendance;

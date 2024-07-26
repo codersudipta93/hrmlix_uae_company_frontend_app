@@ -74,7 +74,7 @@ const HelperFunctions = {
 
   getCurrentMonth() {
     const currentDate = new Date();
-    return currentDate.getMonth() + 1;
+    return currentDate.getMonth();
   },
 
   getMonthName(index) {
@@ -83,7 +83,7 @@ const HelperFunctions = {
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
-    return months[index - 1]
+    return months[index]
   },
 
   getCurrentDatenumber() {
@@ -93,8 +93,10 @@ const HelperFunctions = {
 
 
 
-  getAllDatesAndDays(month, year) {
+  getAllDatesAndDays(m, year) {
+    
     // Initialize an empty array to store the results
+    let month = m+1
     let result = [];
 
     // Get the current date
@@ -201,7 +203,69 @@ const HelperFunctions = {
 
   },
 
+  updateSelectedArrObjects(data, obj2,keyName) {
+    // Create a set of IDs from obj2
+    const obj2Ids = new Set(obj2.map(item => item[keyName]));
 
+    // Update the original array with "selected: true" if the object exists in obj2
+    return data.map(item => {
+      if (obj2Ids.has(item[keyName])) {
+        return { ...item, selected: true };
+      }
+      return item;
+    });
+  },
+
+  updateSelectedObjects(data, obj2) {
+
+    console.log(data)
+    console.log(obj2)
+    return data.map(item => {
+        if ( item.value === obj2.value) {
+            return { ...item, selected: true };
+        }
+        return item;
+    });
+},
+
+  getLastFiveYears() {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+
+    for (let i = 0; i < 5; i++) {
+      const year = currentYear - i;
+      years.push({ id: (i + 1).toString(), label: year.toString(), value: year.toString() });
+    }
+
+    return years;
+  },
+
+  getLastTwelveMonths() {
+    const months = [
+      { label: 'January', value: '0' },
+      { label: 'February', value: '1' },
+      { label: 'March', value: '2' },
+      { label: 'April', value: '3' },
+      { label: 'May', value: '4' },
+      { label: 'June', value: '5' },
+      { label: 'July', value: '6' },
+      { label: 'August', value: '7' },
+      { label: 'September', value: '8' },
+      { label: 'October', value: '9' },
+      { label: 'November', value: '10' },
+      { label: 'December', value: '11' }
+    ];
+
+    // const currentMonth = new Date().getMonth();
+    // const result = [];
+
+    // for (let i = 0; i < 12; i++) {
+    //   const monthIndex = (currentMonth - i + 12) % 12;
+    //   result.unshift(months[monthIndex]);
+    // }
+
+    return months;
+  },
 
 
   networkStatus(props) {
