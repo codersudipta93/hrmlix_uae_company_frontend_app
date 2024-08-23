@@ -9,7 +9,10 @@ import {
   Splash,
   Signin,
   EployeeAttendanceView,
-  FilterEmployeePage
+  FilterEmployeePage,
+  EployeeAttendanceDetails,
+  RegularizeShift,
+  EditMonthlyAttendanceDetails
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -30,6 +33,9 @@ function Navigator() {
        <Stack.Screen name="Signin" component={Signin} />
        <Stack.Screen name="EployeeAttendanceView" component={EployeeAttendanceView} />
        <Stack.Screen name="FilterEmployeePage" component={FilterEmployeePage} />
+       <Stack.Screen name="EployeeAttendanceDetails" component={EployeeAttendanceDetails} />
+       <Stack.Screen name="RegularizeShift" component={RegularizeShift} />
+       <Stack.Screen name="EditMonthlyAttendanceDetails" component={EditMonthlyAttendanceDetails} />
        
       </Stack.Navigator>
     </NavigationContainer>

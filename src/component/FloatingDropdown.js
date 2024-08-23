@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ScrollView, View, Animated, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
+import { ScrollView, View, Animated, StyleSheet, Text, TouchableOpacity, FlatList, Pressable } from 'react-native';
 import {
     colors,
     height,
@@ -22,9 +22,11 @@ const FloatingDropdown = ({
     placeholderColor,
     inputContainerColor,
     inputMargin,
+    bottomMargin,
     listLabelKeyName = ['label'],
     multiSelect = false,
-    bracketAfterPositionIndex // user for bracket seprator
+    bracketAfterPositionIndex, // user for bracket seprator
+    textTransform
 }) => {
     const [isFocused, setIsFocused] = useState(false);
     const animatedIsFocused = useRef(new Animated.Value(selectedValueData ? 1 : 0)).current;
@@ -63,6 +65,7 @@ const FloatingDropdown = ({
     const labelStyle = {
         position: 'absolute',
         fontFamily: FontFamily.regular,
+        lineHeight:15,
         top: animatedIsFocused.interpolate({
             inputRange: [0, 1],
             outputRange: [12, -10],
@@ -92,6 +95,7 @@ const FloatingDropdown = ({
         borderRadius: 8,
         paddingHorizontal: 6,
         marginTop: inputMargin ? inputMargin : 0,
+        
         justifyContent: 'center',
         width: '100%',
     };
@@ -102,7 +106,7 @@ const FloatingDropdown = ({
     };
 
     return (
-        <TouchableOpacity
+        <Pressable
             activeOpacity={editableStatus ? 0.6 : 1}
             onPress={() => {
                 if (editableStatus) {
@@ -117,7 +121,7 @@ const FloatingDropdown = ({
 
             }}
 
-            style={[styles.touchable, { cursor: editableStatus ? 'text' : 'default' }]}
+            style={[styles.touchable, { cursor: editableStatus ? 'text' : 'default', marginBottom: bottomMargin ?  bottomMargin : 0 }]}
         >
             <Animated.View style={[containerStyle,{borderColor:isFocused == true || selectedValueData != "" ? "#60B057" : '#CACDD4'}]}>
                 <View style={{ paddingHorizontal: 5 }}>
@@ -163,7 +167,7 @@ const FloatingDropdown = ({
                                     {listLabelKeyName.map((value, index) => {
                                         return (
 
-                                            <Text style={[styles.optionText, { color: inputColor, fontFamily: FontFamily.semibold, textTransform:'capitalize' }]}>{index > bracketAfterPositionIndex ? '(' + selectedValueData[value] + ')' : selectedValueData[value]} </Text>
+                                            <Text style={[styles.optionText, { color: inputColor, fontFamily: FontFamily.semibold, textTransform: textTransform ? textTransform :'capitalize' }]}>{index > bracketAfterPositionIndex ? '(' + selectedValueData[value] + ')' : selectedValueData[value]}</Text>
                                         )
                                     })}
                                     {/* <Text style={[styles.optionText, { color: inputColor || '#D0DEEE', fontFamily: FontFamily.semibold }]}>{selectedValueData}</Text> */}
@@ -209,7 +213,7 @@ const FloatingDropdown = ({
                     />
                 </View>
             )}
-        </TouchableOpacity>
+        </Pressable>
     );
 };
 

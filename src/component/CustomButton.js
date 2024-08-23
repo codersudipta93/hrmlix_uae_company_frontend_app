@@ -13,7 +13,7 @@ const CustomButton = (props) => {
           </Text>
         </View>
         :
-        <>
+        <View style={{flexDirection:'row', justifyContent:'flex-start',alignItems:'center'}}>
           {props.requireIcon ?
             <Image
               style={props.iconStyle} 
@@ -21,7 +21,7 @@ const CustomButton = (props) => {
             /> : null}
 
           <Text style={[{ fontFamily: Theme.FontFamily.medium, color: Theme.colors.white, fontSize: Theme.sizes.s16, textAlign: 'center', textTransform: 'uppercase' }, props.buttonTextStyle]}>{props.buttonText}</Text>
-        </>
+        </View>
 
       }
     </TouchableOpacity >

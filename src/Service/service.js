@@ -18,7 +18,7 @@ const postApi = (endpoint, data, token, deviceToken) => {
         headers: {
           'Accept': "*",
           "Content-Type": "application/json",
-          'x-access-token': token
+          'x-access-token': token ? token : ""
          // 'device-token': deviceToken
         }
       }).then((response) => {

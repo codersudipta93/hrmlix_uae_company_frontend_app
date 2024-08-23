@@ -39,7 +39,7 @@ import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { getData, setData, deleteData } from '../Service/localStorage';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { _setreffeshStatus } from '../Store/Reducers/ProjectReducer';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from 'react-native/Libraries/NewAppScreen';
 import CustomHeader from '../component/Header';
@@ -99,6 +99,7 @@ const FilterEmployeePage = props => {
 
     useEffect(() => {
         if (isFocused == true) {
+
             console.log(i18n.language);
             console.log(I18nManager.isRTL);
             getDropDownMaster()
@@ -192,6 +193,8 @@ const FilterEmployeePage = props => {
             })
     }
 
+
+
     const _applyFilter = () => {
         let paramData = {
             "pageno": 1,
@@ -203,11 +206,17 @@ const FilterEmployeePage = props => {
             "departmentData": selectedDepartment,
             "hodData": selectedHod,
             "clientData": selectedClient,
-            "search_day": props?.route?.params?.paramData?.search_day,
+            "search_day": props?.route?.params?.paramData?.search_day ? props?.route?.params?.paramData?.search_day : "",
             "searchkey": search ? search : ""
         }
 
-        props.navigation.navigate('Attendance', { paramData: paramData })
+        if (props?.route?.params?.from == 'attendanceView_page') {
+            console.log(props?.route?.params?.empData)
+            props.navigation.navigate('EployeeAttendanceView', { empData: props?.route?.params?.empData, filterdata: paramData, })
+        } else {
+            props.navigation.navigate('Attendance', { paramData: paramData, from: "Filterpage" })
+            dispatch(_setreffeshStatus(true))
+        }
 
     }
 
@@ -244,7 +253,7 @@ const FilterEmployeePage = props => {
                                     value={search}
                                     onChangeText={setSearchVal}
                                 />
-                            : null}
+                                : null}
 
                             <FloatingDropdown
                                 multiSelect={false}
@@ -305,7 +314,7 @@ const FilterEmployeePage = props => {
                                 inputMargin={20}
                             />
 
-                            {props?.route?.params?.from == "attendanceView_page" ?
+                            {props?.route?.params?.from == "attendance_page" ?
 
                                 <FloatingDropdown
                                     multiSelect={false}
@@ -547,18 +556,35 @@ const FilterEmployeePage = props => {
 
                             </> : null}
 
-                            <CustomButton
-                                isLoading={btnLoaderStatus}
-                                backgroundColor={colors.primary}
-                                buttonText="Apply"
-                                buttonTextStyle={{ textAlign: 'center', letterSpacing: 1.2, fontFamily: FontFamily.medium, color: '#fff', fontSize: sizes.h6 }}
-                                requireBorder={false}
-                                borderColor={colors.white}
-                                style={{ width: '100%', borderRadius: 8, marginTop: 20, opacity: 1 }}
-                                onPress={() => {
-                                    _applyFilter()
-                                }}
-                            />
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                {props?.route?.params?.from == 'attendance_page' ?
+                                    <CustomButton
+                                        requireBorder={true}
+                                        isLoading={btnLoaderStatus}
+                                        backgroundColor={colors.white}
+                                        buttonText="Clear Filter"
+                                        buttonTextStyle={{ textAlign: 'center', letterSpacing: 1.2, fontFamily: FontFamily.medium, color: colors.primary, fontSize: sizes.h6 }}
+
+                                        borderColor={colors.primary}
+                                        style={{ width: '48%', borderRadius: 8, marginTop: 20, opacity: 1 }}
+                                        onPress={() => {
+                                            //_applyFilter()
+                                        }}
+                                    /> : null}
+
+                                <CustomButton
+                                    isLoading={btnLoaderStatus}
+                                    backgroundColor={colors.primary}
+                                    buttonText="Apply"
+                                    buttonTextStyle={{ textAlign: 'center', letterSpacing: 1.2, fontFamily: FontFamily.medium, color: '#fff', fontSize: sizes.h6 }}
+                                    requireBorder={false}
+                                    borderColor={colors.white}
+                                    style={{ width: props?.route?.params?.from == 'attendance_page' ?'48%' : '100%', borderRadius: 8, marginTop: 20, opacity: 1 }}
+                                    onPress={() => {
+                                        _applyFilter()
+                                    }}
+                                />
+                            </View>
                         </View>
                     </View>
 

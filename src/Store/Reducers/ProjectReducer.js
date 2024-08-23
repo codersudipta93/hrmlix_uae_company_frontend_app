@@ -6,6 +6,7 @@ const date = new Date();
 const initialState = {
   userDetails: "",
   token: "",
+  needRefresh:false
 };
 
 export const projectReducer = createSlice({
@@ -21,14 +22,17 @@ export const projectReducer = createSlice({
       state.token = action.payload;
     },
     
-    
+    _setreffeshStatus: (state, action) => {
+      state.needRefresh = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
 export const {
   _setUserData,
-  _setToken
+  _setToken,
+  _setreffeshStatus
 } = projectReducer.actions;
 
 export default projectReducer.reducer;

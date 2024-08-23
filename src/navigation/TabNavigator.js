@@ -25,6 +25,8 @@ import {
 import { colors, sizes, FontFamily } from '../constants/Theme';
 import { LOCAL_ICONS } from '../constants/PathConfig';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { useIsFocused, useFocusEffect, useNavigationState } from '@react-navigation/native';
 
 const TabArr = [
   {
@@ -59,7 +61,8 @@ const TabButton = props => {
   const { item, onPress, accessibilityState } = props;
   const focused = accessibilityState.selected;
   const viewRef = useRef(null);
-
+  const dispatch = useDispatch(); //Redux
+  const { parentPage } = useSelector(state => state.project);
 
   useEffect(() => {
 
@@ -77,7 +80,23 @@ const TabButton = props => {
     //     1: {scale: 0.9, rotate: '0deg'},
     //   });
     // }
+   
   }, [focused]);
+
+  const tabClick = (()=>{
+    onPress();
+    //dispatch(_setParentPageStatus(true))
+})
+
+useFocusEffect(
+  React.useCallback(() => {
+    //dispatch(_setParentPageStatus(true))
+    return () => {
+     
+    };
+  }, [])
+);
+
 
   return (
     <TouchableOpacity

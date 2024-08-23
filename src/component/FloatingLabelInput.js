@@ -21,7 +21,10 @@ const FloatingLabelInput = ({
     labelBg,
     labelColor,
     inputColor,
-    placeholderColor
+    placeholderColor,
+    top,
+    marginBottom,
+    keyboardType
 }) => {
 
     const [isFocused, setIsFocused] = useState(false);
@@ -90,13 +93,13 @@ const FloatingLabelInput = ({
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 6,
-        marginBottom: 20,
+        marginBottom: marginBottom ?  marginBottom : 20,
         justifyContent: 'center',
         width: '100%',
     };
 
     return (
-        <Animated.View style={[containerStyle, {}]}>
+        <Animated.View style={[containerStyle, {marginTop:top ? top : 0}]}>
             <View style={{paddingHorizontal:5}}>
                 <Animated.Text style={[labelStyle]}>
                     {label}
@@ -115,6 +118,7 @@ const FloatingLabelInput = ({
                 onBlur={() => setIsFocused(false)}
                 blurOnSubmit
                 underlineColorAndroid="transparent"
+                keyboardType={keyboardType ? keyboardType : 'default'}
             />
         </Animated.View>
     );

@@ -1,7 +1,7 @@
 import { Dashboard } from '../screens';
 
 export const AllSourcePath = {
-  API_BASE_URL_DEV: 'https://uaedevcombackend.hrmlix.com/',
+  API_BASE_URL_DEV: 'https://uaedevcombackend.hrmlix.com/api/company-backend-service/',
   API_IMG_URL_DEV: '',
   API_BASE_URL_LIVE: '',
   API_IMG_URL_LIVE: '',
@@ -19,8 +19,8 @@ export const LOCAL_ICONS = {
   employees:require('../assets/icons/employees.png'),
   calendarCheck : require('../assets/icons/calendar-check.png'),
   newIcon : require('../assets/icons/newIcon.png'),
-  loader : require('../assets/icons/loader.gif')
-  
+  loader : require('../assets/icons/loader.gif'),
+  report : require('../assets/icons/report.png')
 };
 
 

@@ -38,7 +38,7 @@ import { HelperFunctions } from '../../constants';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import { postApi } from '../../Service/service';
-
+import { _setreffeshStatus } from '../../Store/Reducers/ProjectReducer';
 import { getData, setData, deleteData } from '../../Service/localStorage';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -61,7 +61,7 @@ const Attendance = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
-  const { userDetails, token } = useSelector(state => state.project);
+  const { userDetails, token, needRefresh } = useSelector(state => state.project);
 
   const { t, i18n } = useTranslation();
 
@@ -88,7 +88,7 @@ const Attendance = props => {
 
 
   useEffect(() => {
-    if (isFocused) {
+   // if (needRefresh == true) {
       let month = HelperFunctions.getCurrentMonth(); //(1-based index)
       let year = HelperFunctions.getCurrentYear();
       let datesAndDays = HelperFunctions.getAllDatesAndDays(month, year);
@@ -97,41 +97,23 @@ const Attendance = props => {
       setselectedMonth(month);
       setselectedYear(year);
       setCalenderdata(datesAndDays);
-      console.log(datesAndDays);
+      //console.log(datesAndDays);
+      _updatefilterData(HelperFunctions.getCurrentDatenumber(), month, year, 'default');
+    //}
+  }, []);
 
-      _updatefilterData(HelperFunctions.getCurrentDatenumber(), month, year, 'default')
+  useEffect(() => {
+     if (needRefresh == true) {
+       _updatefilterData(HelperFunctions.getCurrentDatenumber(), "", "a", 'default');
+     }
+   }, [isFocused]);
 
 
 
-    }
-
-  }, [isFocused]);
-
-
-  const _openFilter = () => {
-    //alert(filterdata?.search_month)
-    let pData = {
-      "pageno": 1,
-      "search_month": { label: HelperFunctions.getMonthName(filterdata?.search_month), value: (filterdata?.search_month).toString() },
-      "search_year": { label: (filterdata?.search_year).toString(), value: (filterdata?.search_year).toString() },
-      "attendance_type": filterdata?.attendance_type,
-      "branchData": props?.route?.params?.paramData?.branchData ? props?.route?.params?.paramData?.branchData : [],
-      "designationData": props?.route?.params?.paramData?.designationData ? props?.route?.params?.paramData?.designationData : [],
-      "departmentData": props?.route?.params?.paramData?.departmentData ? props?.route?.params?.paramData?.departmentData : [],
-      "hodData": props?.route?.params?.paramData?.hodData ? props?.route?.params?.paramData?.hodData : [],
-      "clientData": props?.route?.params?.paramData?.clientData ? props?.route?.params?.paramData?.clientData : [],
-      "search_day": filterdata?.search_day,
-      "searchkey": props?.route?.params?.paramData?.searchkey
-    }
-
-    console.log("filter data paramData ====> ", pData)
-    console.log("filter data paramData ======================= ")
-    props.navigation.navigate('FilterEmployeePage', { paramData: pData, from: 'attendance_page' })
-  }
-
-  const _updatefilterData = (dd, mm, yyyy, type) => {
-
+   const _updatefilterData = (dd, mm, yyyy, type) => {
+    dispatch( _setreffeshStatus(false))
     if (props?.route?.params) {
+      
       let pdata = props?.route?.params?.paramData;
       setselectedMonth(pdata?.search_month?.value);
       setselectedYear(pdata?.search_year?.value);
@@ -140,7 +122,7 @@ const Attendance = props => {
         "pageno": 1,
         "search_month": type == "MONTH_CHANGE" ? (mm).toString() : pdata?.search_month?.value,
         "search_year": pdata?.search_year?.value,
-        "search_day": type == "DATE_CHANGE" ? dd.toString() : dd.toString(),
+        "search_day": type == "DATE_CHANGE" ? dd.toString() : pdata?.search_day,
         "attendance_type": pdata?.attendance_type,
         "branch_id": JSON.stringify(pdata?.branchData.map(item => item._id)),
         "designation_id": JSON.stringify(pdata?.designationData.map(item => item._id)),
@@ -170,9 +152,47 @@ const Attendance = props => {
     }
   }
 
+
+  
+
+  const _openFilter = () => {
+    //alert(filterdata?.search_month)
+    let pData = {
+      "pageno": 1,
+      "search_month": { label: HelperFunctions.getMonthName(filterdata?.search_month), value: (filterdata?.search_month).toString() },
+      "search_year": { label: (filterdata?.search_year).toString(), value: (filterdata?.search_year).toString() },
+      "attendance_type": filterdata?.attendance_type,
+      "branchData": props?.route?.params?.paramData?.branchData ? props?.route?.params?.paramData?.branchData : [],
+      "designationData": props?.route?.params?.paramData?.designationData ? props?.route?.params?.paramData?.designationData : [],
+      "departmentData": props?.route?.params?.paramData?.departmentData ? props?.route?.params?.paramData?.departmentData : [],
+      "hodData": props?.route?.params?.paramData?.hodData ? props?.route?.params?.paramData?.hodData : [],
+      "clientData": props?.route?.params?.paramData?.clientData ? props?.route?.params?.paramData?.clientData : [],
+      "search_day": filterdata?.search_day,
+      "searchkey": props?.route?.params?.paramData?.searchkey
+    }
+
+    console.log("filter data paramData ====> ", pData)
+    console.log("filter data paramData ======================= ")
+    props.navigation.navigate('FilterEmployeePage', { paramData: pData, from: 'attendance_page' })
+  }
+
+ 
   const _gotoAttendanceView = (item) => {
-    console.log(item)
-    props.navigation.navigate('EployeeAttendanceView', { empData: item, filterdata: filterdata })
+    console.log(item);
+    let paramData = {
+      "pageno": 1,
+      "search_month": { label: HelperFunctions.getMonthName(filterdata?.search_month), value: filterdata?.search_month },
+      "search_year": { label: filterdata?.search_year, value: filterdata?.search_year },
+      "attendance_type": filterdata?.attendance_type,
+      "branchData": filterdata?.branch_id,
+      "designationData": filterdata?.designation_id,
+      "departmentData": filterdata?.department_id,
+      "hodData": filterdata?.hod_id,
+      "clientData": filterdata?.client_id,
+      "search_day": filterdata?.search_day ? filterdata?.search_day : "",
+      "searchkey": filterdata?.search ? filterdata?.search : ""
+    }
+    props.navigation.navigate('EployeeAttendanceView', { empData: item, filterdata: paramData })
   }
 
 
@@ -185,12 +205,12 @@ const Attendance = props => {
     data.designation_id = data?.designation_id != "[]" ? data?.designation_id : "";
     data.client_id = data?.client_id != "[]" ? data?.client_id : "";
     data.department_id = data?.department_id != "[]" ? data?.department_id : "";
-
+    data.search_day = data?.attendance_type != "monthly" ? data?.search_day : ""
     if (filterdata != null) {
       setIsLoading(true)
       postApi("company/get-attendance-data", data, token)
         .then((resp) => {
-          //console.log(resp);
+    
           if (resp?.status == 'success') {
             setEmpdata(resp?.employees);
             setIsLoading(false)
@@ -396,7 +416,7 @@ const Attendance = props => {
                   renderItem={ListRender}
                   contentContainerStyle={{ marginBottom: 30 }}
                 />
-                : <View style={{marginTop:180,justifyContent:'center',alignItems:'center'}}>
+                : <View style={{ marginTop: 180, justifyContent: 'center', alignItems: 'center' }}>
                   <Text style={{ color: '#868F9A' }}>Data not found</Text>
                 </View>
             )}
@@ -405,7 +425,7 @@ const Attendance = props => {
           </View>
         </ScrollView>
 
-        <MonthModal selectedIndex={selectedMonth} visible={monthModalVisible} onClose={handleMonthSelect} />
+        <MonthModal selectedIndex={selectedMonth} visible={monthModalVisible} onClose={handleMonthSelect} onPressClose={()=>{setMonthModalVisible(false)}}/>
       </View>
 
 

@@ -102,7 +102,7 @@ const Signin = props => {
         }
 
       } else {
-        console.log("else i ma call set english")
+       // console.log("else i ma call set english")
         setLanguage('en');
         i18n.changeLanguage('en');
         setIsRTL(false);
@@ -122,7 +122,6 @@ const Signin = props => {
       }
     })
   }, []);
-
 
 
   //Back button functionality
@@ -161,13 +160,13 @@ const Signin = props => {
       let paramData = { "corporate_id": corporateId, "userid": empId, "password": password };
       setWaitLoaderStatus(true);
       postApi("company_signin", paramData)
-        .then((resp) => {
+        .then((resp) => { 
           console.log(resp);
           setWaitLoaderStatus(false);
           if (resp?.status == 'success') {
             _saveData(resp);
           } else if (resp?.status == 'val_err') {
-            let message = ""
+            let message = "";
             for (const key in resp.val_msg) {
               if (resp.val_msg[key].message) {
                 message = resp.val_msg[key].message;
