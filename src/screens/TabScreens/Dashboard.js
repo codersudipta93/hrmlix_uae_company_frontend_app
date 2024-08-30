@@ -79,7 +79,8 @@ const Dashboard = props => {
   useEffect(() => {
     if (isFocused == true) {
       console.log(i18n.language);
-      console.log(I18nManager.isRTL)
+      console.log(I18nManager.isRTL);
+      props.navigation.navigate('DocumentVault')
     }
   }, [isFocused]);
 

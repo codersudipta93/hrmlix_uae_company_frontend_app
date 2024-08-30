@@ -20,7 +20,10 @@ export const LOCAL_ICONS = {
   calendarCheck : require('../assets/icons/calendar-check.png'),
   newIcon : require('../assets/icons/newIcon.png'),
   loader : require('../assets/icons/loader.gif'),
-  report : require('../assets/icons/report.png')
+  report : require('../assets/icons/report.png'),
+  EmployeeAttendance : require('../assets/icons/Employee-Attendance.png'),
+  AttendanceListingConsole : require('../assets/icons/Attendance-Listing-Console.png'),
+  AttendanceSummary : require('../assets/icons/Attendance-Summary.png')
 };
 
 
@@ -28,4 +31,7 @@ export const LOCAL_IMAGES = {
   user: require('../assets/imgs/user.jpg'),
   profileBg: require('../assets/imgs/profileBg.jpg'),
   profileBg2: require('../assets/imgs/profileBg.png'),
+  attendanceCardBG1: require('../assets/imgs/bg1.png'),
+  attendanceCardBG2: require('../assets/imgs/bg2.png'),
+  attendanceCardBG3: require('../assets/imgs/bg3.png'),
 };

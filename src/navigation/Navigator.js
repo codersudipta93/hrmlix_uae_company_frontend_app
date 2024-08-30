@@ -12,7 +12,11 @@ import {
   FilterEmployeePage,
   EployeeAttendanceDetails,
   RegularizeShift,
-  EditMonthlyAttendanceDetails
+  EditMonthlyAttendanceDetails,
+  AttendanceSummary,
+  AttendanceListingConsole,
+  EmplyeeAttendance,
+  DocumentVault 
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -36,7 +40,10 @@ function Navigator() {
        <Stack.Screen name="EployeeAttendanceDetails" component={EployeeAttendanceDetails} />
        <Stack.Screen name="RegularizeShift" component={RegularizeShift} />
        <Stack.Screen name="EditMonthlyAttendanceDetails" component={EditMonthlyAttendanceDetails} />
-       
+       <Stack.Screen name="AttendanceSummary" component={AttendanceSummary} />
+       <Stack.Screen name="AttendanceListingConsole" component={AttendanceListingConsole} />
+       <Stack.Screen name="EmplyeeAttendance" component={EmplyeeAttendance} />
+        <Stack.Screen name="DocumentVault" component={DocumentVault} />
       </Stack.Navigator>
     </NavigationContainer>
   );

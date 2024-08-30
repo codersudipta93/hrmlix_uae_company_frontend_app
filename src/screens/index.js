@@ -17,3 +17,7 @@ export {default as FilterEmployeePage} from './FilterEmployeePage';
 export {default as EployeeAttendanceDetails} from './EployeeAttendanceDetails';
 export {default as RegularizeShift} from './RegularizeShift';
 export {default as EditMonthlyAttendanceDetails} from './EditMonthlyAttendanceDetails.js'
+export {default as AttendanceSummary} from './AttendanceSummary.js'
+export {default as AttendanceListingConsole} from './AttendanceListingConsole.js'
+export {default as EmplyeeAttendance} from './EmplyeeAttendance.js'
+export {default as DocumentVault} from './DocumentVault.js'
