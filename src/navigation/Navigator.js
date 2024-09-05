@@ -14,9 +14,15 @@ import {
   RegularizeShift,
   EditMonthlyAttendanceDetails,
   AttendanceSummary,
+  AttendanceSummaryFilter,
   AttendanceListingConsole,
   EmplyeeAttendance,
-  DocumentVault 
+  DocumentVault,
+  BillingList,
+  BillingMaster,
+  PurchaseHistory, 
+  ConsumptionHistory,
+  GovtRule
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -24,9 +30,8 @@ function Navigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-     
+
         <Stack.Screen name="Splash" component={Splash} />
-       
         <Stack.Screen name="TabNavigator" component={TabNavigator} options={{
           headerShown: false,
           // presentation: 'modal',
@@ -41,9 +46,16 @@ function Navigator() {
        <Stack.Screen name="RegularizeShift" component={RegularizeShift} />
        <Stack.Screen name="EditMonthlyAttendanceDetails" component={EditMonthlyAttendanceDetails} />
        <Stack.Screen name="AttendanceSummary" component={AttendanceSummary} />
+       <Stack.Screen name="AttendanceSummaryFilter" component={AttendanceSummaryFilter} />
        <Stack.Screen name="AttendanceListingConsole" component={AttendanceListingConsole} />
        <Stack.Screen name="EmplyeeAttendance" component={EmplyeeAttendance} />
-        <Stack.Screen name="DocumentVault" component={DocumentVault} />
+       <Stack.Screen name="DocumentVault" component={DocumentVault} />
+       <Stack.Screen name="BillingList" component={BillingList} />
+       <Stack.Screen name="BillingMaster" component={BillingMaster} />
+       <Stack.Screen name="PurchaseHistory" component={PurchaseHistory} />
+       <Stack.Screen name="ConsumptionHistory" component={ConsumptionHistory} />
+       <Stack.Screen name="GovtRule" component={GovtRule} />
+       
       </Stack.Navigator>
     </NavigationContainer>
   );

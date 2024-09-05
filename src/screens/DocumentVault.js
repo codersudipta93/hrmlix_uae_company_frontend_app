@@ -17,7 +17,9 @@ import {
     Alert,
     I18nManager,
     ScrollView,
-    Modal
+    Modal,
+    TextInput,
+    Switch
 } from 'react-native'
 
 import React, {
@@ -56,6 +58,8 @@ import BootomSheet from '../component/BootomSheet';
 import CustomButton from '../component/CustomButton';
 import Arrow from '../assets/icons/Arrow';
 import { postApi } from '../Service/service';
+import FloatingLabelInput from '../component/FloatingLabelInput';
+import Loader from '../component/Loader';
 
 const DocumentVault = props => {
     const isFocused = useIsFocused();
@@ -65,53 +69,53 @@ const DocumentVault = props => {
 
     const { userDetails, token } = useSelector(state => state.project);
 
-    const folderData = [
-        { id: '1', label: 'Aadhaar Files' },
-        { id: '2', label: '80C Investments' },
-        { id: '3', label: 'PAN' },
-        { id: '4', label: 'Passport Images' },
-        { id: '2', label: '80C Investments' },
-        { id: '3', label: 'PAN' },
-        { id: '4', label: 'Passport Images' },
-        // Add more items as needed
-    ];
-
-
-
     // Animation state
     const [animValue] = useState(new Animated.Value(1000)); // Start off-screen
 
+    const [docActionModalVisible, setDocActionModalVisible] = useState(false);
+    const [formModalVisibility, setformModalVisibility] = useState(false);
+    const [loadingView, setloadingView] = useState(false);
+    const [isBtnLoading, setBtnLoading]= useState(false);
 
-    const [isModalVisible, setModalVisible] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('Edit');
+    const [selectedOption, setSelectedOption] = useState('');
     const [documentList, setdocumentList] = useState('');
     const [selectedDoc, setselectedDoc] = useState('');
+    const [vaultName, setVaultName] = useState("");
+    const [vaultDescription, onChangeVaultDescription] = useState('');
+    const [validationRequireStatus, setValidationRequireStatus] = useState(false);
+    const expireValiditySwitch = () => setValidationRequireStatus(previousState => !previousState);
 
-    const toggleModal = () => {
-        setModalVisible(!isModalVisible);
-    };
 
-    const handleOptionChange = (option) => {
-        setSelectedOption(option);
-    };
+    const [expireNotificationStatus, setExpireNotificationStatus] = useState(false);
+    const expireToggleSwitch = () => setExpireNotificationStatus(previousState => !previousState);
+
+    const [vaultExpiryDays, setVaultExpiryDays] = useState('');
+
+
+    
 
     useEffect(() => {
         if (isFocused == true) {
             console.log(i18n.language);
             console.log(I18nManager.isRTL);
+           
             getFolderData()
         }
     }, [isFocused]);
 
 
-    const getFolderData = () =>{
+    const getFolderData = () => {
+        setloadingView(!loadingView)
         postApi("company/get-document-master", { pageno: 1 }, token)
             .then((resp) => {
                 console.log(resp);
 
                 if (resp?.status == 'success') {
-                    setdocumentList(resp?.data?.docs)
+                    setdocumentList(resp?.data?.docs);
+                    setloadingView(false);
+                    setformModalVisibility(false);
                 } else if (resp?.status == 'val_err') {
+                    setloadingView(false)
                     let message = ""
                     for (const key in resp.val_msg) {
                         if (resp.val_msg[key].message) {
@@ -120,13 +124,15 @@ const DocumentVault = props => {
                         }
                     }
                     HelperFunctions.showToastMsg(message);
+
                 } else {
+                    setloadingView(false)
                     HelperFunctions.showToastMsg(resp.message);
+
                 }
 
             }).catch((err) => {
-                console.log(err);
-
+                setloadingView(false)
                 HelperFunctions.showToastMsg(err.message);
             })
     }
@@ -154,18 +160,93 @@ const DocumentVault = props => {
     };
 
 
-    const deleteValut = () => {
+    const deleteValutForm = () => {
         if (token) {
-            toggleModal();
-            console.log(selectedDoc)
+            setDocActionModalVisible(!docActionModalVisible)
             Acknoledge_delete();
         } else {
-            toggleModal();
+            setDocActionModalVisible(!docActionModalVisible)
         }
     }
 
+    const openDocmentFormModal = (ACTION_TYPE) => {
+        setformModalVisibility(!formModalVisibility);
+        setDocActionModalVisible(false);
+        if (ACTION_TYPE == 'Edit') {
+            setVaultName(selectedDoc?.document_type_name)
+            onChangeVaultDescription(selectedDoc?.description)
+            setValidationRequireStatus(selectedDoc?.validity_req != null ? selectedDoc?.validity_req == 'yes' ? true : false : false)
+            setExpireNotificationStatus(selectedDoc?.notification_req != null ? selectedDoc?.notification_req == 'yes' ? true : false : false)
+            setVaultExpiryDays(selectedDoc?.no_of_days)
+        } else {
+            setVaultName();
+            onChangeVaultDescription();
+            setValidationRequireStatus(false);
+            setExpireNotificationStatus(false);
+            setVaultExpiryDays("");
+        }
+    }
+
+    const handleOptionChange = (option) => {
+        setSelectedOption(option);
+    };
+
+    //Add or Update value
+    submitValue = () => {
+        if (!vaultName) {
+            HelperFunctions.showToastMsg("Please enter vault name");
+        } else if (expireNotificationStatus == true && !vaultExpiryDays) {
+            HelperFunctions.showToastMsg("Please enter vault expiry in days");
+        } else {
+            setBtnLoading(true);
+            documentSubmitApi();
+        }
+    }
+
+   
+
+    const documentSubmitApi = () => {
+        let param = {
+            "document_master_id": selectedDoc?._id ? selectedDoc?._id : null,
+            "document_type_name": vaultName,
+            "validity_req": validationRequireStatus == true ? 'yes' : 'no',
+            "description": vaultDescription,
+            "notification_req": expireNotificationStatus == true ? 'yes' : 'no',
+            "no_of_days": vaultExpiryDays
+        }
+        
+        console.log(param)
+        postApi(selectedDoc != "" ? "company/edit-document-master" : "company/add-document-master", param, token)
+            .then((resp) => {
+                console.log(resp);
+                if (resp?.status == 'success') {
+                    HelperFunctions.showToastMsg(resp?.message);
+                    getFolderData();
+                    setBtnLoading(false);
+                } else if (resp?.status == 'val_err') {
+                    setBtnLoading(false);
+                    let message = ""
+                    for (const key in resp.val_msg) {
+                        if (resp.val_msg[key].message) {
+                            message = resp.val_msg[key].message;
+                            break;
+                        }
+                    }
+                    HelperFunctions.showToastMsg(message);
+                } else {
+                    setBtnLoading(false);
+                    HelperFunctions.showToastMsg(resp.message);
+                }
+
+            }).catch((err) => {
+                setBtnLoading(false);
+                console.log(err);
+                HelperFunctions.showToastMsg(err.message);
+            })
+    }
+
     const Acknoledge_delete = () => {
-        Alert.alert('Alert', 'Are you sure, you want to delete' + selectedDoc?.document_type_name + '?', [
+        Alert.alert('Alert', 'Are you sure, you want to delete ' + selectedDoc?.document_type_name + ' ?', [
             {
                 text: 'Cancel',
                 onPress: () => null,
@@ -177,7 +258,7 @@ const DocumentVault = props => {
                         .then((resp) => {
                             console.log(resp);
                             if (resp?.status == 'success') {
-                                HelperFunctions.showToastMsg('Successfully logout');
+                                HelperFunctions.showToastMsg('Successfully Deleted');
                                 getFolderData()
                             } else if (resp?.status == 'val_err') {
                                 let message = ""
@@ -215,7 +296,7 @@ const DocumentVault = props => {
 
             <TouchableOpacity onPress={() => {
                 setselectedDoc(item);
-                toggleModal()
+                setDocActionModalVisible(!docActionModalVisible)
             }} style={styles.moreButton}>
                 <Icon name="more-vert" size={20} color="#333" />
             </TouchableOpacity>
@@ -236,7 +317,7 @@ const DocumentVault = props => {
                     searchIcon={true}
                 />
 
-                <View  style={{paddingTop:12,justifyContent:'center', alignItems:'center'}}>
+                <View style={{ paddingTop: 12, justifyContent: 'center', alignItems: 'center' }}>
                     <FlatList
                         data={documentList}
                         renderItem={folderRender}
@@ -245,7 +326,12 @@ const DocumentVault = props => {
                     />
 
                 </View>
-                <TouchableOpacity style={styles.addButton}>
+
+                <TouchableOpacity onPress={() => {
+                    setselectedDoc("");
+                    setSelectedOption("Add");
+                    openDocmentFormModal("Add");
+                }} style={styles.addButton}>
                     <Icon name="add" size={24} color="#fff" />
                 </TouchableOpacity>
             </View>
@@ -254,14 +340,22 @@ const DocumentVault = props => {
             <Modal
                 animationType="fade"
                 transparent={true}
-                visible={isModalVisible}
+                visible={docActionModalVisible}
                 onRequestClose={() => onClose(null)}
 
             >
                 <View style={styles.modalContainer}>
-
                     <View style={styles.modalContent}>
-                        <View style={styles.radioContainer}>
+                        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingVertical: 0 }}>
+
+                            <IonIcon
+                                name="close"
+                                size={24}
+                                color={'#8A8E9C'}
+                                onPress={() => { setDocActionModalVisible(!docActionModalVisible) }}
+                            />
+                        </View>
+                        <View style={[styles.radioContainer, { marginTop: 20 }]}>
                             <Pressable onPress={() => handleOptionChange('Edit')} style={styles.radioButton}>
                                 {/* <View style={selectedOption === 'Edit' ? styles.radioSelected : styles.radioUnselected} /> */}
                                 <Icon name={selectedOption === 'Edit' ? "radio-button-checked" : "radio-button-unchecked"} size={24} color={selectedOption === 'Edit' ? colors.primary : "#ACACAC"} />
@@ -275,13 +369,122 @@ const DocumentVault = props => {
                             </Pressable>
                         </View>
 
-                        <TouchableOpacity onPress={selectedOption == "Edit" ? toggleModal : deleteValut} style={styles.submitButton}>
+                        <TouchableOpacity onPress={() => { selectedOption == "Edit" ? openDocmentFormModal('Edit') : deleteValutForm() }} style={styles.submitButton}>
                             <Text style={styles.submitButtonText}>Submit</Text>
                         </TouchableOpacity>
                     </View>
 
                 </View>
             </Modal>
+
+
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={formModalVisibility}
+                onRequestClose={() => onClose(null)}
+
+            >
+                <View style={styles.modalContainer}>
+                    <View style={[styles.modalContent, { width: '90%', maxHeight: '100%', }]}>
+                        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12 }}>
+                            <Text style={{ fontFamily: FontFamily.semibold, fontSize: sizes.h5, color: '#4E525E' }}> {selectedOption == 'Edit' ? 'Update Valut' : 'Add Vault'}</Text>
+                            <IonIcon
+                                name="close"
+                                size={24}
+                                color={'#8A8E9C'}
+                                onPress={() => { setformModalVisibility(!formModalVisibility) }}
+                            />
+                        </View>
+                        <View style={[styles.radioContainer, { width: '100%', flexDirection: 'column',marginBottom:20 }]}>
+                            <FloatingLabelInput
+                                labelColor="#6F7880"
+                                labelBg="#fff"
+                                inputColor="#5A5B5B"
+                                placeholderColor="#8A8E9C"
+                                inputContainerColor={vaultName != "" ? "#60B057" : "#CACDD4"}
+                                //top={20}
+                                marginBottom={12}
+                                label="Vault Name"
+                                placeholder="Write vault name"
+                                value={vaultName != null ? vaultName.toString() : vaultName}
+                                onChangeText={setVaultName}
+                            />
+
+                            <TextInput
+                                onChangeText={onChangeVaultDescription}
+                                value={vaultDescription}
+                                multiline={true}
+                                numberOfLines={10}
+                                placeholder='Vault Description'
+                                style={{ color: "#5A5B5B", height: 100, textAlignVertical: 'top', borderWidth: 1, borderColor: '#CACDD4', borderRadius: 8, paddingLeft: 12, fontFamily: FontFamily.regular, fontSize: sizes.h6 }}
+                            />
+                            <View style={{ fontFamily: FontFamily.regular, fontSize: sizes.h6 - 1, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', paddingLeft: 6, marginTop: 12 }}>
+
+                                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Text style={{ fontFamily: FontFamily.regular, fontSize: sizes.h6 - 1 }}>Validity Required?</Text>
+                                    <Switch
+                                        trackColor={{ false: '#767577', true: '#81b0ff' }}
+                                        thumbColor={validationRequireStatus ? '#007AFF' : '#f4f3f4'}
+                                        ios_backgroundColor="#3e3e3e"
+                                        onValueChange={expireValiditySwitch}
+                                        value={validationRequireStatus}
+                                    />
+                                </View>
+                                {validationRequireStatus == true ?
+                                    <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 15 }}>
+                                        <Text style={{ fontFamily: FontFamily.regular, fontSize: sizes.h6 - 1 }}>Expiring Notification ?</Text>
+                                        <Switch
+                                            trackColor={{ false: '#767577', true: '#81b0ff' }}
+                                            thumbColor={expireNotificationStatus ? '#007AFF' : '#f4f3f4'}
+                                            ios_backgroundColor="#3e3e3e"
+                                            onValueChange={expireToggleSwitch}
+                                            value={expireNotificationStatus}
+                                        />
+                                    </View>
+                                    : null}
+
+                                {expireNotificationStatus == true ?
+                                    <FloatingLabelInput
+                                        labelColor="#6F7880"
+                                        labelBg="#fff"
+                                        inputColor="#5A5B5B"
+                                        placeholderColor="#8A8E9C"
+                                        inputContainerColor={vaultExpiryDays != "" ? "#60B057" : "#CACDD4"}
+                                        top={20}
+                                        //marginBottom={12}
+                                        label="Expire in (days)"
+                                        placeholder="No of days"
+                                        value={vaultExpiryDays != null ? vaultExpiryDays.toString() : vaultExpiryDays}
+                                        onChangeText={setVaultExpiryDays}
+                                    />
+                                    : null}
+
+                            </View>
+
+                        </View>
+
+                        {/* <TouchableOpacity onPress={() => { submitValue() }} style={styles.submitButton}>
+                            <Text style={styles.submitButtonText}>Submit</Text>
+                        </TouchableOpacity> */}
+
+                        <CustomButton
+                            isLoading={isBtnLoading}
+                            backgroundColor={colors.primary}
+                            buttonText={selectedOption == 'Add' ? "SUBMIT" : 'UPDATE'}
+                            buttonTextStyle={{ textAlign: 'center', textTransform: 'uppercase', letterSpacing: 1.2, fontFamily: FontFamily.medium, color: '#fff', fontSize: sizes.h6 - 1, lineHeight: 23 }}
+                            requireBorder={false}
+                            borderColor={colors.white}
+                            style={{ width: '40%', borderRadius: 8, marginTop: 0, paddingVertical: 0 }}
+                            onPress={() => { submitValue() }}
+                        />
+
+                    </View>
+
+                </View>
+            </Modal>
+
+            <Loader isLoading={loadingView} />
         </SafeAreaView >
     )
 }
@@ -290,7 +493,7 @@ const styles = StyleSheet.create({
     main: {
         flex: 1,
         backgroundColor: '#F5F7FB',
-        
+
 
     },
     modalheadingText: {
@@ -340,7 +543,7 @@ const styles = StyleSheet.create({
         width: '28%',
         position: 'relative',
         height: 129,
-        
+
     },
     label: {
         marginTop: 10,

@@ -54,6 +54,7 @@ import Filter from '../assets/icons/Filter';
 import Action from '../assets/icons/Action';
 import MonthModal from '../component/MonthModal';
 import SkeletonLoader from '../component/SkeletonLoader';
+import NoDataFound from '../component/NoDataFound';
 
 
 
@@ -312,9 +313,7 @@ const EmplyeeAttendance = props => {
     _updatefilterData(selectedDate, month, HelperFunctions.getCurrentYear(), 'MONTH_CHANGE')
   };
 
-  const notfoundRender = ({ index, item }) => (
-    <Text style={{ color: 'red' }}>Data not found</Text>
-  );
+  
 
   const ListRender = ({ index, item }) => (
     <Pressable onPress={() => { _gotoAttendanceView(item) }} style={[styles.listCard, { paddingVertical: 15, marginBottom: 0, borderRadius: 0, borderTopRightRadius: index == 0 ? 8 : 0, borderTopLeftRadius: index == 0 ? 8 : 0, borderBottomLeftRadius: sampleData.length - 1 == index ? 8 : 0, borderBottomRightRadius: sampleData.length - 1 == index ? 8 : 0 }]}>
@@ -416,9 +415,7 @@ const EmplyeeAttendance = props => {
                   renderItem={ListRender}
                   contentContainerStyle={{ marginBottom: 30 }}
                 />
-                : <View style={{ marginTop: 180, justifyContent: 'center', alignItems: 'center' }}>
-                  <Text style={{ color: '#868F9A' }}>Data not found</Text>
-                </View>
+                : <NoDataFound />
             )}
 
 

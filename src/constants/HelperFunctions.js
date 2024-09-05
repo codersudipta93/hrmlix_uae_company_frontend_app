@@ -262,19 +262,48 @@ const HelperFunctions = {
   // },
 
   getColorCode(type) {
-    
+
     if (type == 'P') {
       return { bgColor: '#F0F7EF', textColor: "#60B057" }
     } else if (type == 'A') {
       return { bgColor: '#FFEFEF', textColor: "#FC6860" }
-    }else if(type == undefined){
+    } else if (type == undefined) {
       return { bgColor: '#FFAC10', textColor: "#FFAC10" }
     } else {
       return { bgColor: '#f4edff', textColor: "#9d5bff" }
     }
   },
 
+  getDateDDMMYY(dateStamp) {
+    const timestamp = new Date(dateStamp);
 
+    const day = String(timestamp.getUTCDate()).padStart(2, '0');
+    const month = String(timestamp.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so add 1
+    const year = timestamp.getUTCFullYear();
+
+    return `${day}-${month}-${year}`;
+  },
+
+  getLastDateOfCurrentMonth() {
+    const timestamp = new Date();
+
+    // Get the current year and month
+    const year = timestamp.getUTCFullYear();
+    const month = timestamp.getUTCMonth(); // 0-indexed, so September is 8
+
+    // Create a date object for the first day of the next month
+    const nextMonth = new Date(Date.UTC(year, month + 1, 1));
+
+    // Subtract one day to get the last day of the current month
+    const lastDayOfMonth = new Date(nextMonth - 1);
+
+    // Extract the date in "YYYY-MM-DD" format
+    const yearStr = lastDayOfMonth.getUTCFullYear();
+    const monthStr = String(lastDayOfMonth.getUTCMonth() + 1).padStart(2, '0');
+    const dayStr = String(lastDayOfMonth.getUTCDate()).padStart(2, '0');
+
+    return `${yearStr}-${monthStr}-${dayStr}`;
+  },
 
   getTypeFullName(attendanceCode, singleShiftStatus) {
     switch (attendanceCode) {
@@ -634,7 +663,7 @@ const HelperFunctions = {
     return { displayHours: `${formattedHours}H:${formattedMinutes}M`, rawHours: `${formattedHours}.${formattedMinutes}` };
   },
   getLeaveTypes(attendance_type) {
-   
+
     if (attendance_type == "time") {
       return [
         { label: 'Present', value: 'present' },
@@ -653,6 +682,31 @@ const HelperFunctions = {
         { label: 'Full day', value: 'full_day' },
       ]
     }
+  },
+
+  getmonthYear(dateStr) {
+    const dateString = dateStr;
+    const date = new Date(dateString);
+
+    // Get the month (0-based index, so add 1)
+    const month = date.getMonth() + 1;
+
+    // Get the year
+    const year = date.getFullYear();
+
+    return { month: `${month}`, year: `${year}` };
+  },
+
+  getparticularName(type) {
+    switch (type) {
+      case 'credit':
+        return "Purchase";
+      case 'consumed':
+        return "Consumed";
+      default:
+        return "Promo";
+    }
+
   }
 }
 

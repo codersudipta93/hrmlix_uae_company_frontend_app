@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, Children } from 'react';
-import { ScrollView, View, Animated, StyleSheet, Text, TouchableOpacity, FlatList, Pressable } from 'react-native';
+import { ScrollView, View, Animated, StyleSheet, Text, TouchableOpacity, FlatList, Pressable,Image } from 'react-native';
 import {
     colors,
     height,
@@ -28,7 +28,10 @@ const FloatingTimePicker = ({
     listLabelKeyName = ['label'],
     children,
     timeIconPress,
-    confirmDateClick
+    confirmDateClick,
+    pickerType,
+    pickerIcon,
+    pickerIconStyle
 }) => {
     const [isFocused, setIsFocused] = useState(false);
     const animatedIsFocused = useRef(new Animated.Value(selectedValue ? 1 : 0)).current;
@@ -68,7 +71,7 @@ const FloatingTimePicker = ({
     const labelStyle = {
         position: 'absolute',
         fontFamily: FontFamily.regular,
-        lineHeight:15,
+        lineHeight: 15,
         top: animatedIsFocused.interpolate({
             inputRange: [0, 1],
             outputRange: [12, -10],
@@ -137,8 +140,15 @@ const FloatingTimePicker = ({
                             <Text style={[styles.optionText, { color: 'grey' }]}>{isFocused ? "Select " + labelName : ""}</Text>
                         }
                     </View>
- 
-                    <TimeIcon height="20" width="20" color="#60B057" />
+
+                    {pickerIcon ?
+                        <Image
+                            style={pickerIconStyle}
+                            source={pickerIcon}
+                        /> :
+                        <TimeIcon height="20" width="20" color="#60B057" />
+                    }
+
 
                 </View>
             </Animated.View>
@@ -146,7 +156,8 @@ const FloatingTimePicker = ({
             <DateTimePickerModal
                 isVisible={showOptions}
                 locale="en_GB"
-                mode="time"
+                // mode="time"
+                mode={pickerType ? pickerType : "time"}
                 onConfirm={(time) => {
                     if (isFocused == true) {
                         setIsFocused(selectedValue != '' ? true : false);
@@ -167,7 +178,7 @@ const FloatingTimePicker = ({
                     setShowOptions(!showOptions);
                 }}
             />
-        </Pressable> 
+        </Pressable>
     );
 };
 

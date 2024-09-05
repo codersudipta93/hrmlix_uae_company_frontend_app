@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Button, Modal, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 
-const BootomSheet = ({isModalVisible,toggleModal, animValue, children}) => {
+const BootomSheet = ({isModalVisible,toggleModal, animValue, children, modalContainerStyle}) => {
 //   const [isModalVisible, setModalVisible] = useState(false);
 
 //   // Animation state
@@ -40,7 +40,7 @@ const BootomSheet = ({isModalVisible,toggleModal, animValue, children}) => {
           activeOpacity={1}
           onPress={toggleModal}
         >
-          <Animated.View style={[styles.modalContainer, { transform: [{ translateY: animValue }] }]}>
+          <Animated.View style={[modalContainerStyle ? modalContainerStyle : styles.modalContainer, { transform: [{ translateY: animValue }] }]}>
             {children}
           </Animated.View>
         </TouchableOpacity>

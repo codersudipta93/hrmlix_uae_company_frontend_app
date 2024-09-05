@@ -52,6 +52,7 @@ import Filter from '../assets/icons/Filter';
 import Action from '../assets/icons/Action';
 import MonthModal from '../component/MonthModal';
 import SkeletonLoader from '../component/SkeletonLoader';
+import NoDataFound from '../component/NoDataFound';
 
 const AttendanceListingConsole = props => {
   const isFocused = useIsFocused();
@@ -145,7 +146,7 @@ const AttendanceListingConsole = props => {
         "client_id": JSON.stringify([]),
         "searchkey": ""
       }
-      setFilterData(apiParam);
+                                                                                                                                                            setFilterData(apiParam);
     }
   }
 
@@ -402,9 +403,7 @@ const AttendanceListingConsole = props => {
                   renderItem={ListRender}
                   contentContainerStyle={{ marginBottom: 30 }}
                 />
-                : <View style={{ marginTop: 180, justifyContent: 'center', alignItems: 'center' }}>
-                  <Text style={{ color: '#868F9A' }}>Data not found</Text>
-                </View>
+                :<NoDataFound />
             )}
           </View>
         </ScrollView>
