@@ -105,12 +105,11 @@ const GovtRule = props => {
 
 
   const ListRender = ({ index, item }) => (
-    <View style={[styles.listCard, { marginBottom: 8}]}>
+    <View style={[styles.listCard, { marginBottom: 8 }]}>
       <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-        <View style={{ }}>
+        <View style={{}}>
           <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>Rule {index + 1}</Text>
-          <View style={{borderBottomWidth:0.5, borderColor:'#E7EAF1', marginTop:8}}></View>
-          
+          <View style={{ borderBottomWidth: 0.5, borderColor: '#E7EAF1', marginTop: 8 }}></View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginTop: 6 }}>
             <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left', marginTop: 6 }}>Service Year</Text>
             <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left', marginTop: 6 }}>Service Days</Text>
@@ -123,7 +122,6 @@ const GovtRule = props => {
               <Text style={{ fontFamily: FontFamily.bold, color: '#539964', fontSize: sizes.h6, textAlign: 'left' }}>{item?.service_days} {item?.service_year_no_rule == "greater" ? ">" : "<="}</Text>
             </View>
           </View>
-
         </View>
       </View>
       {/* <View style={{ paddingLeft: 12, width: '40%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>

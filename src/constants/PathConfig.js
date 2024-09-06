@@ -26,7 +26,10 @@ export const LOCAL_ICONS = {
   AttendanceSummary : require('../assets/icons/Attendance-Summary.png'),
   invoice : require('../assets/icons/invoice.png'),
   purchase : require('../assets/icons/purchase.png'),
-  consumption : require('../assets/icons/comsumption.png')
+  consumption : require('../assets/icons/comsumption.png'),
+  arrow: require('../assets/icons/arrow.png'),
+  camera: require('../assets/icons/camera.png'),
+  gallery: require('../assets/icons/gallery.png'),
 };
 
 

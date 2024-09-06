@@ -22,7 +22,14 @@ import {
   BillingMaster,
   PurchaseHistory, 
   ConsumptionHistory,
-  GovtRule
+  GovtRule,
+  CompanyProfileDashboard,
+  ProfileAndPartnerdetails,
+  EstablishmentDetails,
+  RegisteredOfficeAddress,
+  CommunicationAddress,
+  PrefferanceSettings,
+  CompanyBranch
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -55,6 +62,13 @@ function Navigator() {
        <Stack.Screen name="PurchaseHistory" component={PurchaseHistory} />
        <Stack.Screen name="ConsumptionHistory" component={ConsumptionHistory} />
        <Stack.Screen name="GovtRule" component={GovtRule} />
+       <Stack.Screen name="CompanyProfileDashboard" component={CompanyProfileDashboard} />
+       <Stack.Screen name="ProfileAndPartnerdetails" component={ProfileAndPartnerdetails} />
+       <Stack.Screen name="EstablishmentDetails" component={EstablishmentDetails} />
+       <Stack.Screen name="RegisteredOfficeAddress" component={RegisteredOfficeAddress} />
+       <Stack.Screen name="CommunicationAddress" component={CommunicationAddress} />
+       <Stack.Screen name="PrefferanceSettings" component={PrefferanceSettings} />
+       <Stack.Screen name="CompanyBranch" component={CompanyBranch} />
        
       </Stack.Navigator>
     </NavigationContainer>
