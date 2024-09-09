@@ -42,7 +42,7 @@ const CustomHeader = (props) => {
 
                 <>
                     {props.searchIcon == true ?
-                        <TouchableOpacity style={{ marginRight: 11 }} onPress={props.onPressCustomIcon}>
+                        <TouchableOpacity style={{ marginRight: 11 }} onPress={props.onPressSearchIcon}>
                             <Icon name={"search"} size={20} color="#8A8E9C" />
                         </TouchableOpacity>
 

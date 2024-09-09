@@ -18,6 +18,8 @@
     "react-native-image-picker": "^7.1.2",
     "react-native-image-zoom-viewer": "^3.0.1",
     "react-native-orientation-locker": "^1.7.0",
+    "react-native-pell-rich-editor": "^1.9.0",
+    "react-native-render-html": "^6.3.4",
     "react-native-share": "^11.0.1",
     "react-native-webview": "^13.12.1",
     "rn-fetch-blob": "^0.12.0"

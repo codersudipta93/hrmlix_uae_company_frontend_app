@@ -60,7 +60,7 @@ const Dashboard = props => {
   const route = useRoute();
   const dispatch = useDispatch();
 
-  const {userDetails,token} = useSelector(state => state.project);
+  const { userDetails, token } = useSelector(state => state.project);
 
   const { t, i18n } = useTranslation();
 
@@ -80,7 +80,7 @@ const Dashboard = props => {
     if (isFocused == true) {
       console.log(i18n.language);
       console.log(I18nManager.isRTL);
-     props.navigation.navigate('CompanyProfileDashboard')
+      props.navigation.navigate('AnnouncementList')
     }
   }, [isFocused]);
 
@@ -119,8 +119,8 @@ const Dashboard = props => {
         <Text style={{ fontFamily: FontFamily.medium, color: colors.white, fontSize: sizes.h6 }}>02</Text>
         <Text style={{ fontFamily: FontFamily.medium, color: colors.white, fontSize: sizes.md, marginTop: 1 }}>Jun</Text>
       </View>
-      <View style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: 14,paddingRight:50}}>
-        <Text style={{ fontFamily: FontFamily.regular, color: '#4E525E', fontSize: sizes.md+1, textAlign: 'left' }}>Ivan Infotech has announce 5% bonus to the Employees.</Text>
+      <View style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: 14, paddingRight: 50 }}>
+        <Text style={{ fontFamily: FontFamily.regular, color: '#4E525E', fontSize: sizes.md + 1, textAlign: 'left' }}>Ivan Infotech has announce 5% bonus to the Employees.</Text>
       </View>
     </View>
   );
@@ -133,11 +133,11 @@ const Dashboard = props => {
         </View>
         <View style={{ paddingLeft: 12 }}>
           <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.md, textAlign: 'left' }}>Brent Farrell DVM</Text>
-          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md-1, textAlign: 'left', marginTop: 6 }}>UI/UX Designer</Text>
+          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md - 1, textAlign: 'left', marginTop: 6 }}>UI/UX Designer</Text>
         </View>
       </View>
       <View style={{ paddingLeft: 12, width: '40%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md-1, textAlign: 'left', lineHeight: 19 }}>02 Aug 2024</Text>
+        <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md - 1, textAlign: 'left', lineHeight: 19 }}>02 Aug 2024</Text>
       </View>
     </View>
   );
@@ -151,11 +151,11 @@ const Dashboard = props => {
         </View>
         <View style={{ paddingLeft: 12 }}>
           <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>Brent Farrell DVM</Text>
-          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md-1, textAlign: 'left', marginTop: 6 }}>UI/UX Designer</Text>
+          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md - 1, textAlign: 'left', marginTop: 6 }}>UI/UX Designer</Text>
         </View>
       </View>
       <View style={{ paddingLeft: 12, width: '40%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <Text style={{ fontFamily: FontFamily.regular, color: '#60B057', fontSize: sizes.md-1, textAlign: 'left', marginTop: 6 }}>Today</Text>
+        <Text style={{ fontFamily: FontFamily.regular, color: '#60B057', fontSize: sizes.md - 1, textAlign: 'left', marginTop: 6 }}>Today</Text>
       </View>
     </View>
   );
@@ -169,7 +169,7 @@ const Dashboard = props => {
         </View>
         <View style={{ paddingLeft: 12 }}>
           <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>Brent Farrell DVM</Text>
-          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md-1, textAlign: 'left', marginTop: 4 }}>UI/UX Designer</Text>
+          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md - 1, textAlign: 'left', marginTop: 4 }}>UI/UX Designer</Text>
           <Text style={{ fontFamily: FontFamily.regular, color: '#60B057', fontSize: sizes.md, textAlign: 'left', marginTop: 4 }}>Today</Text>
         </View>
       </View>
@@ -181,7 +181,7 @@ const Dashboard = props => {
       <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
         <View style={{ paddingLeft: 12, width: '60%' }}>
           <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.md, textAlign: 'left' }}>Anjali Mukherjee</Text>
-          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.sm+1, textAlign: 'left', marginTop: 4 }}>UI/UX Designer</Text>
+          <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.sm + 1, textAlign: 'left', marginTop: 4 }}>UI/UX Designer</Text>
         </View>
         <View style={{ width: '40%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
           <View style={{ justifyContent: 'center', alignItems: 'center', height: 4, width: 4, backgroundColor: '#FFAC10', borderRadius: 50 }}>
@@ -324,12 +324,12 @@ const Dashboard = props => {
             }}>
 
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontFamily: FontFamily.regular, color: colors.green, fontSize: sizes.h6-1 }}>Current Plan</Text>
+                <Text style={{ fontFamily: FontFamily.regular, color: colors.green, fontSize: sizes.h6 - 1 }}>Current Plan</Text>
                 <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.md, marginTop: 6 }}>Plan 1</Text>
               </View>
               <View style={{ width: 1.2, height: 42, backgroundColor: '#E7EAF1' }}></View>
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontFamily: FontFamily.regular, color: colors.yellow, fontSize: sizes.h6-1 }}>Credit Balance</Text>
+                <Text style={{ fontFamily: FontFamily.regular, color: colors.yellow, fontSize: sizes.h6 - 1 }}>Credit Balance</Text>
                 <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.md, marginTop: 6 }}>6002</Text>
               </View>
 
@@ -353,7 +353,7 @@ const Dashboard = props => {
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 30 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-            <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Upcoming Birthday</Text>
+              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Upcoming Birthday</Text>
               <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text></TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
@@ -369,7 +369,7 @@ const Dashboard = props => {
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 30 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-            <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6,lineHeight:21 }}>Employee On Leave</Text>
+              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6, lineHeight: 21 }}>Employee On Leave</Text>
               <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text></TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
@@ -385,7 +385,7 @@ const Dashboard = props => {
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-            <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Work Anniversary</Text>
+              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Work Anniversary</Text>
               <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text></TouchableOpacity>
             </View>
 

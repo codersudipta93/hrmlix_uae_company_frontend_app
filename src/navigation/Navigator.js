@@ -29,7 +29,11 @@ import {
   RegisteredOfficeAddress,
   CommunicationAddress,
   PrefferanceSettings,
-  CompanyBranch
+  CompanyBranch,
+  AnnouncementList,
+  AnnouncementEdit,
+  AnnouncementDetails,
+  AnnouncementListSearch
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -69,6 +73,10 @@ function Navigator() {
        <Stack.Screen name="CommunicationAddress" component={CommunicationAddress} />
        <Stack.Screen name="PrefferanceSettings" component={PrefferanceSettings} />
        <Stack.Screen name="CompanyBranch" component={CompanyBranch} />
+       <Stack.Screen name="AnnouncementList" component={AnnouncementList} />
+       <Stack.Screen name="AnnouncementEdit" component={AnnouncementEdit} />
+       <Stack.Screen name="AnnouncementDetails" component={AnnouncementDetails} />
+       <Stack.Screen name="AnnouncementListSearch" component={AnnouncementListSearch} />
        
       </Stack.Navigator>
     </NavigationContainer>

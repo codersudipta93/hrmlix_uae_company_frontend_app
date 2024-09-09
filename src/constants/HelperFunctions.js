@@ -707,7 +707,31 @@ const HelperFunctions = {
         return "Promo";
     }
 
+  },
+
+  getDateandtime (isoDate) {
+    const date = new Date(isoDate);
+  
+    // Format parts
+    const day = String(date.getDate()).padStart(2, '0'); // 2-digit day
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear();
+  
+    // Format time
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // If hour is 0, make it 12
+  
+    // Get the month abbreviation
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthAbbrev = monthNames[date.getMonth()];
+  
+    // Final formatted string
+    return `${month}/${day}/${year} ${monthAbbrev} ${hours}:${minutes} ${ampm}`;
   }
+
 }
 
 export default HelperFunctions;

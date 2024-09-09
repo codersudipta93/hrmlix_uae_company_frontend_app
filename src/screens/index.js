@@ -34,3 +34,7 @@ export {default as RegisteredOfficeAddress} from './CompanyProfile/RegisteredOff
 export {default as CommunicationAddress} from './CompanyProfile/CommunicationAddress.js'
 export {default as PrefferanceSettings} from './CompanyProfile/PrefferanceSettings.js'
 export {default as CompanyBranch} from './CompanyProfile/CompanyBranch.js'
+export {default as AnnouncementList} from './Announcement/AnnouncementList.js'
+export {default as AnnouncementEdit} from './Announcement/AnnouncementEdit.js'
+export {default as AnnouncementDetails} from './Announcement/AnnouncementDetails.js'
+export {default as AnnouncementListSearch} from './Announcement/AnnouncementListSearch.js'
