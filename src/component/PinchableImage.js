@@ -5,7 +5,7 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import Orientation from 'react-native-orientation-locker';
 import WebView from 'react-native-webview';
 
-const CustomImageViewer = ({ images, isVisible, onClose, innerHtml = true }) => {
+const CustomImageViewer = ({backgroundColor, images, isVisible, onClose, innerHtml = true }) => {
 	const [orientation, setOrientation] = useState('PORTRAIT');
 	const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -51,7 +51,7 @@ const CustomImageViewer = ({ images, isVisible, onClose, innerHtml = true }) => 
 					imageUrls={images}
 					enableSwipeDown
 					onSwipeDown={onClose}
-					backgroundColor="black"
+					backgroundColor={backgroundColor ? backgroundColor : "#000" }
 					style={getContainerStyle()}
 					onChange={onChangeImage}
 				/>

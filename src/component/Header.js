@@ -25,7 +25,7 @@ const CustomHeader = (props) => {
         <View onPress={props.onPress} style={[{ paddingHorizontal: 12, backgroundColor: props.backgroundColor ? props.backgroundColor : colors.white, alignItems: 'center', justifyContent: 'center', height: 75, borderWidth: props.requireBorder ? 1 : 0, borderColor: props.borderColor ? props.borderColor : null }, props.style]}>
 
             <View style={{ width: '60%', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
-                <Pressable onPress={props?.backClick ? props?.backClick : goBack}><Arrow size={28} color={props?.backiconColor ? props?.backiconColor : '#404040'} style={{ transform: [{ rotate: '90deg' }] }} /></Pressable>
+            {props?.backClickHide  ? null : <Pressable onPress={props?.backClick ? props?.backClick : goBack}><Arrow size={28} color={props?.backiconColor ? props?.backiconColor : '#404040'} style={{ transform: [{ rotate: '90deg' }] }} /></Pressable>  }
                 <Text style={[{ marginLeft: 8, fontFamily: FontFamily.semibold, color: props?.headerTextColor ? props?.headerTextColor : "#4E525E", fontSize: sizes.h5, textAlign: 'left' }, props.buttonTextStyle]}>{props.buttonText}</Text>
             </View>
             <View style={{ width: '40%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>

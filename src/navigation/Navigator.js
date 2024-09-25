@@ -33,7 +33,22 @@ import {
   AnnouncementList,
   AnnouncementEdit,
   AnnouncementDetails,
-  AnnouncementListSearch
+  AnnouncementListSearch,
+  SallaryRevisionDashboard,
+  ApplyRevision,
+  ApplyRevisionFilter,
+  CalculatedRevision,
+  CalculatedRevisionFilter,
+  RevisionReport,
+  ArrearSlip,
+  RevisionReportFilter,
+  EmployeeDashboard,
+  EmployeeAddress,
+  EmployeeBankDetails,
+  EmployeeHrDetails,
+  EmployeePersonalDetails,
+  OtherInfoDashboard,
+  ShortcutsDashboard
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -77,6 +92,21 @@ function Navigator() {
        <Stack.Screen name="AnnouncementEdit" component={AnnouncementEdit} />
        <Stack.Screen name="AnnouncementDetails" component={AnnouncementDetails} />
        <Stack.Screen name="AnnouncementListSearch" component={AnnouncementListSearch} />
+       <Stack.Screen name="SallaryRevisionDashboard" component={SallaryRevisionDashboard} />
+       <Stack.Screen name="ApplyRevision" component={ApplyRevision} />
+       <Stack.Screen name="ApplyRevisionFilter" component={ApplyRevisionFilter} />
+       <Stack.Screen name="CalculatedRevision" component={CalculatedRevision} />
+       <Stack.Screen name="CalculatedRevisionFilter" component={CalculatedRevisionFilter} />
+       <Stack.Screen name="RevisionReport" component={RevisionReport} />
+       <Stack.Screen name="ArrearSlip" component={ArrearSlip} />
+       <Stack.Screen name="RevisionReportFilter" component={RevisionReportFilter} />
+       <Stack.Screen name="EmployeeDashboard" component={EmployeeDashboard} />
+       <Stack.Screen name="EmployeeAddress" component={EmployeeAddress} />
+       <Stack.Screen name="EmployeeBankDetails" component={EmployeeBankDetails} />
+       <Stack.Screen name="EmployeeHrDetails" component={EmployeeHrDetails} />
+       <Stack.Screen name="EmployeePersonalDetails" component={EmployeePersonalDetails} />
+       <Stack.Screen name="OtherInfoDashboard" component={OtherInfoDashboard} />
+       <Stack.Screen name="ShortcutsDashboard" component={ShortcutsDashboard} />
        
       </Stack.Navigator>
     </NavigationContainer>

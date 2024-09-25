@@ -4,7 +4,7 @@ import Theme from '../constants/Theme'
 
 const CustomButton = (props) => {
   return (
-    <TouchableOpacity onPress={props.onPress} style={[{ backgroundColor: props.backgroundColor ? props.backgroundColor : '#F1592A', borderRadius: 4, alignItems: 'center', justifyContent: 'center', height: 50, borderWidth: props.requireBorder ? 1 : 0, borderColor: props.borderColor ? props.borderColor : null }, props.style]}>
+    <TouchableOpacity onPress={props.onPress} style={[{ backgroundColor: props.backgroundColor ? props.backgroundColor : '#F1592A', borderRadius: 4, alignItems: 'center', justifyContent: 'center', height: props?.height ? props.height : 50, borderWidth: props.requireBorder ? 1 : 0, borderColor: props.borderColor ? props.borderColor : null }, props.style]}>
       {props.isLoading == true ?
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color="#fff"/>

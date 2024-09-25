@@ -56,6 +56,7 @@ import Loader from '../../component/Loader';
 import BootomSheet from '../../component/BootomSheet';
 import Icon from 'react-native-vector-icons/Ionicons';
 import NoDataFound from '../../component/NoDataFound';
+
 const AnnouncementList = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
@@ -253,7 +254,25 @@ const AnnouncementList = props => {
     return true;
   };
 
+  const placeholderList = ({ index, item }) => (
 
+    <SkeletonPlaceholder >
+      <View style={{
+        borderRadius: 8,
+        padding: 12,
+        paddingVertical: 18,
+        marginBottom: 12,
+        borderRadius: 12,
+        borderWidth: 1
+      }}>
+        <View style={{ width: "100%", height: 20 }} />
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: 6 }}>
+          <View style={{ width: "15%", height: 20, }} />
+          <View style={{ width: "20%", height: 20, marginLeft: 4 }} />
+        </View>
+      </View>
+    </SkeletonPlaceholder>
+  );
 
   const ListRender = ({ index, item }) => (
     <View style={[styles.listCard, { paddingVertical: 22, marginBottom: 12, borderRadius: 12 }]}>
@@ -314,15 +333,27 @@ const AnnouncementList = props => {
               </TouchableOpacity> */}
           </View>
 
-          {announcementData != "" ?
+          {announcementData == "" && waitLoaderStatus == true ?
+
+
             <FlatList
               showsVerticalScrollIndicator={false}
-              data={announcementData}
-              renderItem={ListRender}
+              data={[1, 1, 1, 1, 1]}
+              renderItem={placeholderList}
               contentContainerStyle={{ marginBottom: 30 }}
             />
-            : <NoDataFound />
-          }
+            : <>
+
+              {announcementData != "" ?
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  data={announcementData}
+                  renderItem={ListRender}
+                  contentContainerStyle={{ marginBottom: 30 }}
+                />
+                : <NoDataFound />
+              }
+            </>}
 
           <TouchableOpacity onPress={() => {
             props.navigation.navigate('AnnouncementEdit', { paramData: "", mode: 'add' })
@@ -333,7 +364,7 @@ const AnnouncementList = props => {
         </View>
 
       </View>
-      <Loader isLoading={waitLoaderStatus} />
+      {/* <Loader isLoading={waitLoaderStatus} /> */}
       <BootomSheet
         toggleModal={openUploadModal}
         isModalVisible={modalOpen}

@@ -30,6 +30,7 @@ export const LOCAL_ICONS = {
   arrow: require('../assets/icons/arrow.png'),
   camera: require('../assets/icons/camera.png'),
   gallery: require('../assets/icons/gallery.png'),
+  bulletPoint: require('../assets/icons/bulletPoint.png'),
 };
 
 

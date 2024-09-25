@@ -13,9 +13,11 @@ import {
   Dimensions,
   BackHandler,
   Alert,
+  Animated,
   I18nManager,
   ScrollView,
-  ImageBackground
+  ImageBackground,
+  PermissionsAndroid
 } from 'react-native'
 
 import React, {
@@ -36,7 +38,7 @@ import { LOCAL_IMAGES, LOCAL_ICONS, AllSourcePath } from '../../constants/PathCo
 import { HelperFunctions } from '../../constants';
 import { useRoute } from '@react-navigation/native';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
-import { postApi } from '../../Service/service';
+import { postApi, profilePhotoUpload } from '../../Service/service';
 import { _setreffeshStatus } from '../../Store/Reducers/ProjectReducer';
 import { getData, setData, deleteData } from '../../Service/localStorage';
 import { useDispatch, useSelector } from 'react-redux';
@@ -44,24 +46,20 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from 'react-native/Libraries/NewAppScreen';
 import CustomHeader from '../../component/Header';
-
+import * as ImagePicker from "react-native-image-picker";
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useTranslation } from 'react-i18next'; //for translation service
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import Delete from '../../assets/icons/Delete';
-import Filter from '../../assets/icons/Filter';
-import Action from '../../assets/icons/Action';
-import MonthModal from '../../component/MonthModal';
-import SkeletonLoader from '../../component/SkeletonLoader';
 
-const Attendance = props => {
+
+const SallaryRevisionDashboard = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
   const { userDetails, token, needRefresh } = useSelector(state => state.project);
   const { t, i18n } = useTranslation();
-  const BackgroundImage = require('../../assets/imgs/bg1.png');
-  
+
+
   useEffect(() => {
     if (isFocused == true) {
       console.log(i18n.language);
@@ -69,6 +67,8 @@ const Attendance = props => {
     }
   }, [isFocused]);
 
+
+ 
 
 
   useFocusEffect(
@@ -93,6 +93,7 @@ const Attendance = props => {
     return true;
   };
 
+  
 
 
   return (
@@ -100,56 +101,74 @@ const Attendance = props => {
       <View style={styles.main}>
         <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
         <CustomHeader
-          buttonText={t('Attendance')}
+          buttonText={t('Sallary Rivision')}
+          backgroundColor={"#1E2538"}
+          headerTextColor={"#fff"}
+          backiconColor={"#fff"}
           style={{ flexDirection: 'row' }}
           iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
           icon={LOCAL_IMAGES.user}
-          searchIcon={true}
+          searchIcon={false}
+          hideUserIcon={true}
+          buttonTextStyle={{lineHeight: 23 }}
         />
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false}  >
+          
+
           <View style={{ marginTop: 18, paddingHorizontal: 12 }}>
-            <Pressable onPress={()=>{props.navigation.navigate('EmplyeeAttendance')}} style={[styles.cardContainer,{backgroundColor: '#C9EEFC'}]}>
+            <Pressable onPress={() => { props.navigation.navigate('ApplyRevision') }} style={[styles.cardContainer, { backgroundColor: '#C9EEFC' }]}>
               <View style={[styles.leftSection, {}]}>
                 <ImageBackground source={LOCAL_IMAGES.attendanceCardBG1} style={[styles.background, { width: 75, height: 80 }]}>
                   <View style={styles.container}>
-                    <Image source={LOCAL_ICONS.EmployeeAttendance} style={{ height: 26, width: 37, objectFit: 'contain' }} />
+                    <Image source={LOCAL_ICONS.bulletPoint} style={{ height: 35, width: 35, objectFit: 'contain' }} />
                   </View>
                 </ImageBackground>
               </View>
               <View style={styles.rightSection}>
-                <Text style={styles.cardText}>Employee Attendance</Text>
+                <Text style={styles.cardText}>Apply Revision</Text>
               </View>
             </Pressable>
 
-            <Pressable onPress={()=>{props.navigation.navigate('AttendanceSummary')}} style={[styles.cardContainer,{backgroundColor: '#FCE8E9'}]}>
+            <Pressable onPress={() => { props.navigation.navigate('CalculatedRevision') }} style={[styles.cardContainer, { backgroundColor: '#FCE8E9' }]}>
               <View style={[styles.leftSection, {}]}>
                 <ImageBackground source={LOCAL_IMAGES.attendanceCardBG2} style={[styles.background, { width: 75, height: 80 }]}>
                   <View style={styles.container}>
-                    <Image source={LOCAL_ICONS.AttendanceSummary} style={{ height: 26, width: 37, objectFit: 'contain' }} />
+                  <Image source={LOCAL_ICONS.bulletPoint} style={{ height: 35, width: 35, objectFit: 'contain' }} />
                   </View>
                 </ImageBackground>
               </View>
               <View style={styles.rightSection}>
-                <Text style={styles.cardText}>Attendance Summary</Text>
+                <Text style={styles.cardText}>Calculate Revision</Text>
               </View>
             </Pressable>
 
-            <Pressable onPress={()=>{props.navigation.navigate('AttendanceListingConsole')}} style={[styles.cardContainer,{backgroundColor: '#DBDAFE'}]}>
+            <Pressable onPress={() => { props.navigation.navigate('RevisionReport') }} style={[styles.cardContainer, { backgroundColor: '#DBDAFE' }]}>
               <View style={[styles.leftSection, {}]}>
-                <ImageBackground source={LOCAL_IMAGES.attendanceCardBG3} style={[styles.background, { width: 75, height: 80}]}>
+                <ImageBackground source={LOCAL_IMAGES.attendanceCardBG3} style={[styles.background, { width: 75, height: 80 }]}>
                   <View style={styles.container}>
-                    <Image source={LOCAL_ICONS.AttendanceListingConsole} style={{ height: 26, width: 37, objectFit: 'contain' }} />
+                  <Image source={LOCAL_ICONS.bulletPoint} style={{ height: 35, width: 35, objectFit: 'contain' }} />
                   </View>
                 </ImageBackground>
               </View>
               <View style={styles.rightSection}>
-                <Text style={styles.cardText}>Attendance Listing Console</Text>
+                <Text style={styles.cardText}>Revision Report</Text>
               </View>
             </Pressable>
 
+            <Pressable onPress={() => { props.navigation.navigate('ArrearSlip') }} style={[styles.cardContainer, { backgroundColor: '#FCE8E9' }]}>
+              <View style={[styles.leftSection, {}]}>
+                <ImageBackground source={LOCAL_IMAGES.attendanceCardBG2} style={[styles.background, { width: 75, height: 80 }]}>
+                  <View style={styles.container}>
+                  <Image source={LOCAL_ICONS.bulletPoint} style={{ height: 35, width: 35, objectFit: 'contain' }} />
+                  </View>
+                </ImageBackground>
+              </View>
+              <View style={styles.rightSection}>
+                <Text style={styles.cardText}>Arrear Slip</Text>
+              </View>
+            </Pressable>
           </View>
         </ScrollView>
-
       </View>
     </SafeAreaView>
   )
@@ -161,6 +180,47 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F7FB'
   },
 
+  Cardcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingVertical: 18
+  },
+  subtext: {
+    color: '#D1D4DC',
+    fontSize: sizes.h6 - 1,
+    fontFamily: FontFamily.regular,
+    marginTop: 9
+  },
+  text: {
+    color: 'white',
+    fontSize: sizes.h4,
+    fontFamily: FontFamily.semibold,
+    marginTop: 7
+  },
+  editcontainer: {
+    position: 'absolute',
+    width: 24,
+    height: 24,
+    right: -8,
+    top: 0,
+    bottom: 0,
+    borderRadius: 40,
+    //top: 50px;
+    backgroundColor: "#0E1F33",
+    // borderWidth:1,
+    //display: flex;
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  user: {
+    width: 64,
+    height: 64,
+    borderRadius: 50,
+    //borderWidth: 2.5,
+    borderColor: colors.white
+  },
 
   listCard: {
     backgroundColor: '#FFFFFF',
@@ -182,7 +242,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     // padding: 15,
     alignItems: 'center',
-    marginBottom:16
+    marginBottom: 16
   },
   leftSection: {
     //backgroundColor: '#00BCD4',
@@ -226,6 +286,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+
+  actionSheetContentWrapper: {
+    flexDirection: 'row',
+    justifyContent: "flex-start",
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingBottom: 24,
+  },
+  uploadSourceIcon: {
+    height: 20,
+    width: 20,
+    resizeMode: 'contain',
+    marginRight: 8
+  },
+  uploadSourceText: {
+    fontFamily: FontFamily.medium,
+    color: colors.black,
+    fontSize: sizes.h6,
+  },
 });
-export default Attendance;
+export default SallaryRevisionDashboard;

@@ -80,7 +80,7 @@ const Dashboard = props => {
     if (isFocused == true) {
       console.log(i18n.language);
       console.log(I18nManager.isRTL);
-      props.navigation.navigate('AnnouncementList')
+     // props.navigation.navigate('GovtRule') 
     }
   }, [isFocused]);
 
@@ -226,6 +226,7 @@ const Dashboard = props => {
       <View style={styles.main}>
         <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
         <CustomHeader
+          backClickHide={true}
           buttonText={t('dashboard')}
           style={{ flexDirection: 'row' }}
           iconStyle={{ height: 28, width: 28, borderRadius: 50 }}

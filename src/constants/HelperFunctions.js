@@ -209,57 +209,8 @@ const HelperFunctions = {
 
     // Compare provided year and month with the current year and month
     return year === currentYear && month === currentMonth;
-  }
-  ,
-  // getAllDatesAndDays(m, year) {
+  },
 
-  //   // Initialize an empty array to store the results
-  //   let month = m + 1
-  //   let result = [];
-
-  //   // Get the current date
-  //   let currentDate = new Date();
-
-  //   // Helper function to get the day name from the day of the week number
-  //   const getDayName = (dayOfWeek) => {
-  //     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  //     return daysOfWeek[dayOfWeek];
-  //   };
-
-  //   // Loop through each day of the month
-  //   for (let day = 1; day <= 31; day++) {
-  //     // Create a new Date object for the current day in the loop
-  //     let date = new Date(year, month - 1, day); // month - 1 because months are zero-indexed in JavaScript
-
-  //     // Check if the date is still within the same month and year
-  //     if (date.getMonth() + 1 !== month) {
-  //       break; // Break the loop if we've gone past the last day of the month
-  //     }
-
-  //     // Get the day of the week as a number (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-  //     let dayOfWeek = date.getDay();
-
-  //     // Create an object with the date, day name, and selected key
-  //     let dateObject = {
-  //       year: year,
-  //       month: month,
-  //       date: day,
-  //       dayName: getDayName(dayOfWeek),
-  //       formatedDate: moment([year, month - 1, day]).format('YYYY-MM-DD'),
-  //       selected: false // Default value for the selected key
-  //     };
-
-  //     // Check if the current date matches the date in the loop
-  //     if (date.toDateString() === currentDate.toDateString()) {
-  //       dateObject.selected = true; // Set selected to true for the current date
-  //     }
-
-  //     // Add the object to the result array
-  //     result.push(dateObject);
-  //   }
-
-  //   return result;
-  // },
 
   getColorCode(type) {
 
@@ -271,6 +222,18 @@ const HelperFunctions = {
       return { bgColor: '#FFAC10', textColor: "#FFAC10" }
     } else {
       return { bgColor: '#f4edff', textColor: "#9d5bff" }
+    }
+  },
+
+  getGenderName(type) {
+    if (type == 'm') {
+      return "Male"
+    } else if (type == 'f') {
+      return "Female"
+    } else if (type == 't') {
+      return "Transgender"
+    } else {
+      return "Other"
     }
   },
 
@@ -709,27 +672,65 @@ const HelperFunctions = {
 
   },
 
-  getDateandtime (isoDate) {
+  getDateandtime(isoDate) {
     const date = new Date(isoDate);
-  
+
     // Format parts
     const day = String(date.getDate()).padStart(2, '0'); // 2-digit day
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
     const year = date.getFullYear();
-  
+
     // Format time
     let hours = date.getHours();
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
     hours = hours ? hours : 12; // If hour is 0, make it 12
-  
+
     // Get the month abbreviation
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const monthAbbrev = monthNames[date.getMonth()];
-  
+
     // Final formatted string
     return `${month}/${day}/${year} ${monthAbbrev} ${hours}:${minutes} ${ampm}`;
+  },
+
+  getNameById(packages, id, keyName) {
+    console.log(packages)
+    console.log(id)
+    const pkg = packages.find(item => item._id === id);
+    return pkg ? pkg[keyName? keyName : 'package_name'] : 'Package not found';
+  },
+
+  getFormattedDate(dateString) {
+    const date = new Date(dateString);
+    
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  },
+
+  getMonth(dateString) {
+    const date = new Date(dateString);
+    
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+    
+    return month;
+  },
+  getYear(dateString) {
+    const date = new Date(dateString);
+    
+    const year = date.getUTCFullYear();
+    
+    return year;
+  },
+  convertToISOWithTime(dateString, timeString = "18:30:00") {
+    // Combine the date and time
+    const combinedDateTime = `${dateString}T${timeString}.000Z`;
+  
+    return new Date(combinedDateTime).toISOString();
   }
 
 }

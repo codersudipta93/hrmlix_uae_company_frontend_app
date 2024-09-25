@@ -6,7 +6,8 @@ const date = new Date();
 const initialState = {
   userDetails: "",
   token: "",
-  needRefresh:false
+  needRefresh:false,
+  masterData:""
 };
 
 export const projectReducer = createSlice({
@@ -25,6 +26,11 @@ export const projectReducer = createSlice({
     _setreffeshStatus: (state, action) => {
       state.needRefresh = action.payload;
     },
+
+    _setmasterData: (state, action) => {
+      state.masterData = action.payload;
+    },
+
   },
 });
 
@@ -32,7 +38,8 @@ export const projectReducer = createSlice({
 export const {
   _setUserData,
   _setToken,
-  _setreffeshStatus
+  _setreffeshStatus,
+  _setmasterData
 } = projectReducer.actions;
 
 export default projectReducer.reducer;

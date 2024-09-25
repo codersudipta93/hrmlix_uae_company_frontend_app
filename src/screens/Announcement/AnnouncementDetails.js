@@ -20,7 +20,8 @@ import {
   Animated,
   useWindowDimensions,
   Modal,
-  TextInput
+  TextInput,
+  Keyboard
 } from 'react-native'
 
 import React, {
@@ -71,28 +72,15 @@ const AnnouncementDetails = props => {
   const { t, i18n } = useTranslation();
   const [selecteddetails, setselectedDetails] = useState("");
   const [announcementData, setannouncementData] = useState("");
+  const [commentArr, setCommmentArr] = useState("");
 
   const [waitLoaderStatus, setWaitLoaderStatus] = useState(false);
-
-
+  const [comment, setCommment] = useState("");
 
   const [modalVisible, setModalVisible] = useState(false);
-
-  const comments = [
-    { id: '1', name: 'John', comment: 'This is awesome!' },
-    { id: '2', name: 'Jane', comment: 'Great job!' },
-    { id: '3', name: 'Sam', comment: 'Keep it up!' },
-    { id: '4', name: 'Lucy', comment: 'Amazing work!' },
-    { id: '5', name: 'Mike', comment: 'Very informative!' },
-  ];
-
-  const renderComment = ({ item }) => (
-    <View style={styles.commentBox}>
-      <Text style={styles.commenterName}>{item.name}</Text>
-      <Text style={styles.commentText}>{item.comment}</Text>
-    </View>
-  );
-
+  const flatListRef = useRef(null);
+  const [isTexinputFocused, setIsTextInputFocused] = useState(false);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (isFocused == true) {
@@ -109,6 +97,7 @@ const AnnouncementDetails = props => {
 
     }
   }, [isFocused]);
+
 
 
   useEffect(() => {
@@ -128,6 +117,79 @@ const AnnouncementDetails = props => {
         if (resp?.status == 'success') {
           setannouncementData(resp?.result[0]);
           setWaitLoaderStatus(false)
+        } else if (resp?.status == 'val_err') {
+          let message = ""
+          for (const key in resp.val_msg) {
+            if (resp.val_msg[key].message) {
+              message = resp.val_msg[key].message;
+              break;
+            }
+          }
+          setWaitLoaderStatus(false)
+          HelperFunctions.showToastMsg(message);
+
+        } else {
+          HelperFunctions.showToastMsg(resp.message);
+          setWaitLoaderStatus(false)
+        }
+
+      }).catch((err) => {
+        console.log(err);
+        setWaitLoaderStatus(false)
+        HelperFunctions.showToastMsg(err.message);
+      })
+  }
+
+
+  const getComments = (parent_id) => {
+    setModalVisible(true)
+    setWaitLoaderStatus(true)
+    let paramData = {
+      "parent_id": parent_id
+    }
+    postApi("company/announcement-reply-list", paramData, token)
+      .then((resp) => {
+        console.log(resp)
+        if (resp?.status == 'success') {
+          setCommmentArr(resp?.data);
+          setWaitLoaderStatus(false);
+          flatListRef.current.scrollToEnd({ animated: true });
+        } else if (resp?.status == 'val_err') {
+          let message = ""
+          for (const key in resp.val_msg) {
+            if (resp.val_msg[key].message) {
+              message = resp.val_msg[key].message;
+              break;
+            }
+          }
+          setWaitLoaderStatus(false)
+          HelperFunctions.showToastMsg(message);
+
+        } else {
+          HelperFunctions.showToastMsg(resp.message);
+          setWaitLoaderStatus(false)
+        }
+
+      }).catch((err) => {
+        console.log(err);
+        setWaitLoaderStatus(false)
+        HelperFunctions.showToastMsg(err.message);
+      })
+  }
+
+  placeComment = () => {
+    setWaitLoaderStatus(true)
+    let paramData = {
+      "parent_id": announcementData?._id,
+      "reply_description": comment
+    }
+    postApi("company/company-dashboard-create-reply", paramData, token)
+      .then((resp) => {
+        console.log(resp)
+        if (resp?.status == 'success') {
+          getComments(announcementData?._id)
+          setWaitLoaderStatus(false);
+          setCommment("")
         } else if (resp?.status == 'val_err') {
           let message = ""
           for (const key in resp.val_msg) {
@@ -175,6 +237,9 @@ const AnnouncementDetails = props => {
 
 
 
+
+
+
   const ListRender = ({ index, item }) => (
     <View style={[styles.listCard, { paddingVertical: 18, marginBottom: 12, borderRadius: 12 }]}>
       <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -209,12 +274,18 @@ const AnnouncementDetails = props => {
       </View>
 
       <View style={{ paddingLeft: 8, marginTop: 6, width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Pressable onPress={(() => { setModalVisible(true) })} style={{ marginTop: 6, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+        <Pressable onPress={(() => {
+          item?.reply_length > 0 ? getComments(item?._id) : null;
+          setIsTextInputFocused(false);
+        })} style={{ marginTop: 6, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
           <MaterialIcons name="message-reply-text-outline" size={25} color="#878787" />
           <Text style={{ marginLeft: 8, marginBottom: 4, fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, color: colors.primary }}>{item?.reply_length > 0 ? item?.reply_length : null} Comments</Text>
         </Pressable>
 
-        <Pressable style={{ marginTop: 6, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingRight: 14 }}>
+        <Pressable onPress={(() => {
+          item?.reply_length > 0 ? getComments(item?._id) : null
+          setIsTextInputFocused(true);
+        })} style={{ marginTop: 6, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingRight: 14 }}>
           <MaterialIcons name="reply-outline" size={25} color="#878787" />
           <Text style={{ marginLeft: 8, fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, color: colors.primary }}>Reply</Text>
         </Pressable>
@@ -227,16 +298,16 @@ const AnnouncementDetails = props => {
     <View style={[styles.listCard, { paddingVertical: 22, marginBottom: 0, borderRadius: 0, }]}>
       <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
         <View style={{ justifyContent: 'center', alignItems: 'center', height: 35, width: 35, backgroundColor: '#007AFF', borderRadius: 50 }}>
-          <Image source={LOCAL_IMAGES.user} style={{ height: '100%', width: '100%', borderRadius: 50, objectFit: 'cover' }} />
+          <Image source={{ uri: item?.company_logo }} style={{ height: '100%', width: '100%', borderRadius: 50, objectFit: 'cover' }} />
         </View>
         <View style={{ paddingLeft: 12 }}>
-          <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>Brent Farrell DVM</Text>
+          <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>{item?.company_name}</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', marginTop: 8 }}>
             <Icon name="calendar" size={16} color="#878787" />
-            <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left', marginTop: 0, marginRight: 50, marginLeft: 4 }}>09-09-2024 :: Sep 5:59 PM</Text>
+            <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left', marginTop: 0, marginRight: 50, marginLeft: 4 }}>{HelperFunctions.getDateandtime(item?.created_at)}</Text>
           </View>
           <View style={{ width: '90%', backgroundColor: '#F5F7FB', marginRight: 20, paddingVertical: 8, paddingHorizontal: 10, borderRadius: 8, marginRight: 22, marginTop: 12 }}>
-            <Text style={{ fontFamily: FontFamily.regular, color: '#4E525E', fontSize: sizes.md + 1, textAlign: 'left', }}>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature</Text>
+            <Text style={{ fontFamily: FontFamily.regular, color: '#4E525E', fontSize: sizes.md + 1, textAlign: 'left', }}>{item?.reply_description}</Text>
           </View>
         </View>
       </View>
@@ -244,6 +315,29 @@ const AnnouncementDetails = props => {
     </View>
   );
 
+
+  const placeholderComments = ({ index, item }) => (
+
+    <SkeletonPlaceholder >
+      <View style={{
+        borderRadius: 8,
+        padding: 12,
+        paddingVertical: 18,
+        marginBottom: 12,
+        width: '100%'
+      }}>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', marginTop: 6 }}>
+          <View style={{ width: 30, height: 30, borderRadius: 50 }} />
+          <View style={{ width: "100%" }}>
+            <View style={{ width: "80%", height: 20, marginLeft: 4 }} />
+            <View style={{ width: "20%", height: 10, marginLeft: 4, marginTop: 8 }} />
+            <View style={{ width: "80%", height: 90, marginLeft: 4, marginTop: 8 }} />
+          </View>
+        </View>
+      </View>
+    </SkeletonPlaceholder>
+  );
 
 
   return (
@@ -259,17 +353,41 @@ const AnnouncementDetails = props => {
         />
 
         <View style={{ paddingHorizontal: 14, marginTop: 12 }}>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={[announcementData]}
-            renderItem={ListRender}
-            contentContainerStyle={{ marginBottom: 30 }}
-          />
+          {announcementData == "" && waitLoaderStatus == true ?
+            <SkeletonPlaceholder >
+              <View style={{
+                borderRadius: 8,
+                padding: 12,
+                paddingVertical: 18,
+                marginBottom: 12,
+                borderRadius: 12,
+                borderWidth: 1
+              }}>
+                <View style={{ width: "100%", height: 20 }} />
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
+                  <View style={{ width: "60%", height: 20, }} />
+                  <View style={{ width: "20%", height: 20 }} />
+                </View>
+                <View style={{ width: "100%", height: 150, marginTop: 10 }} />
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+                  <View style={{ width: "20%", height: 20, }} />
+                  <View style={{ width: "20%", height: 20 }} />
+                </View>
+              </View>
+            </SkeletonPlaceholder>
 
+            : <FlatList
+              showsVerticalScrollIndicator={false}
+              data={[announcementData]}
+              renderItem={ListRender}
+              contentContainerStyle={{ marginBottom: 30 }}
+            />
+
+          }
         </View>
 
       </View>
-      <Loader isLoading={waitLoaderStatus} />
+      {/* <Loader isLoading={waitLoaderStatus} /> */}
 
       <View style={{ flex: 1 }} >
         <Modal
@@ -285,7 +403,11 @@ const AnnouncementDetails = props => {
                 fontSize: 20,
                 fontWeight: 'bold',
               }}>Comments</Text>
-              <Pressable onPress={(() => { setModalVisible(false) })} style={{ alignSelf: 'flex-end', paddingBottom: 10, paddingTop: 10, paddingRight: 4 }}>
+              <Pressable onPress={(() => {
+                setModalVisible(false);
+                setCommmentArr("")
+
+              })} style={{ alignSelf: 'flex-end', paddingBottom: 10, paddingTop: 10, paddingRight: 4 }}>
                 <IonIcon
                   name={"close"}
                   size={24}
@@ -294,12 +416,22 @@ const AnnouncementDetails = props => {
               </Pressable>
             </View>
 
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              data={[1, 1, 1, 1, 1]}
-              renderItem={commentsRender}
-              contentContainerStyle={{ marginBottom: 30 }}
-            />
+            {commentArr == "" && waitLoaderStatus == true ?
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+                renderItem={placeholderComments}
+                contentContainerStyle={{ marginBottom: 30 }}
+              />
+              :
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={commentArr}
+                renderItem={commentsRender}
+                contentContainerStyle={{ marginBottom: 30 }}
+                ref={flatListRef}
+              />
+            }
           </View>
           {/* Footer Section */}
           <View style={styles.footer}>
@@ -308,12 +440,23 @@ const AnnouncementDetails = props => {
               <TextInput
                 style={styles.input}
                 placeholder="Write your comment..."
+                value={comment}
+                onChangeText={(text) => {
+                  setCommment(text)
+                }}
+
+                autoFocus={isTexinputFocused ? true : false}
+                ref={inputRef}
               />
-              <MaterialIcons name="send-circle" size={40} color="#878787" />
+              <MaterialIcons onPress={() => {
+                comment != "" ? placeComment() : null
+              }} name="send-circle" size={40} color={comment != "" ? colors.primary : "#878787"} />
             </View>
           </View>
         </Modal>
       </View>
+
+
     </SafeAreaView>
   )
 }

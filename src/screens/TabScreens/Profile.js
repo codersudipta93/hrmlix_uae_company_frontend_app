@@ -159,7 +159,7 @@ const Profile = props => {
             </View>
           </Pressable>
 
-          <Pressable style={[styles.listItem, { paddingLeft: 12 }]}>
+          <Pressable onPress={()=>{props.navigation.navigate('SallaryRevisionDashboard') }} style={[styles.listItem, { paddingLeft: 12 }]}>
             <AppraisalIcon />
             <View>
               <Text style={styles.itemText}>Salary Revision/Appraisal</Text>
@@ -172,8 +172,8 @@ const Profile = props => {
               <Text style={styles.itemText}>Holiday</Text>
             </View>
           </Pressable>
-
-          <Pressable style={[styles.listItem, { paddingLeft: 12 }]}>
+          
+          <Pressable onPress={()=>{props.navigation.navigate('BillingMaster') }} style={[styles.listItem, { paddingLeft: 12 }]}>
             <Billing />
             <View>
               <Text style={styles.itemText}>Billing</Text>
@@ -186,8 +186,8 @@ const Profile = props => {
               <Text style={styles.itemText}>Approval</Text>
             </View>
           </Pressable>
-
-          <Pressable style={[styles.listItem, { paddingLeft: 12 }]}>
+          
+          <Pressable onPress={()=>{props.navigation.navigate('DocumentVault') }} style={[styles.listItem, { paddingLeft: 12 }]}>
             <Document />
             <View>
               <Text style={styles.itemText}>Document Vault</Text>
