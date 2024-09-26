@@ -426,6 +426,7 @@ const HelperFunctions = {
   jsonParse(data) {
     return JSON.parse(data)
   },
+
   formatHours(input) {
     // Separate the integer and decimal parts
     let hours = Math.floor(input);
@@ -501,6 +502,7 @@ const HelperFunctions = {
 
     return `${hoursStr}H:${minutesStr}M`;
   },
+
   calculateWorkDuration(login_time, logout_time) {
     // Ensure both times are defined
     if (!login_time || !logout_time) {
@@ -542,6 +544,7 @@ const HelperFunctions = {
 
     return `${hoursStr}H:${minutesStr}M`;
   },
+
   adjustColorContrast(hex, amount) {
     //  console.log(hex)
     let r = parseInt(hex.slice(1, 3), 16);
@@ -625,6 +628,7 @@ const HelperFunctions = {
 
     return { displayHours: `${formattedHours}H:${formattedMinutes}M`, rawHours: `${formattedHours}.${formattedMinutes}` };
   },
+  
   getLeaveTypes(attendance_type) {
 
     if (attendance_type == "time") {

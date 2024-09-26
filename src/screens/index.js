@@ -53,4 +53,16 @@ export {default as EmployeeHrDetails} from './EmployeeSubPages/EmployeeHrDetails
 export {default as EmployeePersonalDetails} from './EmployeeSubPages/EmployeePersonalDetails.js'
 export {default as OtherInfoDashboard} from './EmployeeSubPages/OtherInfoDashboard.js'
 export {default as ShortcutsDashboard} from './EmployeeSubPages/ShortcutsDashboard.js'
+export {default as TrainingDetails} from './EmployeeSubPages/TrainingDetails.js'
+export {default as DiscipilinaryAction} from './EmployeeSubPages/DiscipilinaryAction.js'
+export {default as AccidentDetails} from './EmployeeSubPages/AccidentDetails.js'
+export {default as ExtraCurricular} from './EmployeeSubPages/ExtraCurricular.js'
+export {default as EducationDetails} from './EmployeeSubPages/EducationDetails.js'
+export {default as EmployeeAssets} from './EmployeeSubPages/EmployeeAssets.js'
+export {default as ContractDetails} from './EmployeeSubPages/ContractDetails.js'
+export {default as AnnualComponent} from './EmployeeSubPages/AnnualComponent.js'
+export {default as KPIPerformance} from './EmployeeSubPages/KPIPerformance.js'
+export {default as Fnf} from './EmployeeSubPages/Fnf.js'
+export {default as FnfReport} from './EmployeeSubPages/FnfReport.js'
+
 

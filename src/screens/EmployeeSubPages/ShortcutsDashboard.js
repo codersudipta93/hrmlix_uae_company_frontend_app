@@ -47,11 +47,6 @@ import CustomHeader from '../../component/Header';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useTranslation } from 'react-i18next'; //for translation service
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import Delete from '../../assets/icons/Delete';
-import Filter from '../../assets/icons/Filter';
-import Action from '../../assets/icons/Action';
-import MonthModal from '../../component/MonthModal';
 import SkeletonLoader from '../../component/SkeletonLoader';
 
 const ShortcutsDashboard = props => {
@@ -61,7 +56,6 @@ const ShortcutsDashboard = props => {
   const dispatch = useDispatch();
   const { userDetails, token, needRefresh } = useSelector(state => state.project);
   const { t, i18n } = useTranslation();
-  const BackgroundImage = require('../../assets/imgs/bg1.png');
   const [empdata, setempdata] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   
@@ -71,7 +65,7 @@ const ShortcutsDashboard = props => {
       console.log(i18n.language);
       console.log(I18nManager.isRTL);
       if (props?.route?.params) {
-        console.log("paramData ======> ")
+        console.log("Shortcut info Page data  ======> ")
         console.log(props?.route?.params?.paramData);
       }
     }
@@ -127,7 +121,7 @@ const ShortcutsDashboard = props => {
             />
             :
             <View style={{ marginTop: 18, paddingHorizontal: 12 }}>
-              <Pressable onPress={() => { props.navigation.navigate('EmployeePersonalDetails', { paramData: empdata }) }} style={[styles.cardContainer, { backgroundColor: '#C9EEFC' }]}>
+              <Pressable onPress={() => { props.navigation.navigate('EmployeeAssets',{ paramData: props?.route?.params?.paramData })}} style={[styles.cardContainer, { backgroundColor: '#C9EEFC' }]}>
                 <View style={[styles.leftSection, {}]}>
                   <ImageBackground source={LOCAL_IMAGES.attendanceCardBG1} style={[styles.background, { width: 75, height: 80 }]}>
                     <View style={styles.container}>
@@ -140,7 +134,7 @@ const ShortcutsDashboard = props => {
                 </View>
               </Pressable>
 
-              <Pressable onPress={() => { props.navigation.navigate('EmployeeAddress', { paramData: empdata }) }} style={[styles.cardContainer, { backgroundColor: '#FCE8E9' }]}>
+              <Pressable onPress={() => { props.navigation.navigate('ContractDetails',{ paramData: props?.route?.params?.paramData })}} style={[styles.cardContainer, { backgroundColor: '#FCE8E9' }]}>
                 <View style={[styles.leftSection, {}]}>
                   <ImageBackground source={LOCAL_IMAGES.attendanceCardBG2} style={[styles.background, { width: 75, height: 80 }]}>
                     <View style={styles.container}>
@@ -153,7 +147,7 @@ const ShortcutsDashboard = props => {
                 </View>
               </Pressable>
 
-              <Pressable onPress={() => { props.navigation.navigate('EmployeeBankDetails', { paramData: empdata }) }} style={[styles.cardContainer, { backgroundColor: '#DBDAFE' }]}>
+              <Pressable onPress={() => { props.navigation.navigate('AnnualComponent',{ paramData: props?.route?.params?.paramData })}} style={[styles.cardContainer, { backgroundColor: '#DBDAFE' }]}>
                 <View style={[styles.leftSection, {}]}>
                   <ImageBackground source={LOCAL_IMAGES.attendanceCardBG3} style={[styles.background, { width: 75, height: 80 }]}>
                     <View style={styles.container}>
@@ -166,7 +160,7 @@ const ShortcutsDashboard = props => {
                 </View>
               </Pressable>
 
-              <Pressable onPress={() => { props.navigation.navigate('EmployeeHrDetails', { paramData: empdata }) }} style={[styles.cardContainer, { backgroundColor: '#C9EEFC' }]}>
+              <Pressable onPress={() => { props.navigation.navigate('Fnf',{ paramData: props?.route?.params?.paramData })}} style={[styles.cardContainer, { backgroundColor: '#C9EEFC' }]}>
                 <View style={[styles.leftSection, {}]}>
                   <ImageBackground source={LOCAL_IMAGES.attendanceCardBG1} style={[styles.background, { width: 75, height: 80 }]}>
                     <View style={styles.container}>
@@ -179,7 +173,7 @@ const ShortcutsDashboard = props => {
                 </View>
               </Pressable>
 
-              <Pressable onPress={() => { props.navigation.navigate('EmployeeHrDetails') }} style={[styles.cardContainer, { backgroundColor: '#FCE8E9' }]}>
+              <Pressable onPress={() => { props.navigation.navigate('KPIPerformance',{ paramData: props?.route?.params?.paramData })}} style={[styles.cardContainer, { backgroundColor: '#FCE8E9' }]}>
                 <View style={[styles.leftSection, {}]}>
                   <ImageBackground source={LOCAL_IMAGES.attendanceCardBG2} style={[styles.background, { width: 75, height: 80 }]}>
                     <View style={styles.container}>
@@ -190,11 +184,11 @@ const ShortcutsDashboard = props => {
                 <View style={styles.rightSection}>
                   <Text style={styles.cardText}>Kpi & Performance</Text>
                 </View>
-              </Pressable>
+              </Pressable>   
             </View>
           }
         </ScrollView>
-
+  
       </View>
     </SafeAreaView>
   )

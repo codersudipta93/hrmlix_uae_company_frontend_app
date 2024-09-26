@@ -80,7 +80,7 @@ const Dashboard = props => {
     if (isFocused == true) {
       console.log(i18n.language);
       console.log(I18nManager.isRTL);
-     // props.navigation.navigate('GovtRule') 
+      props.navigation.navigate('FnfReport') 
     }
   }, [isFocused]);
 
