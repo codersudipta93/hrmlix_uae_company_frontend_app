@@ -64,5 +64,6 @@ export {default as AnnualComponent} from './EmployeeSubPages/AnnualComponent.js'
 export {default as KPIPerformance} from './EmployeeSubPages/KPIPerformance.js'
 export {default as Fnf} from './EmployeeSubPages/Fnf.js'
 export {default as FnfReport} from './EmployeeSubPages/FnfReport.js'
+export {default as EmployeeFilter} from './EmployeeSubPages/EmployeeFilter.js'
 
 

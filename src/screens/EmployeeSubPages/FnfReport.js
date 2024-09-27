@@ -62,7 +62,7 @@ const FnfReport = props => {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const sampleData = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    const [isModalVisible, setModalVisible] = useState(false);
+    const [reportData, setReportData] = useState("");
 
     // Animation state
     const [animValue] = useState(new Animated.Value(1000)); // Start off-screen
@@ -70,14 +70,17 @@ const FnfReport = props => {
     useEffect(() => {
         if (isFocused == true) {
             console.log(i18n.language);
-            console.log(I18nManager.isRTL)
+            console.log(I18nManager.isRTL);
+            if (props?.route?.params) {
+                console.log("Employee assets paramData ======> ")
+                console.log(props?.route?.params?.paramData);
+                setReportData(props?.route?.params?.paramData)
+              }
         }
     }, [isFocused]);
 
 
-    useEffect(() => {
-
-    }, []);
+  
 
     useFocusEffect(
         React.useCallback(() => {
@@ -114,7 +117,7 @@ const FnfReport = props => {
                     style={{ flexDirection: 'row' }}
                     iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
                     icon={LOCAL_IMAGES.user}
-                    searchIcon={true}
+                    searchIcon={false}
                 />
 
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -131,37 +134,41 @@ const FnfReport = props => {
 
                         {/* Employee Information */}
                         <View style={styles.infoSection}>
-                            <InfoRow label="Employee Name" value="Subham Das" />
+                            <InfoRow label="Employee Name" value={ reportData?.emp_first_name + " " + reportData?.emp_last_name}  />
                             <InfoRow label="Designation" value="N/A" />
-                            <InfoRow label="Date Of Joining" value="Jan 19, 2001" />
-                            <InfoRow label="Date Of Leaving" value="Sep 26, 2024" />
-                            <InfoRow label="Working Tenure" value="23 Years 8 Months 11 Days" />
-                            <InfoRow label="Last Working Month" value="Sep 2024" />
+                            <InfoRow label="Date Of Joining" value={reportData?.date_of_join ? HelperFunctions.getDateDDMMYY(reportData?.date_of_join) : "N/A"} />
+                            <InfoRow label="Date Of Leaving" value={reportData?.full_and_final_data?.last_working_date ? HelperFunctions.getDateDDMMYY(reportData?.full_and_final_data?.last_working_date): "N/A"} />
+                            <InfoRow label="Working Tenure" value={reportData?.date_of_join && reportData?.full_and_final_data?.last_working_date ? HelperFunctions.dateDiff(reportData?.date_of_join, reportData?.full_and_final_data?.last_working_date) : 'N/A'} />
+                            <InfoRow label="Last Working Month" value={reportData?.full_and_final_data?.last_working_date ? HelperFunctions.getmonthYear(reportData?.full_and_final_data?.last_working_date)?.month_name + ', ' + HelperFunctions.getYear(reportData?.full_and_final_data?.last_working_date) : 'N/A'} />
                             <InfoRow label="Month Days" value="N/A" />
-                            <InfoRow label="Pay days" value="N/A" />
+                            <InfoRow label="Pay days" value="N/A" borderBottom={true}/>
+                        </View>
+
+                        <View style={styles.infoSection}>
+                            <InfoRow label="COMPONENTS" value="RATE" labelStyle={{fontFamily:FontFamily.bold}} valueStyle={{fontFamily:FontFamily.bold}}/>
+                            <InfoRow label="Earned Gross" value="0.00" borderBottom={true} />
                         </View>
 
 
                         {/* Earned Gross Section */}
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>COMPONENTS</Text>
-                            <View style={styles.row}>
-                                <Text style={styles.label}>Earned Gross</Text>
-                                <Text style={styles.value}>0.00</Text>
-                            </View>
+                            <Text style={styles.sectionTitle}>EARNINGS</Text>
+                            <View style={styles.infoSection}>
+                            <InfoRow label="COMPONENTS" value="Amount" labelStyle={{fontFamily:FontFamily.bold}} valueStyle={{fontFamily:FontFamily.bold}}/>
+                            <InfoRow label="Earned Gross" value="0.00" borderBottom={true} />
+                        </View>
                         </View>
 
                         {/* Earnings Section */}
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>EARNINGS</Text>
-                            <InfoRow label="Earned Gross" value="0.00" />
-
+                            
                             {/* Other Components */}
-                            <Text style={[styles.sectionTitle,{marginTop:18}]}>Other Components</Text>
+                            <InfoRow label="Other Components" value="Amount" labelStyle={{fontFamily:FontFamily.bold}} valueStyle={{fontFamily:FontFamily.bold}}/>
                             <InfoRow label="Annual Bonus/ Leave Encashment" value="" />
                             <InfoRow label="Gratuity" value="" />
                             <InfoRow label="Other payments" value="" />
-                            <InfoRow label="Total Income" value="" />
+                            <InfoRow label="Total Income" value=""  />
+                            <InfoRow label="Net Payable" value="" borderBottom={true} />
                         </View>
 
                     </View>
@@ -210,7 +217,7 @@ const styles = StyleSheet.create({
         fontFamily:FontFamily.regular,
     },
     infoSection: {
-        marginTop: 20,
+        marginTop: 10,
     },
     section: {
         marginTop: 6,

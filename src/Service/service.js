@@ -3,41 +3,37 @@ import { useSelector } from "react-redux";
 import { AllSourcePath } from '../constants/PathConfig';
 
 //== Post without token API
+
+
 const postApi = (endpoint, data, token, deviceToken) => {
-  console.log(endpoint, "api called =====>")
+  console.log(endpoint, "API called =====>");
   console.log("Endpoint", AllSourcePath.API_BASE_URL_DEV + endpoint);
-  console.log("Resquested params =========> ", data)
-  console.log("Token", token)
-  //console.log("Devicetoken", deviceToken)
+  console.log("Requested params =========> ", data);
+  console.log("Token", token);
+  console.log("Device token", deviceToken);
   console.log("==============================");
 
   return new Promise((resolve, reject) => {
-
-    try {
-      axios.post(AllSourcePath.API_BASE_URL_DEV + endpoint, data, {
-        headers: {
-          'Accept': "*",
-          "Content-Type": "application/json",
-          'x-access-token': token ? token : ""
-         // 'device-token': deviceToken
-        }
-      }).then((response) => {
-        console.log('API response ==========================================>')
-        resolve(response.data);
-      })
-        .catch((error) => {
-          console.error('error', error);
-          reject(error);
-        });
-
-    }
-    catch(err) {
-      console.error('err', err);
-    }                            
-
+    axios.post(AllSourcePath.API_BASE_URL_DEV + endpoint, data, {
+      headers: {
+        'Accept': "*/*",
+        "Content-Type": "application/json",
+        'x-access-token': token ? token : "",
+        'device-token': deviceToken || ""  // Optional, will pass empty string if deviceToken is null or undefined
+      }
+    })
+    .then((response) => {
+      console.log('API response ==========================================>');
+      resolve(response.data);
+    })
+    .catch((error) => {
+      console.error('API error', error);
+      reject(error);
+    });
   });
-
 };
+
+
 
 
 const profilePhotoUpload = (endpoint, bodyData, token) => {

@@ -67,11 +67,11 @@ const AnnualComponent = props => {
   const { userDetails, token, needRefresh, masterData } = useSelector(state => state.project);
   const { t, i18n } = useTranslation();
 
-  const [imageUrl, setImageurl] = useState("");
-  const [imageModalVisible, setImageModalVisibility] = useState(false);
   const sampleData = [1, 1, 1, 1, 1];
 
   const [isLoading, setIsLoading] = useState(false);
+  const [heads, setHead] = useState(false);
+  
   const [selectedIndex, setIndex] = useState(null);
 
   useEffect(() => {
@@ -86,6 +86,7 @@ const AnnualComponent = props => {
     if (props?.route?.params) {
       console.log("Annual Component page paramData ======> ")
       //console.log(props?.route?.params?.paramData?.emp_det?.training);
+      getHeadData()
     }
   }, []);
 
@@ -113,16 +114,13 @@ const AnnualComponent = props => {
   };
 
 
-  const showImage = (item) => {
-
-    if (item?.education_file_image) {
+  const getHeadData = (item) => {
       setIsLoading(true);
       let param = { image_path: item?.education_file_image }
-      postApi("/company/single-view-image", param, token)
+      postApi("/company/get-extra-earning-head", {}, token)
         .then((resp) => {
           if (resp?.status == 'success') {
-            setImageurl(resp?.image)
-            console.log(resp?.image)
+            setHead(resp?.temp_head);
             setIsLoading(false);
           } else {
             HelperFunctions.showToastMsg(resp.message);
@@ -133,10 +131,9 @@ const AnnualComponent = props => {
           setIsLoading(false)
           HelperFunctions.showToastMsg(err.message);
         })
-    } else { HelperFunctions.showToastMsg('Sorry! No Photo found') }
+    
   }
 
-  useEffect(() => { if (imageUrl != "") { setImageModalVisibility(true) } }, [imageUrl]);
 
   const ListRender = ({ index, item }) => (
     <>
@@ -181,7 +178,7 @@ const AnnualComponent = props => {
             </View>
             <View style={{ paddingRight: 12 }}>
               <Text style={[styles.optionVal, { textTransform: 'capitalize', fontSize: sizes.md, marginTop: 6, fontFamily: FontFamily.regular }]}>
-                {item?.earning_head_id ? item?.earning_head_id : "N/A"}
+                {item?.earning_head_id ? HelperFunctions.getNameById(heads,item?.earning_head_id,'head_name') : "N/A"}
               </Text>
             </View>
           </View>
@@ -233,20 +230,11 @@ const AnnualComponent = props => {
             )}
           </View>
         </ScrollView>
+        <Loader isLoading={isLoading} />
       </View>
 
       <Loader isLoading={isLoading} />
 
-      <CustomImageViewer
-        backgroundColor={'#fff'}
-        images={[{
-          url: imageUrl,
-        }]}
-        isVisible={imageModalVisible}
-        onClose={() => {
-          setImageModalVisibility(false);
-        }}
-      />
     </SafeAreaView>
   )
 }

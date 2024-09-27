@@ -59,7 +59,8 @@ import {
   AnnualComponent,
   KPIPerformance,
   Fnf,
-  FnfReport
+  FnfReport,
+  EmployeeFilter
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -129,6 +130,7 @@ function Navigator() {
         <Stack.Screen name="KPIPerformance" component={KPIPerformance} />
         <Stack.Screen name="Fnf" component={Fnf} />
         <Stack.Screen name="FnfReport" component={FnfReport} />
+        <Stack.Screen name="EmployeeFilter" component={EmployeeFilter} />
         
       </Stack.Navigator>
     </NavigationContainer>

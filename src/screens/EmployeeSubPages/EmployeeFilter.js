@@ -56,7 +56,7 @@ import Loader from '../../component/Loader';
 import FloatingTimePicker from '../../component/FloatingTimePicker';
 import FloatingYearMonthPicker from '../../component/FloatingYearMonthPicker';
 
-const ApplyRevisionFilter = props => {
+const EmployeeFilter = props => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const dispatch = useDispatch();
@@ -85,7 +85,7 @@ const ApplyRevisionFilter = props => {
     const [attendance, setattendance] = useState([{ label: 'Whole Day', value: 'wholeday' }, { label: 'Monthly', value: 'monthly' }, { label: 'Time', value: 'time' }, { label: 'Half Day', value: 'halfday' }]);
     const [attendance_type, setattendance_type] = useState("");
 
-    const [filter_type, setfilter_type] = useState("");
+    const [advanceFilter, setAdvance_filter] = useState(false);
     const [revision_history_type, set_revision_history_type] = useState("");
 
 
@@ -129,10 +129,10 @@ const ApplyRevisionFilter = props => {
                 setattendance(attendance)
                 setattendance_type(pdata?.attendance_type);
 
-                setfilter_type(pdata?.filter_type)
+                setAdvance_filter(pdata?.filter_type)
 
-                if(pdata?.filter_type == "revision_history_report"){
-                   
+                if (pdata?.filter_type == "revision_history_report") {
+
                     set_revision_history_type(pdata?.search_type);
                     setStartdate(HelperFunctions.convertToISOWithTime(pdata?.wage_from_date))
                     setEndDate(HelperFunctions.convertToISOWithTime(pdata?.wage_to_date))
@@ -189,16 +189,16 @@ const ApplyRevisionFilter = props => {
                 "wage_month_to": HelperFunctions.getMonth(endDate),
                 "wage_year_from": HelperFunctions.getYear(startdate),
                 "wage_year_to": HelperFunctions.getYear(endDate),
-                "pageno": 1,                                                                                           
+                "pageno": 1,
                 "perpage": 100,
                 "filter_type": filter_type,
             }
 
-                //console.log(paramData)
-                props.navigation.navigate('ApplyRevision', { paramData: paramData })
-                dispatch(_setreffeshStatus(true));
-                //console.log(paramData)
-           
+            //console.log(paramData)
+            props.navigation.navigate('ApplyRevision', { paramData: paramData })
+            dispatch(_setreffeshStatus(true));
+            //console.log(paramData)
+
         } else {
             let paramData = {
                 "pageno": 1,
@@ -244,17 +244,17 @@ const ApplyRevisionFilter = props => {
 
 
         let paramData = {
-        "pageno": 1,
-        "perpage": 100,
-        "department_id":  "",
-        "hod_id": "",
-        "designation_id":"",
-        "branch_id":  "",
-        "multiEdit": "",
-        "searchkey":  "",
-        "attendance_type": attendance_type?.value,
-        "filter_type": "apply_revision",
-    }
+            "pageno": 1,
+            "perpage": 100,
+            "department_id": "",
+            "hod_id": "",
+            "designation_id": "",
+            "branch_id": "",
+            "multiEdit": "",
+            "searchkey": "",
+            "attendance_type": attendance_type?.value,
+            "filter_type": "apply_revision",
+        }
 
         props.navigation.navigate('ApplyRevision', { paramData: paramData })
         dispatch(_setreffeshStatus(true));
@@ -275,7 +275,7 @@ const ApplyRevisionFilter = props => {
                 <ScrollView showsVerticalScrollIndicator={false}>
 
                     <View style={{ paddingHorizontal: 14, marginTop: 12 }}>
-                       
+
                         <View style={{ padding: 12, backgroundColor: colors.white, borderRadius: 8, marginBottom: 20 }}>
 
                             <FloatingLabelInput
@@ -293,7 +293,7 @@ const ApplyRevisionFilter = props => {
 
                             <FloatingDropdown
                                 multiSelect={false}
-                                labelName="Attendance Type"
+                                labelName="Client"
                                 selectedValueData={attendance_type != '' ? attendance_type : ""}
                                 options={attendance}
                                 listLabelKeyName={['value']}
@@ -477,92 +477,257 @@ const ApplyRevisionFilter = props => {
                                 inputMargin={18}
                             />
 
+                            <FloatingDropdown
+                                multiSelect={false}
+                                labelName="Status"
+                                selectedValueData={attendance_type != '' ? attendance_type : ""}
+                                options={attendance}
+                                listLabelKeyName={['value']}
+                                onSelect={(option) => {
+                                    let data = HelperFunctions.copyArrayOfObj(attendance);
+                                    for (let k = 0; k < data.length; k++) {
+                                        if (data[k].value == option.value) {
+                                            data[k].selected = data[k].selected == true;
+                                            setattendance_type(data[k])
+                                        } else {
+                                            data[k].selected = data[k].selected == false;
+                                        }
+                                    }
+
+                                    setattendance(data)
+                                }}
+                                inputContainerColor="#CACDD4"
+                                labelBg={colors.white}
+                                labelColor="#007AFF"
+                                placeholderColor="#8A8E9C"
+                                inputColor={colors.primary}
+                                inputMargin={18}
+                            />
+
+
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
 
-                                <Pressable onPress={() => { setfilter_type('apply_revision') }} style={{ borderWidth: 1, marginTop: 18, borderColor: filter_type == 'apply_revision' ? colors.primary : "#CACDD4", borderRadius: 6, paddingHorizontal: 4, paddingVertical: 12, width: '45%' }}>
-                                    <Text style={{ fontFamily: FontFamily.semibold, color: filter_type == 'apply_revision' ? colors.primary : '#4E525E', fontSize: sizes.h6 - 1, textAlign: 'center' }}>
-                                        Apply Revision
+                                <Pressable onPress={() => { setAdvance_filter(!advanceFilter) }} style={{ borderWidth: 1, marginTop: 18, borderColor: advanceFilter ? colors.primary : "#CACDD4", borderRadius: 6, paddingHorizontal: 4, paddingVertical: 12, width: '45%' }}>
+                                    <Text style={{ fontFamily: FontFamily.semibold, color: advanceFilter ? colors.primary : '#4E525E', fontSize: sizes.h6 - 1, textAlign: 'center' }}>
+                                        Advance Filter
                                     </Text>
                                 </Pressable>
 
-                                <Pressable onPress={() => {
-                                    setfilter_type('revision_history_report')
-                                    revision_history_type == "" ? set_revision_history_type('effective_Dt') : null;
-                                }} style={{ borderWidth: 1, marginTop: 18, borderColor: filter_type == 'revision_history_report' ? colors.primary : "#CACDD4", borderRadius: 6, paddingHorizontal: 4, paddingVertical: 12, width: '45%', marginLeft: 16 }}>
-                                    <Text style={{ fontFamily: FontFamily.semibold, color: filter_type == 'revision_history_report' ? colors.primary : '#4E525E', fontSize: sizes.h6 - 1, textAlign: 'center' }}>
-                                        Revision History Report</Text>
-                                </Pressable>
+
                             </View>
 
 
-                            {filter_type == 'revision_history_report' ? <>
+                            {advanceFilter ? <>
 
-                                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%', marginBottom: 15 }}>
+                                <FloatingDropdown
+                                    multiSelect={false}
+                                    labelName="Select Gender"
+                                    selectedValueData={attendance_type != '' ? attendance_type : ""}
+                                    options={attendance}
+                                    listLabelKeyName={['value']}
+                                    onSelect={(option) => {
+                                        let data = HelperFunctions.copyArrayOfObj(attendance);
+                                        for (let k = 0; k < data.length; k++) {
+                                            if (data[k].value == option.value) {
+                                                data[k].selected = data[k].selected == true;
+                                                setattendance_type(data[k])
+                                            } else {
+                                                data[k].selected = data[k].selected == false;
+                                            }
+                                        }
 
-                                    <Pressable onPress={() => { set_revision_history_type('effective_Dt') }} style={{ borderWidth: 1, marginTop: 18, borderColor: revision_history_type == 'effective_Dt' ? colors.primary : "#CACDD4", borderRadius: 6, paddingHorizontal: 4, paddingVertical: 12, width: '45%' }}>
-                                        <Text style={{ fontFamily: FontFamily.semibold, color: revision_history_type == 'effective_Dt' ? colors.primary : '#4E525E', fontSize: sizes.h6 - 1, textAlign: 'center' }}>
-                                            Effective Dt
-                                        </Text>
-                                    </Pressable>
+                                        setattendance(data)
+                                    }}
+                                    inputContainerColor="#CACDD4"
+                                    labelBg={colors.white}
+                                    labelColor="#007AFF"
+                                    placeholderColor="#8A8E9C"
+                                    inputColor={colors.primary}
+                                    inputMargin={18}
+                                />
 
-                                    <Pressable onPress={() => { set_revision_history_type('revision_Dt') }} style={{ borderWidth: 1, marginTop: 18, borderColor: revision_history_type == 'revision_Dt' ? colors.primary : "#CACDD4", borderRadius: 6, paddingHorizontal: 4, paddingVertical: 12, width: '45%', marginLeft: 16 }}>
-                                        <Text style={{ fontFamily: FontFamily.semibold, color: revision_history_type == 'revision_Dt' ? colors.primary : '#4E525E', fontSize: sizes.h6 - 1, textAlign: 'center' }}>
-                                            Revision Dt</Text>
-                                    </Pressable>
+                                <FloatingDropdown
+                                    multiSelect={false}
+                                    labelName="Select Region"
+                                    selectedValueData={attendance_type != '' ? attendance_type : ""}
+                                    options={attendance}
+                                    listLabelKeyName={['value']}
+                                    onSelect={(option) => {
+                                        let data = HelperFunctions.copyArrayOfObj(attendance);
+                                        for (let k = 0; k < data.length; k++) {
+                                            if (data[k].value == option.value) {
+                                                data[k].selected = data[k].selected == true;
+                                                setattendance_type(data[k])
+                                            } else {
+                                                data[k].selected = data[k].selected == false;
+                                            }
+                                        }
+
+                                        setattendance(data)
+                                    }}
+                                    inputContainerColor="#CACDD4"
+                                    labelBg={colors.white}
+                                    labelColor="#007AFF"
+                                    placeholderColor="#8A8E9C"
+                                    inputColor={colors.primary}
+                                    inputMargin={18}
+                                />
+
+                                <View style={{ marginBottom: 4, marginTop: 14, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                    <Text style={{ fontFamily: FontFamily.semibold, color: '#5A5B5B', fontSize: sizes.h6, lineHeight: 35 }}>
+                                        Age
+                                    </Text>
                                 </View>
-
-                                <View style={{ marginBottom: 8, marginTop: 18, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
-                                    <FloatingYearMonthPicker
-                                        pickerType="date"
-                                        pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
-                                        pickerIcon={LOCAL_ICONS.calender}
-                                        editableStatus={true}
-                                        labelName={'Date From'}
+                                <>
+                                    <FloatingLabelInput
+                                        label="From"
+                                        placeholder="Age from"
                                         inputContainerColor="#CACDD4"
                                         labelBg={colors.white}
                                         labelColor="#007AFF"
                                         placeholderColor="#8A8E9C"
-                                        inputColor="#5A5B5B"
-                                        //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
-                                        selectedValue={startdate ? HelperFunctions.getmonthYear(startdate).month + "/" + HelperFunctions.getmonthYear(startdate).year : "" }
-                                        inputMargin={10}
-                                        confirmDateClick={(timestamp) => {
-                                            console.log(timestamp)
-                                            console.log(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
-                                            //setStartdate(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
-                                            setStartdate(timestamp.toISOString())
-                                        }}
+                                        inputColor={colors.primary}
+                                        value={search}
+                                        onChangeText={setSearchVal}
                                     />
 
-                                </View>
-
-                                <View style={{ marginBottom: 8, marginTop: 18, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
-                                    <FloatingYearMonthPicker
-                                        pickerType="date"
-                                        pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
-                                        pickerIcon={LOCAL_ICONS.calender}
-                                        editableStatus={true}
-                                        labelName={'Date To'}
+                                    <FloatingLabelInput
+                                        label="To"
+                                        placeholder="Age upto"
                                         inputContainerColor="#CACDD4"
                                         labelBg={colors.white}
                                         labelColor="#007AFF"
                                         placeholderColor="#8A8E9C"
-                                        inputColor="#5A5B5B"
-                                        //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
-                                        selectedValue={endDate ? HelperFunctions.getmonthYear(endDate).month + "/" + HelperFunctions.getmonthYear(endDate).year : "" }
-                                        inputMargin={20}
-                                        confirmDateClick={(timestamp) => {
-                                            console.log(timestamp)
-                                            console.log(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
-                                            setEndDate(timestamp.toISOString());
-                                        }}
+                                        inputColor={colors.primary}
+                                        value={search}
+                                        onChangeText={setSearchVal}
                                     />
+                                </>
 
+
+
+                                <View style={{ marginBottom: 4, marginTop:0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                    <Text style={{ fontFamily: FontFamily.semibold, color: '#5A5B5B', fontSize: sizes.h6, lineHeight: 35 }}>Date of Joining</Text>
                                 </View>
+                                <>
+
+                                    <View style={{ marginBottom: 4, marginTop: 6, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                        <FloatingYearMonthPicker
+                                            pickerType="date"
+                                            pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
+                                            pickerIcon={LOCAL_ICONS.calender}
+                                            editableStatus={true}
+                                            labelName={'Date From'}
+                                            inputContainerColor="#CACDD4"
+                                            labelBg={colors.white}
+                                            labelColor="#007AFF"
+                                            placeholderColor="#8A8E9C"
+                                            inputColor="#5A5B5B"
+                                            //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
+                                            selectedValue={startdate ? HelperFunctions.getmonthYear(startdate).month + "/" + HelperFunctions.getmonthYear(startdate).year : ""}
+                                            inputMargin={10}
+                                            confirmDateClick={(timestamp) => {
+                                                console.log(timestamp)
+                                                console.log(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
+                                                //setStartdate(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
+                                                setStartdate(timestamp.toISOString())
+                                            }}
+                                        />
+
+                                    </View>
+
+
+
+                                    <View style={{ marginBottom: 0, marginTop: 4, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                        <FloatingYearMonthPicker
+                                            pickerType="date"
+                                            pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
+                                            pickerIcon={LOCAL_ICONS.calender}
+                                            editableStatus={true}
+                                            labelName={'Date To'}
+                                            inputContainerColor="#CACDD4"
+                                            labelBg={colors.white}
+                                            labelColor="#007AFF"
+                                            placeholderColor="#8A8E9C"
+                                            inputColor="#5A5B5B"
+                                            //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
+                                            selectedValue={endDate ? HelperFunctions.getmonthYear(endDate).month + "/" + HelperFunctions.getmonthYear(endDate).year : ""}
+                                            inputMargin={20}
+                                            confirmDateClick={(timestamp) => {
+                                                console.log(timestamp)
+                                                console.log(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
+                                                setEndDate(timestamp.toISOString());
+                                            }}
+                                        />
+
+                                    </View>
+
+                                </>
+
+
+                                <View style={{ marginBottom: 4, marginTop: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                    <Text style={{ fontFamily: FontFamily.semibold, color: '#5A5B5B', fontSize: sizes.h6, lineHeight: 35 }}>
+                                        Date of exit
+                                    </Text>
+                                </View>
+                                <>
+
+                                    <View style={{ marginBottom: 4, marginTop: 6, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                        <FloatingYearMonthPicker
+                                            pickerType="date"
+                                            pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
+                                            pickerIcon={LOCAL_ICONS.calender}
+                                            editableStatus={true}
+                                            labelName={'Date From'}
+                                            inputContainerColor="#CACDD4"
+                                            labelBg={colors.white}
+                                            labelColor="#007AFF"
+                                            placeholderColor="#8A8E9C"
+                                            inputColor="#5A5B5B"
+                                            //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
+                                            selectedValue={startdate ? HelperFunctions.getmonthYear(startdate).month + "/" + HelperFunctions.getmonthYear(startdate).year : ""}
+                                            inputMargin={10}
+                                            confirmDateClick={(timestamp) => {
+                                                console.log(timestamp)
+                                                console.log(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
+                                                //setStartdate(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
+                                                setStartdate(timestamp.toISOString())
+                                            }}
+                                        />
+
+                                    </View>
+
+
+                                    <View style={{ marginBottom: 8, marginTop: 4, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                        <FloatingYearMonthPicker
+                                            pickerType="date"
+                                            pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
+                                            pickerIcon={LOCAL_ICONS.calender}
+                                            editableStatus={true}
+                                            labelName={'Date To'}
+                                            inputContainerColor="#CACDD4"
+                                            labelBg={colors.white}
+                                            labelColor="#007AFF"
+                                            placeholderColor="#8A8E9C"
+                                            inputColor="#5A5B5B"
+                                            //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
+                                            selectedValue={endDate ? HelperFunctions.getmonthYear(endDate).month + "/" + HelperFunctions.getmonthYear(endDate).year : ""}
+                                            inputMargin={20}
+                                            confirmDateClick={(timestamp) => {
+                                                console.log(timestamp)
+                                                console.log(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
+                                                setEndDate(timestamp.toISOString());
+                                            }}
+                                        />
+
+                                    </View>
+
+                                </>
+
                             </> : null}
 
 
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop:20 }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 }}>
 
                                 <CustomButton
                                     requireBorder={true}
@@ -630,4 +795,4 @@ const styles = StyleSheet.create({
 
 
 });
-export default ApplyRevisionFilter;
+export default EmployeeFilter;

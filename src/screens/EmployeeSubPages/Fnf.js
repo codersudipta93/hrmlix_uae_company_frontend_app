@@ -59,6 +59,7 @@ import { _setmasterData } from '../../Store/Reducers/ProjectReducer';
 import BootomSheet from '../../component/BootomSheet';
 import Loader from '../../component/Loader';
 import CustomImageViewer from '../../component/PinchableImage';
+import CustomButton from '../../component/CustomButton';
 
 const Fnf = props => {
 
@@ -73,6 +74,7 @@ const Fnf = props => {
   const sampleData = [1, 1, 1, 1, 1];
 
   const [isLoading, setIsLoading] = useState(false);
+  const [btnLoading, setbtnLoading] = useState(false);
   const [selectedIndex, setIndex] = useState(null);
 
   useEffect(() => {
@@ -114,28 +116,22 @@ const Fnf = props => {
   };
 
 
-  const showImage = (item) => {
-
-    if (item?.disciplinary_file_image) {
-      setIsLoading(true);
-      let param = { image_path: item?.disciplinary_file_image }
-      postApi("/company/single-view-image", param, token)
-        .then((resp) => {
-          if (resp?.status == 'success') {
-            setImageurl(resp?.image)
-            console.log(resp?.image)
-            setIsLoading(false);
-
-          } else {
-            HelperFunctions.showToastMsg(resp.message);
-            setIsLoading(false);
-          }
-        }).catch((err) => {
-          console.log(err);
-          setIsLoading(false)
-          HelperFunctions.showToastMsg(err.message);
-        })
-    } else { HelperFunctions.showToastMsg('Sorry! No Photo found') }
+  const fetchReport = () => {
+    setbtnLoading(true);
+    postApi("company/employee-full-and-final-report", { employee_id: props?.route?.params?.paramData?.emp_det?.employee_id }, token)
+      .then((resp) => {
+        if (resp?.status == 'success') {
+          setbtnLoading(false);
+          props.navigation.navigate('FnfReport', { paramData: resp?.doc })
+        } else {
+          HelperFunctions.showToastMsg(resp.message);
+          setbtnLoading(false);
+        }
+      }).catch((err) => {
+        console.log(err);
+        setbtnLoading(false)
+        HelperFunctions.showToastMsg(err.message);
+      })
   }
 
   useEffect(() => { if (imageUrl != "") { setImageModalVisibility(true) } }, [imageUrl]);
@@ -262,15 +258,6 @@ const Fnf = props => {
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 12 }}>
-
-
-
-
-
-
-
-
-
             {isLoading ? (
               <FlatList
                 data={sampleData}
@@ -281,7 +268,7 @@ const Fnf = props => {
               <>
                 <View style={{ paddingLeft: 0 }}>
 
-                  <View style={[styles.listContainer, { paddingLeft: 12, paddingTop:0 }]}>
+                  <View style={[styles.listContainer, { paddingLeft: 12, paddingTop: 0 }]}>
                     <View>
                       <Text style={[styles.optionname, { marginTop: 0, fontFamily: FontFamily.medium }]}>
                         Date of Resignation
@@ -385,7 +372,7 @@ const Fnf = props => {
                     </View>
                   </View>
 
-                
+
 
                   <View style={[styles.listContainer, { paddingLeft: 12 }]}>
                     <View>
@@ -395,7 +382,7 @@ const Fnf = props => {
                     </View>
                     <View style={{ paddingRight: 12 }}>
                       <Text style={[styles.optionVal, { textTransform: 'capitalize', fontSize: sizes.md, marginTop: 6, fontFamily: FontFamily.regular }]}>
-                      {props?.route?.params?.paramData?.emp_det?.full_and_final?.is_outstanding_incentive ? props?.route?.params?.paramData?.emp_det?.full_and_final?.is_outstanding_incentive == true ? 'Yes' : 'No' : "N/A"}
+                        {props?.route?.params?.paramData?.emp_det?.full_and_final?.is_outstanding_incentive ? props?.route?.params?.paramData?.emp_det?.full_and_final?.is_outstanding_incentive == true ? 'Yes' : 'No' : "N/A"}
                       </Text>
                     </View>
                   </View>
@@ -429,9 +416,9 @@ const Fnf = props => {
 
                 {props?.route?.params?.paramData?.emp_det?.assets != "" ?
                   <>
-                    <View style={{ flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', marginVertical:20 }}>
+                    <View style={{ flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', marginVertical: 20 }}>
                       <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6, lineHeight: 35, textTransform: 'capitalize' }}>Assets Details</Text>
-                      <View style={{ width:'100%',height:1,backgroundColor:'#E7EAF1'}}></View>
+                      <View style={{ width: '100%', height: 1, backgroundColor: '#E7EAF1' }}></View>
                     </View>
 
                     <FlatList
@@ -440,9 +427,23 @@ const Fnf = props => {
                       renderItem={ListRender}
                       contentContainerStyle={{ marginBottom: 30 }}
                     />
-                  </> :
+                  </> : null}
 
-                  <NoDataFound />}
+                {/* <NoDataFound /> */}
+                <View style={{ justifyContent: 'center', flexDirection: 'row', alignItems: 'center'}}>
+                  <CustomButton
+                    isLoading={btnLoading}
+                    backgroundColor={colors.primary}
+                    buttonText={t('View Final Report')}
+                    buttonTextStyle={{ textAlign: 'center', letterSpacing: 1.2, fontFamily: FontFamily.medium, color: '#fff', fontSize: sizes.h6 }}
+                    requireBorder={false}
+                    borderColor={colors.white}
+                    style={{ marginTop: 40, width: '60%', borderRadius: 8, opacity: 1, marginBottom: 10  }}
+                    onPress={() => {
+                      fetchReport()
+                    }}
+                  />
+                </View>
               </>
             )}
           </View>

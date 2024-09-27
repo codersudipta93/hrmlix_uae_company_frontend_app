@@ -374,7 +374,7 @@ const PurchaseHistory = props => {
                             <View style={{ marginBottom: 8, marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
                                 <FloatingTimePicker
                                     pickerType="date"
-                                    pickerIconStyle={{ height: 20, width: 20, tintColor: '#60B057' }}
+                                    pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
                                     pickerIcon={LOCAL_ICONS.calender}
                                     editableStatus={true}
                                     labelName={'From Date'}
@@ -395,7 +395,7 @@ const PurchaseHistory = props => {
                             <View style={{ marginBottom: 14, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
                                 <FloatingTimePicker
                                     pickerType="date"
-                                    pickerIconStyle={{ height: 20, width: 20, tintColor: '#60B057' }}
+                                    pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
                                     pickerIcon={LOCAL_ICONS.calender}
                                     editableStatus={true}
                                     labelName={'To Date'}

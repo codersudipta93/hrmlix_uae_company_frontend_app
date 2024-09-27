@@ -221,7 +221,7 @@ const KPIPerformance = props => {
                         <Text style={[styles.optionVal, { textTransform: 'uppercase', fontSize: sizes.md, marginTop: 6, fontFamily: FontFamily.regular }]}>
                           {kPIdata?.lvl_1_assignee?.assign_value}
                         </Text>
-                      </View>
+                      </View> 
                     </View>
 
                     <View style={[styles.listContainer, { paddingLeft: 12 }]}>

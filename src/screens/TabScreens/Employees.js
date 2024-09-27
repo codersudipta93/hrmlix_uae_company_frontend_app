@@ -107,14 +107,14 @@ const Employees = props => {
 
       let apiParam = {
         "pageno": 1,
-        "perpage": 20,
-        "wage_month_from": "8",
-        "wage_year_from": "2024",
-        "wage_month_to": "8",
-        "wage_year_to": "2024",
-        "date_from": "2024-09",
-        "date_to": "2024-09",
-        "searchkey": "",
+        "perpage": 100,
+        "wage_month_from": HelperFunctions.getCurrentMonth(),
+        "wage_year_from": HelperFunctions.getCurrentYear(),
+        "wage_month_to": HelperFunctions.getCurrentMonth(),
+        "wage_year_to": HelperFunctions.getCurrentYear(),
+        "date_from": HelperFunctions.getCurrentYear() + '-' + HelperFunctions.getCurrentMonth(),
+        "date_to": HelperFunctions.getCurrentYear() + '-' + HelperFunctions.getCurrentMonth(),
+        "searchkey": "subham",
         "department_id": "",
         "designation_id": "",
         "branch_id": "",
@@ -131,8 +131,8 @@ const Employees = props => {
         "doj_to": "",
         "search_type": "",
         "doe_to": "",
-        "date_start_from": "",
-        "date_end_to": "",
+        "date_start_from": HelperFunctions.getFormattedDate(new Date()),
+        "date_end_to": HelperFunctions.getFormattedDate(new Date()),
         "bank_id": "",
         "emp_status": "",
         "advance_filter": "no"
@@ -141,6 +141,9 @@ const Employees = props => {
       setFilterData(apiParam);
     }
   }
+
+
+
 
   useEffect(() => {
     console.log(filterdata);
@@ -239,7 +242,7 @@ const Employees = props => {
           size={18}
           color={colors.primary}
           onPress={() => {
-            props.navigation.navigate('EmployeeDashboard',{empID:item?._id})
+            props.navigation.navigate('EmployeeDashboard', { empID: item?._id })
 
           }}
         />
@@ -264,7 +267,7 @@ const Employees = props => {
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 12 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, }}>
               <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5, lineHeight: 15 }}>Employees Listing</Text>
-              <TouchableOpacity style={{ padding: 6, paddingHorizontal: 10 }}>
+              <TouchableOpacity onPress={()=>{props.navigation.navigate("EmployeeFilter")}} style={{ padding: 6, paddingHorizontal: 10 }}>
                 <Filter />
               </TouchableOpacity>
             </View>

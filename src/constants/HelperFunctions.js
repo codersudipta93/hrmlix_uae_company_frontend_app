@@ -440,7 +440,6 @@ const HelperFunctions = {
     return `${formattedHours}H:${formattedMinutes}M`;
   },
 
-
   formatWorkingHrs(total_logged_in) {
     // Split the input into hours and minutes
     const [hours, minutes] = total_logged_in.split('.').map(Number);
@@ -451,6 +450,7 @@ const HelperFunctions = {
     // Return formatted time string
     return `${hours}H:${formattedMinutes}M`;
   },
+
   formatLoggedInTime(total_logged_in) {
     // Check if the input is valid
     if (typeof total_logged_in !== 'string' || !total_logged_in.trim()) {
@@ -580,11 +580,6 @@ const HelperFunctions = {
     return yearData.holiday_temp.some(holiday => {
       const holidayStartDate = new Date(holiday.holiday_date);
       const holidayEndDate = new Date(holiday.holiday_to_date);
-      // console.log("parsedInputDate",parsedInputDate)
-      // console.log("holidayStartDate",holidayStartDate)
-      // console.log("holidayEndDate",holidayEndDate)
-      // console.log("======================")
-      // Check if inputDate is between holidayStartDate and holidayEndDate (inclusive)
       return parsedInputDate >= holidayStartDate && parsedInputDate <= holidayEndDate;
     });
   },
@@ -628,7 +623,7 @@ const HelperFunctions = {
 
     return { displayHours: `${formattedHours}H:${formattedMinutes}M`, rawHours: `${formattedHours}.${formattedMinutes}` };
   },
-  
+
   getLeaveTypes(attendance_type) {
 
     if (attendance_type == "time") {
@@ -654,14 +649,11 @@ const HelperFunctions = {
   getmonthYear(dateStr) {
     const dateString = dateStr;
     const date = new Date(dateString);
-
     // Get the month (0-based index, so add 1)
     const month = date.getMonth() + 1;
-
     // Get the year
     const year = date.getFullYear();
-
-    return { month: `${month}`, year: `${year}` };
+    return { month: `${month}`, year: `${year}`, month_name: date.toLocaleString('default', { month: 'long' })};
   },
 
   getparticularName(type) {
@@ -703,39 +695,67 @@ const HelperFunctions = {
     console.log(packages)
     console.log(id)
     const pkg = packages.find(item => item._id === id);
-    return pkg ? pkg[keyName? keyName : 'package_name'] : 'Package not found';
+    return pkg ? pkg[keyName ? keyName : 'package_name'] : 'Not found';
   },
 
   getFormattedDate(dateString) {
     const date = new Date(dateString);
-    
+
     const year = date.getUTCFullYear();
     const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
     const day = String(date.getUTCDate()).padStart(2, '0');
-    
+
     return `${year}-${month}-${day}`;
   },
 
   getMonth(dateString) {
     const date = new Date(dateString);
-    
+
     const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
-    
+
     return month;
   },
+
   getYear(dateString) {
     const date = new Date(dateString);
-    
+
     const year = date.getUTCFullYear();
-    
+
     return year;
   },
+
   convertToISOWithTime(dateString, timeString = "18:30:00") {
     // Combine the date and time
     const combinedDateTime = `${dateString}T${timeString}.000Z`;
-  
+
     return new Date(combinedDateTime).toISOString();
+  },
+
+  dateDiff(startDateStr, endDateStr) {
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(endDateStr);
+  
+    // Calculate year, month, and day differences
+    let years = endDate.getFullYear() - startDate.getFullYear();
+    let months = endDate.getMonth() - startDate.getMonth();
+    let days = endDate.getDate() - startDate.getDate();
+  
+    // Adjust if days are negative
+    if (days < 0) {
+      months--;
+      const previousMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0); // Previous month last day
+      days += previousMonth.getDate();
+    }
+  
+    // Adjust if months are negative
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+  
+    return `${years} Years ${months} Months ${days} Days`;
   }
+  
 
 }
 
