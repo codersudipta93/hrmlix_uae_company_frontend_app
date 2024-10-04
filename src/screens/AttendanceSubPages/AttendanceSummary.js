@@ -140,8 +140,6 @@ const AttendanceSummary = props => {
   }
 
 
-
-
   const _openFilter = () => {
     let pData = {
       "pageno": 1,
@@ -194,7 +192,7 @@ const AttendanceSummary = props => {
     if (flatListRef.current) {
       const currentDateIndex = calenderdata.findIndex(item => item.selected);
       if (currentDateIndex !== -1) {
-        console.log(currentDateIndex)
+        console.log(currentDateIndex);
         flatListRef.current.scrollToIndex({ index: currentDateIndex, animated: true });
       }
     }
@@ -254,7 +252,7 @@ const AttendanceSummary = props => {
               setIndex(null);
 
             } else {
-              setIndex(index)
+              setIndex(index);
             }
 
           }} >
@@ -272,7 +270,7 @@ const AttendanceSummary = props => {
             <View style={{ paddingRight: 12 }}>
               <Text style={styles.optionVal}>{item?.attendance_summ[0]?.paydays}</Text>
             </View>
-          </View>
+          </View> 
 
           <View style={styles.listContainer}>
             <View>
@@ -299,7 +297,7 @@ const AttendanceSummary = props => {
             <View style={{ paddingRight: 12 }}>
               <Text style={styles.optionVal}>{item?.attendance_summ[0]?.total_attendance}</Text>
             </View>
-          </View>
+          </View> 
 
           <View style={styles.listContainer}>
             <View>

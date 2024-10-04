@@ -24,7 +24,8 @@ const FloatingLabelInput = ({
     placeholderColor,
     top,
     marginBottom,
-    keyboardType
+    keyboardType,
+    maxlength
 }) => {
 
     const [isFocused, setIsFocused] = useState(false);
@@ -119,6 +120,7 @@ const FloatingLabelInput = ({
                 blurOnSubmit
                 underlineColorAndroid="transparent"
                 keyboardType={keyboardType ? keyboardType : 'default'}
+                maxLength={maxlength}
             />
         </Animated.View>
     );

@@ -321,56 +321,7 @@ const saveFileToDownloads = async (fileName, base64Data) => {
                                 size={25}
                                 color="#fff"
                                 onPress={() => {
-                                    // let paramData = {
-                                    //     "pageno": 1,
-                                    //     "checked_row_ids": "[\"66cc5119b5dc79748960cf90\"]",
-                                    //     "generate": "excel",
-                                    //     "row_checked_all": false,
-                                    //     "unchecked_row_ids": "[]"
-                                    // }
-                                    // console.log(selectedInvoice)
-                                    // postApi("company/get-payment-history", paramData, token)
-                                    //     .then((resp) => {
-                                    //        // console.log(resp);
-                                    //         if (resp?.status == 'val_err') {
-                                    //             let message = ""
-                                    //             for (const key in resp.val_msg) {
-                                    //                 if (resp.val_msg[key].message) {
-                                    //                     message = resp.val_msg[key].message;
-                                    //                     break;
-                                    //                 }
-                                    //             }
-                                    //             HelperFunctions.showToastMsg(message);
-
-                                    //         } else {
-                                    //             HelperFunctions.showToastMsg("resp.message");
-                                    //             setloadingView(false);
-
-                                    //             setloadingView(false);
-                                    //             const blob = resp.blob();
-
-                                    //             // Convert Blob to Base64
-                                    //             //const base64Data =  blobToBase64(blob);
-                                    //             console.log(blob)
-
-                                    //             // // Remove the data URL prefix
-                                    //             // const base64 = base64Data.split(',')[1];
-
-                                    //             // const fileName = 'downloadedFile.txt';
-                                    //             // const path = `${RNFS.DocumentDirectoryPath}/${fileName}`;
-
-                                    //             // // Write Base64 data to a file
-                                    //             //  RNFS.writeFile(path, base64, 'base64');
-                                    //             // alert('File Saved', `File saved to ${path}`);
-                                    //         }
-
-                                    //     }).catch((err) => {
-                                    //         console.log(err);
-                                    //         setloadingView(false);
-                                    //         HelperFunctions.showToastMsg(err.message);
-                                    //     })
-
-
+                                   
                                     const url = 'https://uaedevcombackend.hrmlix.com/api/company-backend-service/company/get-payment-history';
                                     const params = {
                                         pageno: 1,

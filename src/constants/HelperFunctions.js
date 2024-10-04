@@ -653,7 +653,7 @@ const HelperFunctions = {
     const month = date.getMonth() + 1;
     // Get the year
     const year = date.getFullYear();
-    return { month: `${month}`, year: `${year}`, month_name: date.toLocaleString('default', { month: 'long' })};
+    return {day: `${date.getDate()}`,  month: `${month}`, year: `${year}`, month_name: date.toLocaleString('default', { month: 'long' })};
   },
 
   getparticularName(type) {
@@ -716,6 +716,16 @@ const HelperFunctions = {
     return month;
   },
 
+  getshortMonthName(datestr){
+    let months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
+      'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+
+    const currentDate = new Date(datestr);
+    return months[currentDate.getMonth()]
+  },
+
   getYear(dateString) {
     const date = new Date(dateString);
 
@@ -754,7 +764,16 @@ const HelperFunctions = {
     }
   
     return `${years} Years ${months} Months ${days} Days`;
-  }
+  },
+  isToday(dateString) {
+    const inputDate = new Date(dateString);
+    const today = new Date();
+
+    // Compare year, month, and day
+    return inputDate.getDate() === today.getDate() &&
+           inputDate.getMonth() === today.getMonth() &&
+           inputDate.getFullYear() === today.getFullYear();
+}
   
 
 }

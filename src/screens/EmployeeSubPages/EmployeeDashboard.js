@@ -226,7 +226,7 @@ const EmployeeDashboard = props => {
                 </View>
               </Pressable>
 
-              <Pressable onPress={() => {  }} style={[styles.cardContainer, { backgroundColor: '#C9EEFC' }]}>
+              <Pressable onPress={() => {  props.navigation.navigate('EmployeeDocumentVault' , { paramData: empdata })}} style={[styles.cardContainer, { backgroundColor: '#C9EEFC' }]}>
                 <View style={[styles.leftSection, {}]}>
                   <ImageBackground source={LOCAL_IMAGES.attendanceCardBG1} style={[styles.background, { width: 75, height: 80 }]}>
                     <View style={styles.container}>

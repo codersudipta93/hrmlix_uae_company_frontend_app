@@ -45,9 +45,7 @@ import { Header } from 'react-native/Libraries/NewAppScreen';
 import CustomHeader from '../../component/Header';
 
 import { useTranslation } from 'react-i18next'; //for translation service
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import Delete from '../../assets/icons/Delete';
-import Filter from '../../assets/icons/Filter';
+
 import FloatingLabelInput from '../../component/FloatingLabelInput';
 import FloatingDropdown from '../../component/FloatingDropdown';
 import CustomButton from '../../component/CustomButton';
@@ -55,6 +53,7 @@ import { postApi } from '../../Service/service';
 import Loader from '../../component/Loader';
 import FloatingTimePicker from '../../component/FloatingTimePicker';
 import FloatingYearMonthPicker from '../../component/FloatingYearMonthPicker';
+import DateTimePickerModal from '../../component/FloatingYearMonthPicker';
 
 const EmployeeFilter = props => {
     const isFocused = useIsFocused();
@@ -68,7 +67,6 @@ const EmployeeFilter = props => {
     const [department_id, setdepartment_id] = useState("");
     const [department_ids, setdepartment_ids] = useState("");
 
-
     const [branch_id, setbranch_id] = useState("");
     const [branch_ids, setbranch_ids] = useState("");
 
@@ -78,19 +76,50 @@ const EmployeeFilter = props => {
     const [hod_id, sethod_id] = useState("");
     const [hod_ids, sethod_ids] = useState("");
 
+    const [client_id, setclient_id] = useState("");
+    const [client_ids, setclient_ids] = useState("");
 
     const [btnLoaderStatus, setBtnLoaderStatus] = useState(false);
     const [waitLoaderStatus, setWaitLoaderStatus] = useState(false);
 
-    const [attendance, setattendance] = useState([{ label: 'Whole Day', value: 'wholeday' }, { label: 'Monthly', value: 'monthly' }, { label: 'Time', value: 'time' }, { label: 'Half Day', value: 'halfday' }]);
-    const [attendance_type, setattendance_type] = useState("");
+    const [advanceFilter, setAdvance_filter] = useState('no');
 
-    const [advanceFilter, setAdvance_filter] = useState(false);
-    const [revision_history_type, set_revision_history_type] = useState("");
+    const [genders, setgenders] = useState([
+        { label: 'Male', value: 'm' },
+        { label: 'Female', value: 'f' },
+        { label: 'Transgender', value: 't' },
+        { label: 'Other', value: 'o' }
+    ]);
+    const [gender, setgender] = useState("");
 
+    const [regions, setregions] = useState([
+        { label: 'Islamic', value: 'muslim' },
+        { label: 'Other', value: 'other' },
+        { label: 'Hindu', value: 'hindu' },
+        { label: 'Christian', value: 'chiristian' }
+    ]);
+    const [region, setregion] = useState("");
+
+    const [age_from, setage_from] = useState("");
+    const [age_to, setage_to] = useState("");
+
+    const [doj_from, setdoj_from] = useState("");
+    const [doj_to, setdoj_to] = useState("");
+
+    const [doe_from, setdoe_from] = useState("");
+    const [doe_to, setdoe_to] = useState("");
 
     const [startdate, setStartdate] = useState("");
     const [endDate, setEndDate] = useState("");
+
+    const [empStatusArr, setempStatusArr] = useState([
+        { label: 'All', value: '' },
+        { label: 'Active', value: 'approved' },
+        { label: 'Pending', value: 'pending' },
+        { label: 'Exited', value: 'inactive' },
+    ]);
+
+    const [empStatus, setempStatus] = useState("");
 
 
     useEffect(() => {
@@ -102,23 +131,19 @@ const EmployeeFilter = props => {
 
             if (props?.route?.params) {
                 let pdata = props?.route?.params?.paramData;
-                console.log("Data from salary revision page ====> ", pdata);
-
+                console.log("Data from employee list page ====> ", pdata);
+                // alert(masterData)
                 setSearchVal(pdata?.searchkey);
 
-
+                // clients
+                setclient_id(pdata?.client_id ? pdata?.client_id : []);
+                setclient_ids(HelperFunctions.updateSelectedArrObjects(masterData?.clients, pdata?.client_id ? pdata?.client_id : [], '_id'));
+              
                 setbranch_id(pdata?.branch_id ? pdata?.branch_id : []);
                 setbranch_ids(HelperFunctions.updateSelectedArrObjects(masterData?.branch?.company_branch, pdata?.branch_id ? pdata?.branch_id : [], '_id'));
 
                 setdepartment_id(pdata?.department_id ? pdata?.department_id : []);
                 setdepartment_ids(HelperFunctions.updateSelectedArrObjects(masterData?.department, pdata?.department_id ? pdata?.department_id : [], '_id'));
-
-                setdepartment_id(pdata?.department_id ? pdata?.department_id : []);
-                setdepartment_ids(HelperFunctions.updateSelectedArrObjects(masterData?.department, pdata?.department_id ? pdata?.department_id : [], '_id'));
-
-                setdepartment_id(pdata?.department_id ? pdata?.department_id : []);
-                setdepartment_ids(HelperFunctions.updateSelectedArrObjects(masterData?.department, pdata?.department_id ? pdata?.department_id : [], '_id'));
-
 
                 setdesignation_id(pdata?.designation_id ? pdata?.designation_id : []);
                 setdesignation_ids(HelperFunctions.updateSelectedArrObjects(masterData?.designation, pdata?.designation_id ? pdata?.designation_id : [], '_id'));
@@ -126,32 +151,41 @@ const EmployeeFilter = props => {
                 sethod_id(pdata?.hod_id ? pdata?.hod_id : []);
                 sethod_ids(HelperFunctions.updateSelectedArrObjects(masterData?.hod, pdata?.hod_id ? pdata?.hod_id : [], '_id'));
 
-                setattendance(attendance)
-                setattendance_type(pdata?.attendance_type);
 
-                setAdvance_filter(pdata?.filter_type)
+                if (pdata?.advance_filter == "yes") {
+                    setAdvance_filter(pdata?.advance_filter);
 
-                if (pdata?.filter_type == "revision_history_report") {
+                    setgender(pdata?.gender)
+                    setgenders(HelperFunctions.updateSelectedObjects(genders, pdata?.gender))
 
-                    set_revision_history_type(pdata?.search_type);
-                    setStartdate(HelperFunctions.convertToISOWithTime(pdata?.wage_from_date))
-                    setEndDate(HelperFunctions.convertToISOWithTime(pdata?.wage_to_date))
+                    setregion(pdata?.region)
+                    setregions(HelperFunctions.updateSelectedObjects(regions, pdata?.religion))
+
+                    //setStartdate(HelperFunctions.convertToISOWithTime(pdata?.wage_from_date));
+                    //setEndDate(HelperFunctions.convertToISOWithTime(pdata?.wage_to_date));
+
+                    setdoj_from(doj_from);
+                    setdoj_to(doj_to);
+
+                    setdoe_from(doe_from);
+                    setdoe_to(doe_to);
+
+                    setempStatus(pdata?.emp_status ? pdata?.emp_status : "");
+                    setempStatusArr(HelperFunctions.updateSelectedArrObjects(empStatusArr, pdata?.emp_status ? pdata?.emp_status : [], 'value'));
                 }
             }
         }
+
     }, [isFocused]);
 
 
-    useEffect(() => {
-
-    }, []);
+    useEffect(() => { }, []);
 
     useFocusEffect(
         React.useCallback(() => {
             const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
             return () => {
                 backHandler.remove();
-
             };
             return () => { };
         }, [])
@@ -171,52 +205,34 @@ const EmployeeFilter = props => {
 
 
 
-
-
     const _applyFilter = () => {
 
-        if (filter_type == "revision_history_report") {
-            let paramData = {
-                "wage_from_date": HelperFunctions.getFormattedDate(startdate),
-                "wage_to_date": HelperFunctions.getFormattedDate(endDate),
-                "unchecked_row_ids": [],
-                "checked_row_ids": [],
-                "row_checked_all": "false",
-                "generate": "",
-                "search_type": revision_history_type,
-                "searchkey": "",
-                "wage_month_from": HelperFunctions.getMonth(startdate),
-                "wage_month_to": HelperFunctions.getMonth(endDate),
-                "wage_year_from": HelperFunctions.getYear(startdate),
-                "wage_year_to": HelperFunctions.getYear(endDate),
-                "pageno": 1,
-                "perpage": 100,
-                "filter_type": filter_type,
-            }
-
-            //console.log(paramData)
-            props.navigation.navigate('ApplyRevision', { paramData: paramData })
-            dispatch(_setreffeshStatus(true));
-            //console.log(paramData)
-
-        } else {
-            let paramData = {
-                "pageno": 1,
-                "perpage": 100,
-                "department_id": department_id != "" ? department_id : "",
-                "hod_id": hod_id != "" ? hod_id : "",
-                "designation_id": designation_id != "" ? designation_id : "",
-                "branch_id": branch_id != "" ? branch_id : "",
-                "multiEdit": "",
-                "searchkey": search ? search : "",
-                "attendance_type": attendance_type?.value,
-                "filter_type": filter_type,
-            }
-            set_revision_history_type("");
-            props.navigation.navigate('ApplyRevision', { paramData: paramData })
-            dispatch(_setreffeshStatus(true));
+        let apiParam = {
+            "searchkey": search ? search : "",
+            "department_id": department_id != "" ? department_id : "",
+            "designation_id": designation_id != "" ? designation_id : "",
+            "branch_id": branch_id != "" ? branch_id : "",
+            "client_id": client_id != "" ? client_id : "",
+            "hod_id": hod_id != "" ? hod_id : "",
+            "gender": gender ? gender : "",
+            "religion": region ? region : "",
+            "client_code": "",
+            "age_from": age_from ? age_from : "",
+            "age_to": age_to ? age_to : "",
+            "doj_from": doj_from ? doj_from : "",
+            "doe_from": doe_from ? doe_from : "",
+            "doj_to": doj_to ? doj_to : "",
+            "doe_to": doe_to ? doe_to : "",
+            "search_type": "effective_date",
+            "bank_id": "",
+            "emp_status": "",
+            "advance_filter": advanceFilter
         }
 
+         console.log(apiParam);
+        // dispatch(_setreffeshStatus(true));
+        // props.navigation.navigate('Employees', { paramData: apiParam })
+        
     }
 
 
@@ -252,7 +268,7 @@ const EmployeeFilter = props => {
             "branch_id": "",
             "multiEdit": "",
             "searchkey": "",
-            "attendance_type": attendance_type?.value,
+            //"attendance_type": attendance_type?.value,
             "filter_type": "apply_revision",
         }
 
@@ -292,23 +308,34 @@ const EmployeeFilter = props => {
 
 
                             <FloatingDropdown
-                                multiSelect={false}
+                                multiSelect={true}
                                 labelName="Client"
-                                selectedValueData={attendance_type != '' ? attendance_type : ""}
-                                options={attendance}
-                                listLabelKeyName={['value']}
+                                selectedValueData={client_id != '' ? client_id : ""}
+                                options={client_ids}
+                                listLabelKeyName={['client_name']}
                                 onSelect={(option) => {
-                                    let data = HelperFunctions.copyArrayOfObj(attendance);
+                                    let data = HelperFunctions.copyArrayOfObj(client_ids);
                                     for (let k = 0; k < data.length; k++) {
-                                        if (data[k].value == option.value) {
-                                            data[k].selected = data[k].selected == true;
-                                            setattendance_type(data[k])
-                                        } else {
-                                            data[k].selected = data[k].selected == false;
+                                        if (data[k]._id == option._id) {
+                                            data[k].selected = data[k].selected == true ? false : true;
                                         }
                                     }
 
-                                    setattendance(data)
+                                    setclient_ids(data);
+
+
+                                    setclient_id(prevClients => {
+                                        // Check if the client is already in the list
+                                        const isClientExists = prevClients.some(existingClient => existingClient._id === option._id);
+
+                                        if (isClientExists) {
+                                            // Remove the client if it exists
+                                            return prevClients.filter(existingClient => existingClient._id !== option._id);
+                                        } else {
+                                            // Add the client if it does not exist
+                                            return [...prevClients, option];
+                                        }
+                                    });
                                 }}
                                 inputContainerColor="#CACDD4"
                                 labelBg={colors.white}
@@ -406,7 +433,7 @@ const EmployeeFilter = props => {
                                 options={designation_ids}
                                 listLabelKeyName={['designation_name']}
                                 onSelect={(option) => {
-                                    let data = HelperFunctions.copyArrayOfObj(department_ids);
+                                    let data = HelperFunctions.copyArrayOfObj(designation_ids);
                                     for (let k = 0; k < data.length; k++) {
                                         if (data[k]._id == option._id) {
                                             data[k].selected = data[k].selected == true ? false : true;
@@ -414,8 +441,7 @@ const EmployeeFilter = props => {
                                         }
                                     }
 
-                                    setdesignation_ids(data)
-
+                                    setdesignation_ids(data);
                                     setdesignation_id(prevClients => {
                                         // Check if the client is already in the list
                                         const isClientExists = prevClients.some(existingClient => existingClient._id === option._id);
@@ -454,7 +480,6 @@ const EmployeeFilter = props => {
                                     }
 
                                     sethod_ids(data)
-
                                     sethod_id(prevClients => {
                                         // Check if the client is already in the list
                                         const isClientExists = prevClients.some(existingClient => existingClient._id === option._id);
@@ -480,21 +505,21 @@ const EmployeeFilter = props => {
                             <FloatingDropdown
                                 multiSelect={false}
                                 labelName="Status"
-                                selectedValueData={attendance_type != '' ? attendance_type : ""}
-                                options={attendance}
-                                listLabelKeyName={['value']}
+                                selectedValueData={empStatus != '' ? empStatus : ""}
+                                options={empStatusArr}
+                                listLabelKeyName={['label']}
                                 onSelect={(option) => {
-                                    let data = HelperFunctions.copyArrayOfObj(attendance);
+                                    let data = HelperFunctions.copyArrayOfObj(empStatusArr);
                                     for (let k = 0; k < data.length; k++) {
                                         if (data[k].value == option.value) {
                                             data[k].selected = data[k].selected == true;
-                                            setattendance_type(data[k])
+                                            setempStatus(data[k])
                                         } else {
                                             data[k].selected = data[k].selected == false;
                                         }
                                     }
 
-                                    setattendance(data)
+                                    setempStatusArr(data);
                                 }}
                                 inputContainerColor="#CACDD4"
                                 labelBg={colors.white}
@@ -506,37 +531,34 @@ const EmployeeFilter = props => {
 
 
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
-
-                                <Pressable onPress={() => { setAdvance_filter(!advanceFilter) }} style={{ borderWidth: 1, marginTop: 18, borderColor: advanceFilter ? colors.primary : "#CACDD4", borderRadius: 6, paddingHorizontal: 4, paddingVertical: 12, width: '45%' }}>
-                                    <Text style={{ fontFamily: FontFamily.semibold, color: advanceFilter ? colors.primary : '#4E525E', fontSize: sizes.h6 - 1, textAlign: 'center' }}>
+                                <Pressable onPress={() => { setAdvance_filter(advanceFilter == 'yes' ? 'no' : 'yes') }} style={{ borderWidth: 1, marginTop: 18, borderColor: advanceFilter == 'yes' ? colors.primary : "#CACDD4", borderRadius: 6, paddingHorizontal: 4, paddingVertical: 12, width: '45%' }}>
+                                    <Text style={{ fontFamily: FontFamily.semibold, color: advanceFilter == 'yes' ? colors.primary : '#4E525E', fontSize: sizes.h6 - 1, textAlign: 'center' }}>
                                         Advance Filter
                                     </Text>
                                 </Pressable>
-
-
                             </View>
 
 
-                            {advanceFilter ? <>
+                            {advanceFilter == 'yes' ? <>
 
                                 <FloatingDropdown
                                     multiSelect={false}
                                     labelName="Select Gender"
-                                    selectedValueData={attendance_type != '' ? attendance_type : ""}
-                                    options={attendance}
-                                    listLabelKeyName={['value']}
+                                    selectedValueData={gender != '' ? gender : ""}
+                                    options={genders}
+                                    listLabelKeyName={['label']}
                                     onSelect={(option) => {
-                                        let data = HelperFunctions.copyArrayOfObj(attendance);
+                                        let data = HelperFunctions.copyArrayOfObj(genders);
                                         for (let k = 0; k < data.length; k++) {
                                             if (data[k].value == option.value) {
                                                 data[k].selected = data[k].selected == true;
-                                                setattendance_type(data[k])
+                                                setgender(data[k])
                                             } else {
                                                 data[k].selected = data[k].selected == false;
                                             }
                                         }
 
-                                        setattendance(data)
+                                        setgenders(data)
                                     }}
                                     inputContainerColor="#CACDD4"
                                     labelBg={colors.white}
@@ -549,21 +571,21 @@ const EmployeeFilter = props => {
                                 <FloatingDropdown
                                     multiSelect={false}
                                     labelName="Select Region"
-                                    selectedValueData={attendance_type != '' ? attendance_type : ""}
-                                    options={attendance}
-                                    listLabelKeyName={['value']}
+                                    selectedValueData={region != '' ? region : ""}
+                                    options={regions}
+                                    listLabelKeyName={['label']}
                                     onSelect={(option) => {
-                                        let data = HelperFunctions.copyArrayOfObj(attendance);
+                                        let data = HelperFunctions.copyArrayOfObj(regions);
                                         for (let k = 0; k < data.length; k++) {
                                             if (data[k].value == option.value) {
                                                 data[k].selected = data[k].selected == true;
-                                                setattendance_type(data[k])
+                                                setregion(data[k])
                                             } else {
                                                 data[k].selected = data[k].selected == false;
                                             }
                                         }
 
-                                        setattendance(data)
+                                        setregions(data)
                                     }}
                                     inputContainerColor="#CACDD4"
                                     labelBg={colors.white}
@@ -587,8 +609,15 @@ const EmployeeFilter = props => {
                                         labelColor="#007AFF"
                                         placeholderColor="#8A8E9C"
                                         inputColor={colors.primary}
-                                        value={search}
-                                        onChangeText={setSearchVal}
+                                        value={age_from}
+                                        onChangeText={(res)=>{
+                                            console.log("hi")
+                                            if(res <= 60){
+                                                setage_from(res)
+                                            }
+                                        }}
+                                        keyboardType='number-pad'
+                                        maxlength={2}
                                     />
 
                                     <FloatingLabelInput
@@ -599,70 +628,74 @@ const EmployeeFilter = props => {
                                         labelColor="#007AFF"
                                         placeholderColor="#8A8E9C"
                                         inputColor={colors.primary}
-                                        value={search}
-                                        onChangeText={setSearchVal}
+                                        value={age_to}
+                                        onChangeText={(res)=>{
+                                            console.log("hi")
+                                            if(res <= 60){
+                                                setage_to(res)
+                                            }
+                                        }}
+                                        keyboardType='number-pad'
+                                        maxlength={2}
                                     />
                                 </>
 
 
-
-                                <View style={{ marginBottom: 4, marginTop:0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                <View style={{ marginBottom: 4, marginTop: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
                                     <Text style={{ fontFamily: FontFamily.semibold, color: '#5A5B5B', fontSize: sizes.h6, lineHeight: 35 }}>Date of Joining</Text>
                                 </View>
-                                <>
+                                
+                                    <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
 
-                                    <View style={{ marginBottom: 4, marginTop: 6, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
-                                        <FloatingYearMonthPicker
-                                            pickerType="date"
-                                            pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
-                                            pickerIcon={LOCAL_ICONS.calender}
-                                            editableStatus={true}
-                                            labelName={'Date From'}
-                                            inputContainerColor="#CACDD4"
-                                            labelBg={colors.white}
-                                            labelColor="#007AFF"
-                                            placeholderColor="#8A8E9C"
-                                            inputColor="#5A5B5B"
-                                            //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
-                                            selectedValue={startdate ? HelperFunctions.getmonthYear(startdate).month + "/" + HelperFunctions.getmonthYear(startdate).year : ""}
-                                            inputMargin={10}
-                                            confirmDateClick={(timestamp) => {
-                                                console.log(timestamp)
-                                                console.log(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
-                                                //setStartdate(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
-                                                setStartdate(timestamp.toISOString())
-                                            }}
-                                        />
+                                        <View style={{width:'48%', marginBottom: 20, marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                            <FloatingTimePicker
+                                                pickerType="date"
+                                                pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
+                                                pickerIcon={LOCAL_ICONS.calender}
+                                                editableStatus={true}
+                                                labelName={'Date From'}
+                                                inputContainerColor="#CACDD4"
+                                                labelBg={colors.white}
+                                                labelColor="#007AFF"
+                                                placeholderColor="#8A8E9C"
+                                                inputColor="#5A5B5B"
+                                                //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
+                                                selectedValue={doj_from}
+                                                inputMargin={0}
+                                                confirmDateClick={(timestamp) => {
+                                                    let formatedDate = (timestamp).toISOString().split('T')[0];
+                                                    // setStartdate(formatedDate)
+                                                    setdoj_from(formatedDate)
+                                                }}
+                                            />
+                                        </View>
 
-                                    </View>
-
-
-
-                                    <View style={{ marginBottom: 0, marginTop: 4, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
-                                        <FloatingYearMonthPicker
-                                            pickerType="date"
-                                            pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
-                                            pickerIcon={LOCAL_ICONS.calender}
-                                            editableStatus={true}
-                                            labelName={'Date To'}
-                                            inputContainerColor="#CACDD4"
-                                            labelBg={colors.white}
-                                            labelColor="#007AFF"
-                                            placeholderColor="#8A8E9C"
-                                            inputColor="#5A5B5B"
-                                            //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
-                                            selectedValue={endDate ? HelperFunctions.getmonthYear(endDate).month + "/" + HelperFunctions.getmonthYear(endDate).year : ""}
-                                            inputMargin={20}
-                                            confirmDateClick={(timestamp) => {
-                                                console.log(timestamp)
-                                                console.log(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
-                                                setEndDate(timestamp.toISOString());
-                                            }}
-                                        />
+                                        <View style={{width:'48%', marginBottom: 20, marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                            <FloatingTimePicker
+                                                pickerType="date"
+                                                pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
+                                                pickerIcon={LOCAL_ICONS.calender}
+                                                editableStatus={true}
+                                                labelName={'Date To'}
+                                                inputContainerColor="#CACDD4"
+                                                labelBg={colors.white}
+                                                labelColor="#007AFF"
+                                                placeholderColor="#8A8E9C"
+                                                inputColor="#5A5B5B"
+                                                //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
+                                                selectedValue={doj_to}
+                                                inputMargin={0}
+                                                confirmDateClick={(timestamp) => {
+                                                    let formatedDate = (timestamp).toISOString().split('T')[0];
+                                                    // setStartdate(formatedDate)
+                                                    setdoj_to(formatedDate)
+                                                }}
+                                            />
+                                        </View>
 
                                     </View>
 
-                                </>
+                                
 
 
                                 <View style={{ marginBottom: 4, marginTop: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
@@ -670,59 +703,55 @@ const EmployeeFilter = props => {
                                         Date of exit
                                     </Text>
                                 </View>
-                                <>
+                                <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
 
-                                    <View style={{ marginBottom: 4, marginTop: 6, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
-                                        <FloatingYearMonthPicker
-                                            pickerType="date"
-                                            pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
-                                            pickerIcon={LOCAL_ICONS.calender}
-                                            editableStatus={true}
-                                            labelName={'Date From'}
-                                            inputContainerColor="#CACDD4"
-                                            labelBg={colors.white}
-                                            labelColor="#007AFF"
-                                            placeholderColor="#8A8E9C"
-                                            inputColor="#5A5B5B"
-                                            //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
-                                            selectedValue={startdate ? HelperFunctions.getmonthYear(startdate).month + "/" + HelperFunctions.getmonthYear(startdate).year : ""}
-                                            inputMargin={10}
-                                            confirmDateClick={(timestamp) => {
-                                                console.log(timestamp)
-                                                console.log(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
-                                                //setStartdate(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
-                                                setStartdate(timestamp.toISOString())
-                                            }}
-                                        />
+                                        <View style={{width:'48%', marginBottom: 20, marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                            <FloatingTimePicker
+                                                pickerType="date"
+                                                pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
+                                                pickerIcon={LOCAL_ICONS.calender}
+                                                editableStatus={true}
+                                                labelName={'Date from'}
+                                                inputContainerColor="#CACDD4"
+                                                labelBg={colors.white}
+                                                labelColor="#007AFF"
+                                                placeholderColor="#8A8E9C"
+                                                inputColor="#5A5B5B"
+                                                //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
+                                                selectedValue={doe_from}
+                                                inputMargin={0}
+                                                confirmDateClick={(timestamp) => {
+                                                    let formatedDate = (timestamp).toISOString().split('T')[0];
+                                                    // setStartdate(formatedDate)
+                                                    setdoe_from(formatedDate)
+                                                }}
+                                            />
+                                        </View>
 
-                                    </View>
-
-
-                                    <View style={{ marginBottom: 8, marginTop: 4, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
-                                        <FloatingYearMonthPicker
-                                            pickerType="date"
-                                            pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
-                                            pickerIcon={LOCAL_ICONS.calender}
-                                            editableStatus={true}
-                                            labelName={'Date To'}
-                                            inputContainerColor="#CACDD4"
-                                            labelBg={colors.white}
-                                            labelColor="#007AFF"
-                                            placeholderColor="#8A8E9C"
-                                            inputColor="#5A5B5B"
-                                            //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
-                                            selectedValue={endDate ? HelperFunctions.getmonthYear(endDate).month + "/" + HelperFunctions.getmonthYear(endDate).year : ""}
-                                            inputMargin={20}
-                                            confirmDateClick={(timestamp) => {
-                                                console.log(timestamp)
-                                                console.log(HelperFunctions.getmonthYear(timestamp).month + "/" + HelperFunctions.getmonthYear(timestamp).year);
-                                                setEndDate(timestamp.toISOString());
-                                            }}
-                                        />
+                                        <View style={{width:'48%', marginBottom: 20, marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 0 }}>
+                                            <FloatingTimePicker
+                                                pickerType="date"
+                                                pickerIconStyle={{ height: 18, width: 18, tintColor: '#707070' }}
+                                                pickerIcon={LOCAL_ICONS.calender}
+                                                editableStatus={true}
+                                                labelName={'Date To'}
+                                                inputContainerColor="#CACDD4"
+                                                labelBg={colors.white}
+                                                labelColor="#007AFF"
+                                                placeholderColor="#8A8E9C"
+                                                inputColor="#5A5B5B"
+                                                //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
+                                                selectedValue={doe_to}
+                                                inputMargin={0}
+                                                confirmDateClick={(timestamp) => {
+                                                    let formatedDate = (timestamp).toISOString().split('T')[0];
+                                                    // setStartdate(formatedDate)
+                                                    setdoe_to(formatedDate)
+                                                }}
+                                            />
+                                        </View>
 
                                     </View>
-
-                                </>
 
                             </> : null}
 

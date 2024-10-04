@@ -28,7 +28,7 @@ const FloatingTimePicker = ({
     listLabelKeyName = ['label'],
     children,
     timeIconPress,
-    confirmDateClick,
+    confirmDateClick, 
     pickerType,
     pickerIcon,
     pickerIconStyle
@@ -164,7 +164,7 @@ const FloatingTimePicker = ({
                     } else {
                         setIsFocused(true);
                     }
-
+ ˇ 
                     setShowOptions(!showOptions);
                     confirmDateClick(time);
                 }}

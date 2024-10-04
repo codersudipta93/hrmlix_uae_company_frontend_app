@@ -60,7 +60,9 @@ import {
   KPIPerformance,
   Fnf,
   FnfReport,
-  EmployeeFilter
+  EmployeeFilter,
+  EmployeeDocumentVault,
+  EmployeeDocuments
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -131,6 +133,8 @@ function Navigator() {
         <Stack.Screen name="Fnf" component={Fnf} />
         <Stack.Screen name="FnfReport" component={FnfReport} />
         <Stack.Screen name="EmployeeFilter" component={EmployeeFilter} />
+        <Stack.Screen name="EmployeeDocumentVault" component={EmployeeDocumentVault} />
+        <Stack.Screen name="EmployeeDocuments" component={EmployeeDocuments} />
         
       </Stack.Navigator>
     </NavigationContainer>

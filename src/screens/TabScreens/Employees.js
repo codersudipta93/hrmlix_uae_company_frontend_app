@@ -70,7 +70,8 @@ const Employees = props => {
   useEffect(() => {
     if (isFocused == true) {
       console.log(i18n.language);
-      console.log(I18nManager.isRTL)
+      console.log(I18nManager.isRTL);
+      //alert(JSON.stringify(masterData));
     }
   }, [isFocused]);
 
@@ -94,15 +95,33 @@ const Employees = props => {
       let apiParam = {
         "pageno": 1,
         "perpage": 100,
+        "advance_filter": props?.route?.params?.paramData?.advance_filter,
         "department_id": props?.route?.params?.paramData?.department_id != "" ? JSON.stringify(props?.route?.params?.paramData?.department_id.map(item => item._id)) : "",
         "hod_id": props?.route?.params?.paramData?.hod_id != "" ? JSON.stringify(props?.route?.params?.paramData?.hod_id.map(item => item._id)) : "",
         "designation_id": props?.route?.params?.paramData?.designation_id != "" ? JSON.stringify(props?.route?.params?.paramData?.designation_id.map(item => item._id)) : "",
         "branch_id": props?.route?.params?.paramData?.branch_id != "" ? JSON.stringify(props?.route?.params?.paramData?.branch_id.map(item => item._id)) : "",
+        "client_id": props?.route?.params?.paramData?.client_id != "" ? JSON.stringify(props?.route?.params?.paramData?.client_id.map(item => item._id)) : "",
         "searchkey": props?.route?.params?.paramData?.searchkey,
-        "wage_month": parseFloat(props?.route?.params?.paramData?.attendance_month),
-        "wage_year": parseFloat(props?.route?.params?.paramData?.attendance_year),
+        "wage_month_from": HelperFunctions.getCurrentMonth(),
+        "wage_year_from": HelperFunctions.getCurrentYear(),
+        "wage_month_to": HelperFunctions.getCurrentMonth(),
+        "wage_year_to": HelperFunctions.getCurrentYear(),
+        "date_from": HelperFunctions.getCurrentYear() + '-' + HelperFunctions.getCurrentMonth(),
+        "date_to": HelperFunctions.getCurrentYear() + '-' + HelperFunctions.getCurrentMonth(),
+        "gender": props?.route?.params?.paramData?.gender,
+        "religion": props?.route?.params?.paramData?.religion,
+        "age_from": props?.route?.params?.paramData?.age_from,
+        "age_to": props?.route?.params?.paramData?.age_to,
+        "doj_from": props?.route?.params?.paramData?.doj_from,
+        "doe_from": props?.route?.params?.paramData?.doe_from,
+        "doj_to": props?.route?.params?.paramData?.doj_to,
+        "doe_to": props?.route?.params?.paramData?.doe_to,
+        "emp_status": props?.route?.params?.paramData?.emp_status,
+        "search_type": "effective_date",
       }
+
       setFilterData(apiParam);
+
     } else {
 
       let apiParam = {
@@ -114,7 +133,7 @@ const Employees = props => {
         "wage_year_to": HelperFunctions.getCurrentYear(),
         "date_from": HelperFunctions.getCurrentYear() + '-' + HelperFunctions.getCurrentMonth(),
         "date_to": HelperFunctions.getCurrentYear() + '-' + HelperFunctions.getCurrentMonth(),
-        "searchkey": "subham",
+        "searchkey": "Inga",
         "department_id": "",
         "designation_id": "",
         "branch_id": "",
@@ -129,8 +148,7 @@ const Employees = props => {
         "doj_from": "",
         "doe_from": "",
         "doj_to": "",
-        "search_type": "",
-        "doe_to": "",
+        "search_type": "effective_date",
         "date_start_from": HelperFunctions.getFormattedDate(new Date()),
         "date_end_to": HelperFunctions.getFormattedDate(new Date()),
         "bank_id": "",
@@ -145,11 +163,17 @@ const Employees = props => {
 
 
 
+
   useEffect(() => {
-    console.log(filterdata);
+
     if (filterdata != null) {
+      let apiParam = { ...filterdata };
+      apiParam.gender = apiParam?.gender ? apiParam?.gender.value : "";
+      apiParam.religion = apiParam?.religion ? apiParam?.religion.value : "";
+      apiParam.emp_status = apiParam?.emp_status ? apiParam?.emp_status.value : "";
+      console.log(apiParam);
       setIsLoading(true);
-      postApi("company/get-employee", filterdata, token)
+      postApi("company/get-employee", apiParam, token)
         .then((resp) => {
           console.log(resp);
           if (resp?.status == 'success') {
@@ -175,10 +199,41 @@ const Employees = props => {
           console.log(err);
           HelperFunctions.showToastMsg(err.message);
         })
-
     }
 
   }, [filterdata]);
+
+
+  const openFilter = () => {
+
+    let pData = {
+      "advance_filter": props?.route?.params?.paramData?.advance_filter,
+      "department_id": props?.route?.params?.paramData?.department_id,
+      "hod_id": props?.route?.params?.paramData?.hod_id,
+      "designation_id": props?.route?.params?.paramData?.designation_id,
+      "branch_id": props?.route?.params?.paramData?.branch_id,
+      "client_id":props?.route?.params?.paramData?.client_id,
+      "searchkey": props?.route?.params?.paramData?.searchkey,
+      "gender": props?.route?.params?.paramData?.gender,
+      "religion": props?.route?.params?.paramData?.religion,
+      "age_from": props?.route?.params?.paramData?.age_from,
+      "age_to": props?.route?.params?.paramData?.age_to,
+      "doj_from": props?.route?.params?.paramData?.doj_from,
+      "doe_from": props?.route?.params?.paramData?.doe_from,
+      "doj_to": props?.route?.params?.paramData?.doj_to,
+      "doe_to": props?.route?.params?.paramData?.doe_to,
+      "emp_status": props?.route?.params?.paramData?.emp_status,
+      "search_type": "effective_date",
+    }
+
+    console.log("filter data paramData ====> ", pData)
+    console.log("filter data paramData ======================= ")
+    props.navigation.navigate('EmployeeFilter', { paramData: pData })
+
+  }
+
+
+
 
 
 
@@ -267,7 +322,7 @@ const Employees = props => {
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 12 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, }}>
               <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5, lineHeight: 15 }}>Employees Listing</Text>
-              <TouchableOpacity onPress={()=>{props.navigation.navigate("EmployeeFilter")}} style={{ padding: 6, paddingHorizontal: 10 }}>
+              <TouchableOpacity onPress={() => { openFilter() }} style={{ padding: 6, paddingHorizontal: 10 }}>
                 <Filter />
               </TouchableOpacity>
             </View>

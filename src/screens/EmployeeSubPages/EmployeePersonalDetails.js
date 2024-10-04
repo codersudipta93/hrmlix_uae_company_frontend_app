@@ -165,7 +165,7 @@ const EmployeePersonalDetails = props => {
 
                 <ScrollView showsVerticalScrollIndicator={false}>
 
-                    <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 6 }}>
+                    <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 6, marginBottom:12 }}>
 
                         <View style={[styles.listCard, { flexDirection: 'column', backgroundColor: '#1E2538', paddingVertical: 22, marginBottom: 0, borderRadius: 0, borderTopRightRadius: 8, borderTopLeftRadius: 8, borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }]}>
 
