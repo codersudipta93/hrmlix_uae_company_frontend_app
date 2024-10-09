@@ -164,7 +164,7 @@ const FloatingTimePicker = ({
                     } else {
                         setIsFocused(true);
                     }
- ˇ 
+                    console.log(time)
                     setShowOptions(!showOptions);
                     confirmDateClick(time);
                 }}

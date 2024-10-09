@@ -2,7 +2,7 @@ import { Dashboard } from '../screens';
 
 export const AllSourcePath = {
   API_BASE_URL_DEV: 'https://uaedevcombackend.hrmlix.com/api/company-backend-service/',
-  API_IMG_URL_DEV: '',
+  API_IMG_URL_DEV: 'https://uaedemo.hrmlix.com/assets/images/',
   API_BASE_URL_LIVE: '',
   API_IMG_URL_LIVE: '',
   CURRENCY:'₹'

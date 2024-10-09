@@ -54,7 +54,7 @@ import Action from '../../assets/icons/Action';
 import MonthModal from '../../component/MonthModal';
 import SkeletonLoader from '../../component/SkeletonLoader';
 
-const BillingMaster = props => {
+const NoticeMaster = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
@@ -108,42 +108,31 @@ const BillingMaster = props => {
         />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ marginTop: 18, paddingHorizontal: 12 }}>
-            <Pressable onPress={() => { props.navigation.navigate('BillingList') }} style={[styles.cardContainer, { backgroundColor: '#61A7EE' }]}>
-              <View style={[styles.leftSection, {}]}>
-                <ImageBackground source={LOCAL_IMAGES.invoiceBG} style={[styles.background, { width: 75, height: 80 }]}>
-                  <View style={styles.container}>
-                    <Image source={LOCAL_ICONS.invoice} style={{ height: 26, width: 37, objectFit: 'contain' }} />
-                  </View>
-                </ImageBackground>
-              </View>
-              <View style={styles.rightSection}>
-                <Text style={styles.cardText}>Invoices</Text>
-              </View>
-            </Pressable>
+           
 
-            <Pressable onPress={() => { props.navigation.navigate('PurchaseHistory') }} style={[styles.cardContainer, { backgroundColor: '#FFE0BB' }]}>
+            <Pressable onPress={() => { props.navigation.navigate('Notice',{type:'expired'}) }} style={[styles.cardContainer, { backgroundColor: '#FFE0BB' }]}>
               <View style={[styles.leftSection, {}]}>
                 <ImageBackground source={LOCAL_IMAGES.purchaseBG} style={[styles.background, { width: 75, height: 80 }]}>
                   <View style={styles.container}>
-                    <Image source={LOCAL_ICONS.purchase} style={{ height: 26, width: 37, objectFit: 'contain' }} />
+                    <Image source={LOCAL_ICONS.bulletPoint} style={{ height: 35, width: 37, objectFit: 'contain' }} />
                   </View>
                 </ImageBackground>
               </View>
               <View style={styles.rightSection}>
-                <Text style={styles.cardText}>Purchase History</Text>
+                <Text style={styles.cardText}>Expiring Document</Text>
               </View>
             </Pressable>
 
-            <Pressable onPress={() => { props.navigation.navigate('ConsumptionHistory') }} style={[styles.cardContainer, { backgroundColor: '#AAAAE2' }]}>
+            <Pressable onPress={() => { props.navigation.navigate('Notice',{type:'expiring'}) }} style={[styles.cardContainer, { backgroundColor: '#AAAAE2' }]}>
               <View style={[styles.leftSection, {}]}>
                 <ImageBackground source={LOCAL_IMAGES.comsumptionBG} style={[styles.background, { width: 75, height: 80 }]}>
                   <View style={styles.container}>
-                    <Image source={LOCAL_ICONS.consumption} style={{ height: 26, width: 37, objectFit: 'contain' }} />
+                    <Image source={LOCAL_ICONS.bulletPoint} style={{ height: 35, width: 37, objectFit: 'contain' }} />
                   </View>
                 </ImageBackground>
               </View>
               <View style={styles.rightSection}>
-                <Text style={styles.cardText}>Consumption History</Text>
+                <Text style={styles.cardText}>Expired Doc</Text>
               </View>
             </Pressable>
 
@@ -228,4 +217,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   }
 });
-export default BillingMaster;
+export default NoticeMaster;

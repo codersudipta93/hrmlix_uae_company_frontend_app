@@ -383,7 +383,6 @@ const DocumentVault = props => {
                 transparent={true}
                 visible={formModalVisibility}
                 onRequestClose={() => onClose(null)}
-
             >
                 <View style={styles.modalContainer}>
                     <View style={[styles.modalContent, { width: '90%', maxHeight: '100%', }]}>

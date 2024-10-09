@@ -223,7 +223,7 @@ const EmployeeDocuments = props => {
         } else if (selectedOption == 'add' &&props?.route?.params?.paramData?.validity_req == 'yes' && validTo == "") {
             HelperFunctions.showToastMsg("Please enter document validation expire date");
         } else {
-            setBtnLoading(true);
+            //setBtnLoading(true);
             if(selectedOption == 'add'){
                 saveDocument();
             }else{
@@ -233,16 +233,17 @@ const EmployeeDocuments = props => {
     }
 
     const updateDocument = () => {
+        console.log(selectedDoc)
         let param = {
-            "emp_id": props?.route?.params?.paramData?.emp_id,
+            "emp_id": selectedDoc?.emp_db_id,
             "document_name": vaultName,
-            "document_id": props?.route?.params?.paramData?.document_id,
-            "valid_from": "",
-            "valid_to": ""
+            "document_id": selectedDoc?._id,
+            "valid_from": selectedDoc?.valid_from,
+            "valid_to":  selectedDoc?.valid_to
         }
-
-        //console.log(param)
-        saveDocumentApi("company/edit-document-vault", param, token)
+        console.log(param)
+        // console.log(param)
+        postApi("company/edit-document-vault", param, token)
             .then((resp) => {
                 console.log(resp)
                 if (resp.status == "success") {
@@ -870,7 +871,7 @@ const EmployeeDocuments = props => {
                                 marginBottom={12}
                                 label="Document Name"
                                 placeholder="Write document name"
-                                value={vaultName != null ? vaultName.toString() : vaultName}
+                                value={vaultName != null ? vaultName : vaultName}
                                 onChangeText={setVaultName}
                             />
 
@@ -942,9 +943,11 @@ const EmployeeDocuments = props => {
                                             //selectedValue={loginTime ? HelperFunctions.convertTo12HourFormat(loginTime) : ""}
                                             selectedValue={validTo}
                                             inputMargin={20}
-                                            confirmDateClick={(timestamp) => {
-                                                let formatedDate = (timestamp).toISOString().split('T')[0];
-                                                // setStartdate(formatedDate)
+                                            confirmDateClick={(time) => {
+                                                console.log(time)
+                                             let formatedDate = (time).toISOString().split('T')[0];
+                                                // // setStartdate(formatedDate)
+                                                // //console.log(formatedDate)
                                                 setvalidTo(formatedDate)
                                             }}
                                         />

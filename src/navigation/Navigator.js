@@ -62,7 +62,10 @@ import {
   FnfReport,
   EmployeeFilter,
   EmployeeDocumentVault,
-  EmployeeDocuments
+  EmployeeDocuments,
+  AnnouncementListPublic,
+  Notice,
+  NoticeMaster
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -135,6 +138,9 @@ function Navigator() {
         <Stack.Screen name="EmployeeFilter" component={EmployeeFilter} />
         <Stack.Screen name="EmployeeDocumentVault" component={EmployeeDocumentVault} />
         <Stack.Screen name="EmployeeDocuments" component={EmployeeDocuments} />
+        <Stack.Screen name="AnnouncementListPublic" component={AnnouncementListPublic} />
+        <Stack.Screen name="Notice" component={Notice} />
+        <Stack.Screen name="NoticeMaster" component={NoticeMaster} />
         
       </Stack.Navigator>
     </NavigationContainer>

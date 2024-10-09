@@ -296,6 +296,29 @@ const Dashboard = props => {
     </View>
   );
 
+  const noticeListRender = ({ index, item }) => (
+    <View style={styles.listCard}>
+      <View style={{ justifyContent: 'center', alignItems: 'center', padding: 6, backgroundColor: '#007AFF', borderRadius: 8 }}>
+      </View>
+      <Pressable onPress={() => {
+
+        let param = {
+          "system": "document_user_vault",
+          "document_id": item?.document_type_id,
+          "emp_id": item?.emp_db_id,
+          "name": item?.document_name,
+          "action_type": 'all',
+          "validity_req": item?.validity_req,
+          "expire_in_days": item?.expire_in_days
+        }
+        props.navigation.navigate('EmployeeDocuments', { paramData: param });
+
+      }} style={{ flexDirection: 'column', paddingHorizontal: 14, paddingRight: 50, flex: 1, height: '100%' }}>
+        <Text style={{ fontFamily: FontFamily.regular, color: '#4E525E', fontSize: sizes.md + 1, textAlign: 'left' }}>{item?.document_name + ' document will be expire with in ' + item?.expire_in_days + ' for ' + item?.emp_first_name + ' ' + item?.emp_last_name} </Text>
+      </Pressable>
+    </View>
+  );
+
   const ListRender = ({ index, item }) => (
     <View style={[styles.listCard, { paddingVertical: 18, marginBottom: 0, borderRadius: 0, borderTopRightRadius: index == 0 ? 8 : 0, borderTopLeftRadius: index == 0 ? 8 : 0, borderBottomLeftRadius: sampleData.length - 1 == index ? 8 : 0, borderBottomRightRadius: sampleData.length - 1 == index ? 8 : 0 }]}>
       <View style={{ width: '60%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -351,7 +374,7 @@ const Dashboard = props => {
   );
 
 
-  
+
   const FNFRender = ({ index, item }) => (
     <View style={[styles.listCard, { paddingVertical: 18, marginBottom: 0, borderRadius: 0, borderTopRightRadius: index == 0 ? 8 : 0, borderTopLeftRadius: index == 0 ? 8 : 0, borderBottomLeftRadius: sampleData.length - 1 == index ? 8 : 0, borderBottomRightRadius: sampleData.length - 1 == index ? 8 : 0 }]}>
       <View style={{ width: '60%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -368,7 +391,7 @@ const Dashboard = props => {
       </View> */}
     </View>
   );
-  
+
 
   const birthDayListRender = ({ index, item }) => (
     <View style={[styles.card, { width: 210 }]}>
@@ -392,7 +415,7 @@ const Dashboard = props => {
   const verticalPlaceholderRenderList = ({ index, item }) => (
     <View style={{ flexDirection: 'row' }}>
       <SkeletonLoader width={'15%'} height={60} borderRadius={50} style={{ marginBottom: 6, marginRight: 10 }} />
-      <SkeletonLoader width={width} height={60} borderRadius={10} style={{ marginBottom: 6, marginRight: 10 }} />
+      <SkeletonLoader width={'85%'} height={60} borderRadius={10} style={{ marginBottom: 6, marginRight: 10 }} />
     </View>
 
   );
@@ -512,8 +535,6 @@ const Dashboard = props => {
               </View>
 
               <View style={{ paddingHorizontal: 14, flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 }}>
-
-
                 <View style={[styles.cardMain, { backgroundColor: '#FCE8E9' }]}>
                   <View style={styles.cardSection1}>
                     <View style={styles.cardIconContainer}>
@@ -578,22 +599,58 @@ const Dashboard = props => {
 
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 30 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
-              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Announcement</Text>
-              <TouchableOpacity style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}><Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text></TouchableOpacity>
-            </View>
 
-            {announcementLoader == true ?
+            {announcementLoader == true ? <>
+
+              <SkeletonLoader width={'85%'} height={60} borderRadius={10} style={{ marginBottom: 6, marginRight: 10 }} />
               <FlatList
                 showsVerticalScrollIndicator={false}
-                data={announcementData}
+                data={[1, 1, 1]}
+                renderItem={verticalPlaceholderRenderList}
+                contentContainerStyle={{ marginBottom: 0 }}
+              />
+
+            </> :
+
+              <>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
+                  <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Announcement</Text>
+                  <TouchableOpacity onPress={() => { props.navigation.navigate('AnnouncementListPublic') }} style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}>
+                    <Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  data={announcementData}
+                  renderItem={announcementListRender}
+                  contentContainerStyle={{ marginBottom: 0 }}
+                />
+              </>
+
+            }
+
+          </View>
+
+          <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 30 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, }}>
+              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h6 }}>Notice</Text>
+              <TouchableOpacity onPress={() => { props.navigation.navigate('NoticeMaster') }} style={{ borderWidth: 1, borderColor: '#007AFF', borderRadius: 4, padding: 5, paddingHorizontal: 8 }}>
+                <Text style={{ color: '#007AFF', fontFamily: FontFamily.medium, fontSize: sizes.md }}>View All</Text>
+              </TouchableOpacity>
+            </View>
+
+            {noticeLoader == true ?
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={[1, 1, 1]}
                 renderItem={verticalPlaceholderRenderList}
                 contentContainerStyle={{ marginBottom: 0 }}
               /> :
               <FlatList
                 showsVerticalScrollIndicator={false}
-                data={announcementData}
-                renderItem={announcementListRender}
+                data={noticeData}
+                renderItem={noticeListRender}
                 contentContainerStyle={{ marginBottom: 0 }}
               />
             }

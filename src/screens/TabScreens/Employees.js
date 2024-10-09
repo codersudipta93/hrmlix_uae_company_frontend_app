@@ -7,7 +7,6 @@ import {
   ImageBackground,
   StatusBar,
   Image,
-
   FlatList,
   RefreshControl,
   Pressable,
@@ -16,7 +15,9 @@ import {
   BackHandler,
   Alert,
   I18nManager,
-  ScrollView
+  ScrollView,
+  Modal,
+  Share
 } from 'react-native'
 
 import React, {
@@ -53,6 +54,8 @@ import Delete from '../../assets/icons/Delete';
 import Filter from '../../assets/icons/Filter';
 import SkeletonLoader from '../../component/SkeletonLoader';
 import { _setreffeshStatus, _setmasterData } from '../../Store/Reducers/ProjectReducer';
+import FloatingDropdown from '../../component/FloatingDropdown';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const Employees = props => {
   const isFocused = useIsFocused();
@@ -67,11 +70,21 @@ const Employees = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [filterdata, setFilterData] = useState(null);
 
+  const [hodData, setHod] = useState([]);
+  const [selectedHod, setSelectedHod] = useState([]);
+  const [inviteModalVisibile, setinviteModalVisibile] = useState(false);
+
+  const [linkModalVisibile, setlinkModalVisibile] = useState(false);
+  const [shareLink, setshareLink] = useState("");
+  const [btnLoading, setbtnLoading] = useState(false);
+
+
   useEffect(() => {
     if (isFocused == true) {
       console.log(i18n.language);
       console.log(I18nManager.isRTL);
-      //alert(JSON.stringify(masterData));
+      console.log("JSON.stringify(masterData)");
+      // console.log(JSON.stringify(masterData));
     }
   }, [isFocused]);
 
@@ -212,7 +225,7 @@ const Employees = props => {
       "hod_id": props?.route?.params?.paramData?.hod_id,
       "designation_id": props?.route?.params?.paramData?.designation_id,
       "branch_id": props?.route?.params?.paramData?.branch_id,
-      "client_id":props?.route?.params?.paramData?.client_id,
+      "client_id": props?.route?.params?.paramData?.client_id,
       "searchkey": props?.route?.params?.paramData?.searchkey,
       "gender": props?.route?.params?.paramData?.gender,
       "religion": props?.route?.params?.paramData?.religion,
@@ -234,8 +247,37 @@ const Employees = props => {
 
 
 
+  const copyToClipboard =  () => {
+    // Clipboard.setString(shareLink);
+    // console.log(await Clipboard.getString())
+   // Clipboard.setString('Text to copy');
+    //Clipboard.setString(shareLink)
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Copied to clipboard!');
+  }).catch(err => {
+      console.error('Failed to copy: ', err);
+  });
+  };
+ 
 
-
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: shareLink,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
 
   const getMasterData = () => {
     postApi("company/get-employee-master", {}, token)
@@ -250,6 +292,30 @@ const Employees = props => {
       }).catch((err) => {
         console.log(err);
         setIsLoading(false)
+        HelperFunctions.showToastMsg(err.message);
+      })
+  }
+
+  const generateLink = () => {
+    setbtnLoading(true)
+    postApi("company/generate_employee_invite_link", {
+      "hod_id": selectedHod?._id,
+      "lang": "en"
+    }, token)
+      .then((resp) => {
+        if (resp?.status == 'success') {
+          setshareLink(resp?.url);
+          setbtnLoading(false);
+          setinviteModalVisibile(false);
+          setlinkModalVisibile(true);
+          setSelectedHod("");
+        } else {
+          HelperFunctions.showToastMsg(resp.message);
+          setbtnLoading(false);
+        }
+      }).catch((err) => {
+        console.log(err);
+        setbtnLoading(false)
         HelperFunctions.showToastMsg(err.message);
       })
   }
@@ -284,7 +350,7 @@ const Employees = props => {
     <View style={[styles.listCard, { paddingVertical: 22, marginBottom: 0, borderRadius: 0, borderTopRightRadius: index == 0 ? 8 : 0, borderTopLeftRadius: index == 0 ? 8 : 0, borderBottomLeftRadius: sampleData.length - 1 == index ? 8 : 0, borderBottomRightRadius: sampleData.length - 1 == index ? 8 : 0 }]}>
       <View style={{ width: '60%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
         <View style={{ justifyContent: 'center', alignItems: 'center', height: 35, width: 35, backgroundColor: '#007AFF', borderRadius: 50 }}>
-          <Image source={{ uri: item?.profile_pic ? item?.profile_pic : 'https://uaedemo.hrmlix.com/assets/images/user.jpg' }} style={{ height: '100%', width: '100%', borderRadius: 50, objectFit: 'cover' }} />
+          <Image source={{ uri: item?.profile_pic ? item?.profile_pic : AllSourcePath?.API_IMG_URL_DEV + 'user.jpg' }} style={{ height: '100%', width: '100%', borderRadius: 50, objectFit: 'cover' }} />
         </View>
         <View style={{ paddingLeft: 12 }}>
           <Text style={{ fontFamily: FontFamily.medium, color: '#4E525E', fontSize: sizes.h6, textAlign: 'left' }}>{item?.emp_first_name} {item?.emp_last_name}</Text>
@@ -320,8 +386,14 @@ const Employees = props => {
         <ScrollView showsVerticalScrollIndicator={false}>
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 12 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, }}>
-              <Text style={{ fontFamily: FontFamily.semibold, color: '#4E525E', fontSize: sizes.h5, lineHeight: 15 }}>Employees Listing</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 10, }}>
+              {masterData != "" ?
+                <Pressable onPress={() => {
+                  setinviteModalVisibile(!inviteModalVisibile)
+                  setHod(masterData?.hod)
+                }} style={{ paddingHorizontal: 16, paddingVertical: 8, borderRadius: 4, backgroundColor: colors.primary, marginRight: 10 }}>
+                  <Text style={{ color: '#fff', fontSize: sizes.h6 - 1 }}>Invite</Text>
+                </Pressable> : null}
               <TouchableOpacity onPress={() => { openFilter() }} style={{ padding: 6, paddingHorizontal: 10 }}>
                 <Filter />
               </TouchableOpacity>
@@ -346,6 +418,113 @@ const Employees = props => {
           </View>
         </ScrollView>
       </View>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={inviteModalVisibile}
+        onRequestClose={() => onClose(null)}
+
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingVertical: 0 }}>
+
+              <IonIcon
+                name="close"
+                size={24}
+                color={'#8A8E9C'}
+                onPress={() => { setinviteModalVisibile(!inviteModalVisibile) }}
+              />
+            </View>
+            <View style={[styles.radioContainer, { marginTop: 20 }]}>
+              <FloatingDropdown
+                multiSelect={false}
+                labelName="Select HOD"
+                options={hodData}
+                listLabelKeyName={['first_name', 'last_name']}
+                selectedValueData={selectedHod}
+
+                onSelect={(option) => {
+                  let data = HelperFunctions.copyArrayOfObj(hodData);
+                  for (let k = 0; k < data.length; k++) {
+                    if (data[k]._id == option._id) {
+                      data[k].selected = data[k].selected == true ? false : true;
+                      setSelectedHod(data[k])
+                    } else {
+                      data[k].selected = false;
+                    }
+                  }
+
+                  setHod(data)
+
+                }}
+                inputContainerColor="#CACDD4"
+                labelBg={colors.white}
+                labelColor="#007AFF"
+                placeholderColor="#8A8E9C"
+                inputColor={colors.primary}
+
+                inputMargin={20}
+                bracketAfterPositionIndex={1}
+              />
+            </View>
+
+            <TouchableOpacity onPress={() => { generateLink() }} style={styles.submitButton}>
+              {btnLoading ?
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                  <ActivityIndicator color="#fff" />
+                  <Text style={[{ fontFamily: FontFamily.regular, color: colors.white, fontSize: sizes.h6 - 1, textAlign: 'center', textTransform: 'capitalize', marginLeft: 4 }]}>
+                    Please Wait...
+                  </Text>
+                </View>
+                : <Text style={styles.submitButtonText}>Generate Link</Text>
+              }
+            </TouchableOpacity>
+          </View>
+
+        </View>
+      </Modal>
+
+
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={linkModalVisibile}
+        onRequestClose={() => onClose(null)}
+
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingVertical: 0 }}>
+
+              <IonIcon
+                name="close"
+                size={24}
+                color={'#8A8E9C'}
+                onPress={() => { setlinkModalVisibile(!linkModalVisibile) }}
+              />
+            </View>
+            <View style={[styles.radioContainer, { marginTop: 20,flexDirection:'column' }]}>
+              <Text style={{ color: '#000', fontSize: sizes.h6,marginBottom:4,fontFamily: FontFamily.bold }}>Invite Link - </Text>
+              <Text style={{ color: '#000', fontSize: sizes.h6 - 1,fontFamily: FontFamily.regular }}>{shareLink}</Text>
+            </View>
+
+            <View style={{ width: '100%', justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row' }}>
+              <TouchableOpacity onPress={() => { onShare() }} style={[styles.submitButton,{width:'35%'}]}>
+                <Text style={styles.submitButtonText}>Share</Text>
+              </TouchableOpacity>
+              {/* <TouchableOpacity onPress={() => copyToClipboard()} style={styles.submitButton}>
+                <Text style={styles.submitButtonText}>Copy</Text>
+              </TouchableOpacity> */}
+            </View>
+
+          </View>
+
+        </View>
+      </Modal>
+
 
     </SafeAreaView>
   )
@@ -414,7 +593,42 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     //marginBottom: 8
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    paddingTop: 10,
+    borderRadius: 10,
+    width: '80%',
+    maxHeight: '80%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 
+  radioContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 35,
+    marginTop: 25,
+  },
+  submitButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    width: '45%',
+    borderRadius: 4
+  },
+  submitButtonText: {
+    color: 'white',
+    fontSize: 13,
+    textAlign: 'center'
+  },
 });
 export default Employees;
