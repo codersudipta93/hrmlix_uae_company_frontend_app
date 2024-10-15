@@ -17,7 +17,8 @@ import {
   I18nManager,
   ScrollView,
   Modal,
-  Share
+  Share,
+  Animated
 } from 'react-native'
 
 import React, {
@@ -56,8 +57,11 @@ import SkeletonLoader from '../../component/SkeletonLoader';
 import { _setreffeshStatus, _setmasterData } from '../../Store/Reducers/ProjectReducer';
 import FloatingDropdown from '../../component/FloatingDropdown';
 import Clipboard from '@react-native-clipboard/clipboard';
+import NoDataFound from '../../component/NoDataFound';
+import Eye from '../../assets/icons/Eye';
+import BootomSheet from '../../component/BootomSheet';
 
-const Employees = props => {
+const ShiftingEarningReport = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
@@ -70,14 +74,9 @@ const Employees = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [filterdata, setFilterData] = useState(null);
 
-  const [hodData, setHod] = useState([]);
-  const [selectedHod, setSelectedHod] = useState([]);
-  const [inviteModalVisibile, setinviteModalVisibile] = useState(false);
-
-  const [linkModalVisibile, setlinkModalVisibile] = useState(false);
-  const [shareLink, setshareLink] = useState("");
-  const [btnLoading, setbtnLoading] = useState(false);
-
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedShift, setSelectedShift] = useState("");
+  const [animValue] = useState(new Animated.Value(1000)); // Start off-screen
 
   useEffect(() => {
     if (isFocused == true) {
@@ -108,29 +107,15 @@ const Employees = props => {
       let apiParam = {
         "pageno": 1,
         "perpage": 100,
-        "advance_filter": props?.route?.params?.paramData?.advance_filter,
+        "wage_from_date": props?.route?.params?.paramData?.doj_from ? props?.route?.params?.paramData?.doj_from : "",
+        "wage_to_date": props?.route?.params?.paramData?.doj_to ? props?.route?.params?.paramData?.doj_to : "",
+        "length": 20,
         "department_id": props?.route?.params?.paramData?.department_id != "" ? JSON.stringify(props?.route?.params?.paramData?.department_id.map(item => item._id)) : "",
         "hod_id": props?.route?.params?.paramData?.hod_id != "" ? JSON.stringify(props?.route?.params?.paramData?.hod_id.map(item => item._id)) : "",
         "designation_id": props?.route?.params?.paramData?.designation_id != "" ? JSON.stringify(props?.route?.params?.paramData?.designation_id.map(item => item._id)) : "",
         "branch_id": props?.route?.params?.paramData?.branch_id != "" ? JSON.stringify(props?.route?.params?.paramData?.branch_id.map(item => item._id)) : "",
         "client_id": props?.route?.params?.paramData?.client_id != "" ? JSON.stringify(props?.route?.params?.paramData?.client_id.map(item => item._id)) : "",
-        "searchkey": props?.route?.params?.paramData?.searchkey,
-        "wage_month_from": HelperFunctions.getCurrentMonth(),
-        "wage_year_from": HelperFunctions.getCurrentYear(),
-        "wage_month_to": HelperFunctions.getCurrentMonth(),
-        "wage_year_to": HelperFunctions.getCurrentYear(),
-        "date_from": HelperFunctions.getCurrentYear() + '-' + HelperFunctions.getCurrentMonth(),
-        "date_to": HelperFunctions.getCurrentYear() + '-' + HelperFunctions.getCurrentMonth(),
-        "gender": props?.route?.params?.paramData?.gender,
-        "religion": props?.route?.params?.paramData?.religion,
-        "age_from": props?.route?.params?.paramData?.age_from,
-        "age_to": props?.route?.params?.paramData?.age_to,
-        "doj_from": props?.route?.params?.paramData?.doj_from,
-        "doe_from": props?.route?.params?.paramData?.doe_from,
-        "doj_to": props?.route?.params?.paramData?.doj_to,
-        "doe_to": props?.route?.params?.paramData?.doe_to,
-        "emp_status": props?.route?.params?.paramData?.emp_status,
-        "search_type": "effective_date",
+
       }
 
       setFilterData(apiParam);
@@ -138,35 +123,18 @@ const Employees = props => {
     } else {
 
       let apiParam = {
-        "pageno": 1,
-        "perpage": 100,
-        "wage_month_from": HelperFunctions.getCurrentMonth(),
-        "wage_year_from": HelperFunctions.getCurrentYear(),
-        "wage_month_to": HelperFunctions.getCurrentMonth(),
-        "wage_year_to": HelperFunctions.getCurrentYear(),
-        "date_from": HelperFunctions.getCurrentYear() + '-' + HelperFunctions.getCurrentMonth(),
-        "date_to": HelperFunctions.getCurrentYear() + '-' + HelperFunctions.getCurrentMonth(),
-        "searchkey": "Inga",
+
         "department_id": "",
         "designation_id": "",
         "branch_id": "",
-        "client_id": "",
         "hod_id": "",
-        "emp_id": "",
-        "gender": "",
-        "religion": "",
+        "client_id": "",
         "client_code": "",
-        "age_from": "",
-        "age_to": "",
-        "doj_from": "",
-        "doe_from": "",
-        "doj_to": "",
-        "search_type": "effective_date",
-        "date_start_from": HelperFunctions.getFormattedDate(new Date()),
-        "date_end_to": HelperFunctions.getFormattedDate(new Date()),
-        "bank_id": "",
-        "emp_status": "",
-        "advance_filter": "no"
+        "wage_from_date": new Date(),
+        "wage_to_date": new Date(),
+
+        "pageno": 1,
+        "perpage": 20
       }
 
       setFilterData(apiParam);
@@ -180,13 +148,13 @@ const Employees = props => {
   useEffect(() => {
 
     if (filterdata != null) {
-      let apiParam = { ...filterdata };
-      apiParam.gender = apiParam?.gender ? apiParam?.gender.value : "";
-      apiParam.religion = apiParam?.religion ? apiParam?.religion.value : "";
-      apiParam.emp_status = apiParam?.emp_status ? apiParam?.emp_status.value : "";
-      console.log(apiParam);
+      // let apiParam = { ...filterdata };
+      // apiParam.gender = apiParam?.gender ? apiParam?.gender.value : "";
+      // apiParam.religion = apiParam?.religion ? apiParam?.religion.value : "";
+      // apiParam.emp_status = apiParam?.emp_status ? apiParam?.emp_status.value : "";
+      // console.log(apiParam);
       setIsLoading(true);
-      postApi("company/get-employee", apiParam, token)
+      postApi("company/shift-earning-report", filterdata, token)
         .then((resp) => {
           console.log(resp);
           if (resp?.status == 'success') {
@@ -220,64 +188,22 @@ const Employees = props => {
   const openFilter = () => {
 
     let pData = {
-      "advance_filter": props?.route?.params?.paramData?.advance_filter,
       "department_id": props?.route?.params?.paramData?.department_id,
       "hod_id": props?.route?.params?.paramData?.hod_id,
       "designation_id": props?.route?.params?.paramData?.designation_id,
       "branch_id": props?.route?.params?.paramData?.branch_id,
       "client_id": props?.route?.params?.paramData?.client_id,
-      "searchkey": props?.route?.params?.paramData?.searchkey,
-      "gender": props?.route?.params?.paramData?.gender,
-      "religion": props?.route?.params?.paramData?.religion,
-      "age_from": props?.route?.params?.paramData?.age_from,
-      "age_to": props?.route?.params?.paramData?.age_to,
       "doj_from": props?.route?.params?.paramData?.doj_from,
-      "doe_from": props?.route?.params?.paramData?.doe_from,
       "doj_to": props?.route?.params?.paramData?.doj_to,
-      "doe_to": props?.route?.params?.paramData?.doe_to,
-      "emp_status": props?.route?.params?.paramData?.emp_status,
-      "search_type": "effective_date",
+      "page_component_name": "ShiftingEarningReport"
     }
 
     console.log("filter data paramData ====> ", pData)
     console.log("filter data paramData ======================= ")
-    props.navigation.navigate('EmployeeFilter', { paramData: pData })
+    props.navigation.navigate('ShiftFilter', { paramData: pData })
 
   }
 
-
-
-  const copyToClipboard =  () => {
-    // Clipboard.setString(shareLink);
-    // console.log(await Clipboard.getString())
-   // Clipboard.setString('Text to copy');
-    //Clipboard.setString(shareLink)
-    navigator.clipboard.writeText(text).then(() => {
-      alert('Copied to clipboard!');
-  }).catch(err => {
-      console.error('Failed to copy: ', err);
-  });
-  };
- 
-
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message: shareLink,
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      Alert.alert(error.message);
-    }
-  };
 
   const getMasterData = () => {
     postApi("company/get-employee-master", {}, token)
@@ -296,29 +222,27 @@ const Employees = props => {
       })
   }
 
-  const generateLink = () => {
-    setbtnLoading(true)
-    postApi("company/generate_employee_invite_link", {
-      "hod_id": selectedHod?._id,
-      "lang": "en"
-    }, token)
-      .then((resp) => {
-        if (resp?.status == 'success') {
-          setshareLink(resp?.url);
-          setbtnLoading(false);
-          setinviteModalVisibile(false);
-          setlinkModalVisibile(true);
-          setSelectedHod("");
-        } else {
-          HelperFunctions.showToastMsg(resp.message);
-          setbtnLoading(false);
-        }
-      }).catch((err) => {
-        console.log(err);
-        setbtnLoading(false)
-        HelperFunctions.showToastMsg(err.message);
-      })
-  }
+  const toggleModal = (item) => {
+
+    if (isModalVisible) {
+      setSelectedShift("")
+      // Hide modal
+      Animated.timing(animValue, {
+        toValue: 1000,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => setModalVisible(false));
+    } else {
+      setSelectedShift(item)
+      // Show modal
+      setModalVisible(true);
+      Animated.timing(animValue, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -357,43 +281,40 @@ const Employees = props => {
           <Text style={{ fontFamily: FontFamily.regular, color: '#8A8E9C', fontSize: sizes.md, textAlign: 'left', marginTop: 6 }}>ID: {item?.corporate_id}</Text>
         </View>
       </View>
-      <View style={{ paddingLeft: 12, paddingRight: 8, width: '40%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <IonIcon
-          name="eye"
-          size={18}
-          color={colors.primary}
-          onPress={() => {
-            props.navigation.navigate('EmployeeDashboard', { empID: item?._id })
-
-          }}
-        />
+      <View style={{ paddingLeft: 12, width: '40%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <Pressable onPress={() => { toggleModal(item) }}>
+          <Eye fillColor='#FC6860' style={{ transform: [{ rotate: '-90deg' }] }} />
+        </Pressable>
       </View>
     </View>
   );
+
+  const shiftRateRender = ({ index, item }) => (
+    <View style={{ marginBottom: 14, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View><Text style={styles.leftText}>{item?.shift_data?.shift_name}</Text></View>
+            <View><Text style={[styles.rightText, { textTransform: 'uppercase' }]}>{item?.rate ? item?.rate : "N/A"} AED</Text></View>
+          </View>
+
+  )
 
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.main}>
         <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
         <CustomHeader
-          buttonText={t('Employees')}
+          buttonText={t('Shift Earning Report')}
           style={{ flexDirection: 'row' }}
           iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
           icon={LOCAL_IMAGES.user}
           searchIcon={false}
+          buttonTextStyle={{ lineHeight: 23 }}
         />
 
         <ScrollView showsVerticalScrollIndicator={false}>
 
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 12 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 10, }}>
-              {masterData != "" ?
-                <Pressable onPress={() => {
-                  setinviteModalVisibile(!inviteModalVisibile)
-                  setHod(masterData?.hod)
-                }} style={{ paddingHorizontal: 16, paddingVertical: 8, borderRadius: 4, backgroundColor: colors.primary, marginRight: 10 }}>
-                  <Text style={{ color: '#fff', fontSize: sizes.h6 - 1 }}>Invite</Text>
-                </Pressable> : null}
+
               <TouchableOpacity onPress={() => { openFilter() }} style={{ padding: 6, paddingHorizontal: 10 }}>
                 <Filter />
               </TouchableOpacity>
@@ -405,125 +326,79 @@ const Employees = props => {
                 data={sampleData}
                 renderItem={placeholderRenderList} // Adjust rendering logic as per your data structure
               />
+
               :
 
-              <FlatList
-                showsVerticalScrollIndicator={false}
-                data={empData}
-                renderItem={ListRender}
-                contentContainerStyle={{ marginBottom: 30 }}
-              />
+              empData != "" ?
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  data={empData}
+                  renderItem={ListRender}
+                  contentContainerStyle={{ marginBottom: 30 }}
+                />
+                : <NoDataFound />
 
             }
           </View>
         </ScrollView>
       </View>
 
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={inviteModalVisibile}
-        onRequestClose={() => onClose(null)}
-
+      <BootomSheet
+        toggleModal={toggleModal}
+        isModalVisible={isModalVisible}
+        animValue={animValue}
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingVertical: 0 }}>
-
-              <IonIcon
-                name="close"
-                size={24}
-                color={'#8A8E9C'}
-                onPress={() => { setinviteModalVisibile(!inviteModalVisibile) }}
-              />
-            </View>
-            <View style={[styles.radioContainer, { marginTop: 20 }]}>
-              <FloatingDropdown
-                multiSelect={false}
-                labelName="Select HOD"
-                options={hodData}
-                listLabelKeyName={['first_name', 'last_name']}
-                selectedValueData={selectedHod}
-
-                onSelect={(option) => {
-                  let data = HelperFunctions.copyArrayOfObj(hodData);
-                  for (let k = 0; k < data.length; k++) {
-                    if (data[k]._id == option._id) {
-                      data[k].selected = data[k].selected == true ? false : true;
-                      setSelectedHod(data[k])
-                    } else {
-                      data[k].selected = false;
-                    }
-                  }
-
-                  setHod(data)
-
-                }}
-                inputContainerColor="#CACDD4"
-                labelBg={colors.white}
-                labelColor="#007AFF"
-                placeholderColor="#8A8E9C"
-                inputColor={colors.primary}
-
-                inputMargin={20}
-                bracketAfterPositionIndex={1}
-              />
-            </View>
-
-            <TouchableOpacity onPress={() => { generateLink() }} style={styles.submitButton}>
-              {btnLoading ?
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                  <ActivityIndicator color="#fff" />
-                  <Text style={[{ fontFamily: FontFamily.regular, color: colors.white, fontSize: sizes.h6 - 1, textAlign: 'center', textTransform: 'capitalize', marginLeft: 4 }]}>
-                    Please Wait...
-                  </Text>
-                </View>
-                : <Text style={styles.submitButtonText}>Generate Link</Text>
-              }
-            </TouchableOpacity>
+        <View>
+          <View style={{ marginBottom: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={[styles.modalheadingText, {}]}>Shift Details</Text>
+            <IonIcon
+              name="close"
+              size={20}
+              color="#4E525E"
+            />
           </View>
 
-        </View>
-      </Modal>
-
-
-
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={linkModalVisibile}
-        onRequestClose={() => onClose(null)}
-
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingVertical: 0 }}>
-
-              <IonIcon
-                name="close"
-                size={24}
-                color={'#8A8E9C'}
-                onPress={() => { setlinkModalVisibile(!linkModalVisibile) }}
-              />
-            </View>
-            <View style={[styles.radioContainer, { marginTop: 20,flexDirection:'column' }]}>
-              <Text style={{ color: '#000', fontSize: sizes.h6,marginBottom:4,fontFamily: FontFamily.bold }}>Invite Link - </Text>
-              <Text style={{ color: '#000', fontSize: sizes.h6 - 1,fontFamily: FontFamily.regular }}>{shareLink}</Text>
-            </View>
-
-            <View style={{ width: '100%', justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row' }}>
-              <TouchableOpacity onPress={() => { onShare() }} style={[styles.submitButton,{width:'35%'}]}>
-                <Text style={styles.submitButtonText}>Share</Text>
-              </TouchableOpacity>
-              {/* <TouchableOpacity onPress={() => copyToClipboard()} style={styles.submitButton}>
-                <Text style={styles.submitButtonText}>Copy</Text>
-              </TouchableOpacity> */}
-            </View>
-
+          <View style={{ marginBottom: 14, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View><Text style={styles.leftText}>Department</Text></View>
+            <View><Text style={[styles.rightText, { textTransform: 'uppercase' }]}>{selectedShift?.department?.department_name ? selectedShift?.department?.department_name : 'N/A'}</Text></View>
           </View>
 
+          <View style={{ marginBottom: 14, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View><Text style={styles.leftText}>Designation</Text></View>
+            <View><Text style={[styles.rightText, { textTransform: 'uppercase' }]}>{selectedShift?.designation?.designation_name ? selectedShift?.designation?.designation_name : 'N/A'}</Text></View>
+          </View>
+
+          <View style={{ marginBottom: 14, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View><Text style={styles.leftText}>Branch</Text></View>
+            <View><Text style={[styles.rightText, { textTransform: 'uppercase' }]}>{selectedShift?.branch?.branch_name ? selectedShift?.branch?.branch_name : 'N/A'}</Text></View>
+          </View>
+
+          <View style={{ marginBottom: 14, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View><Text style={styles.leftText}>Client</Text></View>
+            <View><Text style={[styles.rightText, { textTransform: 'uppercase' }]}>{selectedShift?.client?.client_code ? selectedShift?.client?.client_code : 'N/A'}</Text></View>
+          </View>
+
+          <View style={{ marginBottom: 14, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View><Text style={styles.leftText}>HOD</Text></View>
+            <View><Text style={[styles.rightText, { textTransform: 'uppercase' }]}>{selectedShift?.hod?.first_name ? selectedShift?.hod?.first_name + ' ' + selectedShift?.hod?.last_name : "N/A"} </Text></View>
+          </View>
+
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={selectedShift?.shift_rate}
+            renderItem={shiftRateRender}
+            contentContainerStyle={{ marginBottom: 10 }}
+          />
+
+
+          <View style={{ marginBottom: 14, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View><Text style={styles.leftText}>Total Earning</Text></View>
+            <View><Text style={[styles.rightText, { textTransform: 'uppercase' }]}>{selectedShift?.shift_total ? selectedShift?.shift_total : "N/A"} AED</Text></View>
+          </View>
+
+
         </View>
-      </Modal>
+      </BootomSheet>
 
 
     </SafeAreaView>
@@ -630,5 +505,25 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: 'center'
   },
+  modalheadingText: {
+    fontSize: sizes.h6,
+    marginBottom: 10,
+    fontFamily: FontFamily.semibold,
+    color: '#000'
+  },
+  leftText: {
+    fontSize: sizes.h6 - 2,
+    marginBottom: 10,
+    fontFamily: FontFamily.regular,
+    color: '#868F9A',
+    textTransform:'capitalize'
+  },
+  rightText: {
+    fontSize: sizes.h6 - 1,
+    marginBottom: 10,
+    fontFamily: FontFamily.medium,
+    color: '#1E2538',
+    textTransform:'capitalize'
+  },
 });
-export default Employees;
+export default ShiftingEarningReport;

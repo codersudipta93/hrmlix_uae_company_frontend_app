@@ -31,7 +31,8 @@ const FloatingTimePicker = ({
     confirmDateClick, 
     pickerType,
     pickerIcon,
-    pickerIconStyle
+    pickerIconStyle,
+    minimumDatevalidate
 }) => {
     const [isFocused, setIsFocused] = useState(false);
     const animatedIsFocused = useRef(new Animated.Value(selectedValue ? 1 : 0)).current;
@@ -177,6 +178,7 @@ const FloatingTimePicker = ({
 
                     setShowOptions(!showOptions);
                 }}
+                minimumDate={minimumDatevalidate ? new Date() : null}
             />
         </Pressable>
     );

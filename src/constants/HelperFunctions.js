@@ -653,7 +653,7 @@ const HelperFunctions = {
     const month = date.getMonth() + 1;
     // Get the year
     const year = date.getFullYear();
-    return {day: `${date.getDate()}`,  month: `${month}`, year: `${year}`, month_name: date.toLocaleString('default', { month: 'long' })};
+    return { day: `${date.getDate()}`, month: `${month}`, year: `${year}`, month_name: date.toLocaleString('default', { month: 'long' }) };
   },
 
   getparticularName(type) {
@@ -716,7 +716,7 @@ const HelperFunctions = {
     return month;
   },
 
-  getshortMonthName(datestr){
+  getshortMonthName(datestr) {
     let months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
       'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
@@ -744,25 +744,25 @@ const HelperFunctions = {
   dateDiff(startDateStr, endDateStr) {
     const startDate = new Date(startDateStr);
     const endDate = new Date(endDateStr);
-  
+
     // Calculate year, month, and day differences
     let years = endDate.getFullYear() - startDate.getFullYear();
     let months = endDate.getMonth() - startDate.getMonth();
     let days = endDate.getDate() - startDate.getDate();
-  
+
     // Adjust if days are negative
     if (days < 0) {
       months--;
       const previousMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0); // Previous month last day
       days += previousMonth.getDate();
     }
-  
+
     // Adjust if months are negative
     if (months < 0) {
       years--;
       months += 12;
     }
-  
+
     return `${years} Years ${months} Months ${days} Days`;
   },
   isToday(dateString) {
@@ -771,10 +771,16 @@ const HelperFunctions = {
 
     // Compare year, month, and day
     return inputDate.getDate() === today.getDate() &&
-           inputDate.getMonth() === today.getMonth() &&
-           inputDate.getFullYear() === today.getFullYear();
-}
-  
+      inputDate.getMonth() === today.getMonth() &&
+      inputDate.getFullYear() === today.getFullYear();
+  },
+  isEndDateGreater(shiftStartDate, shiftEndDate) {
+    const startDate = new Date(shiftStartDate);
+    const endDate = new Date(shiftEndDate);
+
+    return endDate > startDate;
+  }
+
 
 }
 

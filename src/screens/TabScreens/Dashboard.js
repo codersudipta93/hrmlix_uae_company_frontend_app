@@ -597,7 +597,6 @@ const Dashboard = props => {
             </>}
 
 
-
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 30 }}>
 
             {announcementLoader == true ? <>

@@ -7,7 +7,7 @@ export {default as Signin} from './Signin';
 export {default as Dashboard} from './TabScreens/Dashboard';
 export {default as Attendance} from './TabScreens/Attendance.js';
 export {default as Employees} from './TabScreens/Employees';
-export {default as Shift} from './TabScreens/Shift';
+export {default as ShiftMaster} from './TabScreens/ShiftMaster.js';
 export {default as Profile} from './TabScreens/Profile';
 
 //Individual screen
@@ -70,4 +70,11 @@ export {default as EmployeeDocumentVault} from './EmployeeSubPages/EmployeeDocum
 export {default as EmployeeDocuments} from './EmployeeSubPages/EmployeeDocuments.js'
 export {default as Notice} from './Notice/Notice.js'
 export {default as NoticeMaster} from './Notice/NoticeMaster.js'
+export {default as ShiftList} from './ShiftOthersPage/ShiftList.js'
+export {default as ShiftingReport} from './ShiftOthersPage/ShiftingReport.js'
+export {default as ShiftFilter} from './ShiftOthersPage/ShiftFilter.js'
+export {default as ShiftingEarningReport} from './ShiftOthersPage/ShiftingEarningReport.js'
+export {default as AllocateShift} from './ShiftOthersPage/AllocateShift.js'
+export {default as ShiftingAllowance} from './ShiftOthersPage/ShiftingAllowance.js'
+export {default as ShiftBatch} from './ShiftOthersPage/ShiftBatch.js'
 

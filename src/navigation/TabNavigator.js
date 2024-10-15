@@ -18,7 +18,7 @@ import {
 import {
   Dashboard,
   Employees,
-  Shift,
+  ShiftMaster,
   Attendance,
   Profile
 } from '../screens';
@@ -45,10 +45,10 @@ const TabArr = [
     activeIcon: LOCAL_ICONS.employees,
     component: Employees,
   },{
-    route: 'Shift',
+    route: 'ShiftMaster',
     label: 'Shift',
     activeIcon: LOCAL_ICONS.shift,
-    component: Shift,
+    component: ShiftMaster,
   },{
     route: 'Profile',
     label: 'Profile',

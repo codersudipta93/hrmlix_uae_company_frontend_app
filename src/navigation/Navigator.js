@@ -65,7 +65,14 @@ import {
   EmployeeDocuments,
   AnnouncementListPublic,
   Notice,
-  NoticeMaster
+  NoticeMaster,
+  ShiftList,
+  ShiftingReport,
+  ShiftFilter,
+  ShiftingEarningReport,
+  AllocateShift,
+  ShiftingAllowance,
+  ShiftBatch
 } from '../screens';
 
 import TabNavigator from './TabNavigator'
@@ -141,7 +148,13 @@ function Navigator() {
         <Stack.Screen name="AnnouncementListPublic" component={AnnouncementListPublic} />
         <Stack.Screen name="Notice" component={Notice} />
         <Stack.Screen name="NoticeMaster" component={NoticeMaster} />
-        
+        <Stack.Screen name="ShiftList" component={ShiftList} />
+        <Stack.Screen name="ShiftingReport" component={ShiftingReport} />
+        <Stack.Screen name="ShiftFilter" component={ShiftFilter} />
+        <Stack.Screen name="ShiftingEarningReport" component={ShiftingEarningReport} />
+        <Stack.Screen name="AllocateShift" component={AllocateShift} />
+        <Stack.Screen name="ShiftingAllowance" component={ShiftingAllowance} />
+        <Stack.Screen name="ShiftBatch" component={ShiftBatch} />
       </Stack.Navigator>
     </NavigationContainer>
   );

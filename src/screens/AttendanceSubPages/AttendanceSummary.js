@@ -250,11 +250,9 @@ const AttendanceSummary = props => {
 
             if (index == selectedIndex) {
               setIndex(null);
-
             } else {
               setIndex(index);
             }
-
           }} >
             <Text style={{ fontFamily: FontFamily.medium, color: index == selectedIndex ? '#fff' : '#4E525E', fontSize: sizes.h2 }}>{index == selectedIndex ? '-' : '+'}</Text>
           </Pressable> : null }
