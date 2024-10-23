@@ -72,8 +72,16 @@ import {
   ShiftingEarningReport,
   AllocateShift,
   ShiftingAllowance,
-  ShiftBatch
-} from '../screens';
+  ShiftBatch,
+  PayrollMaster,
+  SallaryMaster,
+  IncentiveMaster,
+  BonusMaster,
+  AdvanceMaster,
+  ReimbursementMaster,
+  ExtraEarningMaster,
+  RunPayroll,
+  FilterPayroll} from '../screens';
 
 import TabNavigator from './TabNavigator'
 function Navigator() {
@@ -155,6 +163,15 @@ function Navigator() {
         <Stack.Screen name="AllocateShift" component={AllocateShift} />
         <Stack.Screen name="ShiftingAllowance" component={ShiftingAllowance} />
         <Stack.Screen name="ShiftBatch" component={ShiftBatch} />
+        <Stack.Screen name="PayrollMaster" component={PayrollMaster} />
+        <Stack.Screen name="SallaryMaster" component={SallaryMaster} />
+        <Stack.Screen name="BonusMaster" component={BonusMaster} />
+        <Stack.Screen name="IncentiveMaster" component={IncentiveMaster} />
+        <Stack.Screen name="AdvanceMaster" component={AdvanceMaster} />
+        <Stack.Screen name="ReimbursementMaster" component={ReimbursementMaster} />
+        <Stack.Screen name="ExtraEarningMaster" component={ExtraEarningMaster} />
+        <Stack.Screen name="RunPayroll" component={RunPayroll} />
+        <Stack.Screen name="FilterPayroll" component={FilterPayroll} />
       </Stack.Navigator>
     </NavigationContainer>
   );

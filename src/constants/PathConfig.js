@@ -38,7 +38,6 @@ export const LOCAL_ICONS = {
 export const LOCAL_IMAGES = {
   user: require('../assets/imgs/user.jpg'),
   profileBg: require('../assets/imgs/profileBg.jpg'),
-  profileBg2: require('../assets/imgs/profileBg.png'),
   attendanceCardBG1: require('../assets/imgs/bg1.png'),
   attendanceCardBG2: require('../assets/imgs/bg2.png'),
   attendanceCardBG3: require('../assets/imgs/bg3.png'),

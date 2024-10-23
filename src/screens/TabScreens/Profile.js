@@ -159,6 +159,13 @@ const Profile = props => {
             </View>
           </Pressable>
 
+          <Pressable onPress={()=>{props.navigation.navigate('PayrollMaster') }} style={[styles.listItem, { paddingLeft: 12, paddingVertical: 12 }]}>
+            <PayrollIcon />
+            <View>
+              <Text style={styles.itemText}>Payroll</Text>
+            </View>
+          </Pressable>
+
           <Pressable onPress={()=>{props.navigation.navigate('SallaryRevisionDashboard') }} style={[styles.listItem, { paddingLeft: 12 }]}>
             <AppraisalIcon />
             <View>

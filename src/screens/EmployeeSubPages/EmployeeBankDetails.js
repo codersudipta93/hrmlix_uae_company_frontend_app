@@ -191,7 +191,7 @@ const EmployeeBankDetails = props => {
                         <View style={[styles.listCard, { paddingVertical: 22, marginBottom: 0, borderRadius: 0, borderTopRightRadius: 0, borderTopLeftRadius: 0, borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }]}>
                             <View style={{ width: '60%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                                 <View style={{ paddingHorizontal: 12 }}>
-                                    <Text style={{ fontFamily: FontFamily.regular, color: '#202020', fontSize: sizes.md, textAlign: 'left' }}>
+                                   <Text style={{ fontFamily: FontFamily.regular, color: '#202020', fontSize: sizes.md, textAlign: 'left' }}>
                                         Baranch Name
                                     </Text>
                                 </View>

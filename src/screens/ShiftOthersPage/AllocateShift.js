@@ -239,6 +239,7 @@ const AllocateShift = props => {
               duration: 300,
               useNativeDriver: true,
             }).start(() => setEditModalVisible(false));
+           
             let apiParam = {
               "pageno": 1,
               "perpage": 20,

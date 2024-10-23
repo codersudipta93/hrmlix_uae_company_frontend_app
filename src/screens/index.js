@@ -77,4 +77,14 @@ export {default as ShiftingEarningReport} from './ShiftOthersPage/ShiftingEarnin
 export {default as AllocateShift} from './ShiftOthersPage/AllocateShift.js'
 export {default as ShiftingAllowance} from './ShiftOthersPage/ShiftingAllowance.js'
 export {default as ShiftBatch} from './ShiftOthersPage/ShiftBatch.js'
+export {default as PayrollMaster} from './Payroll/PayrollMaster.js'
+export {default as SallaryMaster} from './Payroll/SallaryMaster.js'
+export {default as BonusMaster} from './Payroll/BonusMaster.js'
+export {default as IncentiveMaster} from './Payroll/IncentiveMaster.js'
+export {default as AdvanceMaster} from './Payroll/AdvanceMaster.js'
+export {default as ReimbursementMaster} from './Payroll/ReimbursementMaster.js'
+export {default as ExtraEarningMaster} from './Payroll/ExtraEarningMaster.js'
+export {default as RunPayroll} from './Payroll/RunPayroll.js'
+export {default as FilterPayroll} from './Payroll/PayrollFilter.js'
+
 
