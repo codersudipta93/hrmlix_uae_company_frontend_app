@@ -67,7 +67,7 @@ const DocumentVault = props => {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
 
-    const { userDetails, token } = useSelector(state => state.project);
+    const { userDetails,companyData, token } = useSelector(state => state.project);
 
     // Animation state
     const [animValue] = useState(new Animated.Value(1000)); // Start off-screen
@@ -309,12 +309,12 @@ const DocumentVault = props => {
         <SafeAreaView style={styles.main}>
             <View style={styles.main}>
                 <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                <CustomHeader
+               <CustomHeader hideUserIcon={true}
                     buttonText={t('Documents Vault')}
                     style={{ flexDirection: 'row' }}
                     iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
                     icon={LOCAL_IMAGES.user}
-                    searchIcon={true}
+                    searchIcon={false}
                 />
 
                 <View style={{ paddingTop: 12, justifyContent: 'center', alignItems: 'center' }}>

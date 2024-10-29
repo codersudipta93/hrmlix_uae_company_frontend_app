@@ -31,7 +31,9 @@ export const LOCAL_ICONS = {
   camera: require('../assets/icons/camera.png'),
   gallery: require('../assets/icons/gallery.png'),
   bulletPoint: require('../assets/icons/bulletPoint.png'),
-  blankDoc: require('../assets/icons/blankdoc.png')
+  blankDoc: require('../assets/icons/blankdoc.png'),
+  payroll: require('../assets/icons/payroll.png'),
+  menu: require('../assets/icons/menu.png')
 };
 
 

@@ -150,7 +150,7 @@ const PrefferanceSettings = props => {
         <SafeAreaView style={styles.main}>
             <View style={styles.main}>
                 <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                <CustomHeader
+               <CustomHeader 
                     buttonText={t('Preference Settings')}
                     style={{ flexDirection: 'row' }}
                     iconStyle={{ height: 30, width: 30, borderRadius: 50 }}

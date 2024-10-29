@@ -59,7 +59,7 @@ const EmployeeDashboard = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
-  const { userDetails, token, needRefresh } = useSelector(state => state.project);
+  const { userDetails,companyData, token, needRefresh } = useSelector(state => state.project);
   const { t, i18n } = useTranslation();
   const BackgroundImage = require('../../assets/imgs/bg1.png');
   const [empdata, setempdata] = useState("");
@@ -98,27 +98,28 @@ const EmployeeDashboard = props => {
   }
 
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-      return () => {
-        backHandler.remove();
-      };
-      return () => { };
-    }, [])
-  );
+ // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  //     return () => {
+  //       backHandler.remove();
+  //     };
+  //     return () => { };
+  //   }, [])
+  // );
 
-  const handleBackButton = () => {
-    Alert.alert('Hold on!', 'Are you sure you want to go back?', [
-      {
-        text: 'Cancel',
-        onPress: () => null,
-        style: 'cancel',
-      },
-      { text: 'YES', onPress: () => BackHandler.exitApp() },
-    ]);
-    return true;
-  };
+  // const handleBackButton = () => {
+  //   Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+  //     {
+  //       text: 'Cancel',
+  //       onPress: () => null,
+  //       style: 'cancel',
+  //     },
+  //     { text: 'YES', onPress: () => BackHandler.exitApp() },
+  //   ]);
+  //   return true;
+  // };
+
 
 
   const placeholderRenderList = ({ index, item }) => (
@@ -131,12 +132,12 @@ const EmployeeDashboard = props => {
     <SafeAreaView style={styles.main}>
       <View style={styles.main}>
         <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-        <CustomHeader
+       <CustomHeader hideUserIcon={true}
           buttonText={t('Employee')}
           style={{ flexDirection: 'row' }}
           iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
           icon={LOCAL_IMAGES.user}
-          searchIcon={true}
+          searchIcon={false}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
 

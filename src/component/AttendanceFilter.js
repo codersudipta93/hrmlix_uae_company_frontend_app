@@ -59,7 +59,7 @@ const AttendanceFilter = (props) => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const dispatch = useDispatch();
-    const { userDetails, token } = useSelector(state => state.project);
+    const { userDetails,companyData, token } = useSelector(state => state.project);
     const { t, i18n } = useTranslation();
 
     const [search, setSearchVal] = useState('');
@@ -105,31 +105,28 @@ const AttendanceFilter = (props) => {
     }, [isFocused]);
 
 
-
-
-
     useEffect(() => {
         if (props?.filterParamData) {
             let pdata = props?.filterParamData;
             console.log("Data from attendance page ====> ", pdata);
 
             setSearchVal(pdata?.searchkey);
-            setClients(HelperFunctions.updateSelectedArrObjects(clients, pdata?.clientData, '_id'))
+            setClients(HelperFunctions.updateSelectedArrObjects(clients, pdata?.clientData, '_id'));
             setSelectedClient(pdata?.clientData);
 
-            setDepartment(HelperFunctions.updateSelectedArrObjects(departmentData, pdata?.departmentData, '_id'))
+            setDepartment(HelperFunctions.updateSelectedArrObjects(departmentData, pdata?.departmentData, '_id'));
             setSelectedDepartment(pdata?.departmentData);
 
             setSelectedAttendance(pdata?.attendance_type);
-            setattendance(HelperFunctions.updateSelectedObjects(attendance, pdata?.attendance_type))
+            setattendance(HelperFunctions.updateSelectedObjects(attendance, pdata?.attendance_type));
 
             setYear(pdata?.search_year);
-            setYears(HelperFunctions.updateSelectedObjects(years, pdata?.search_year))
+            setYears(HelperFunctions.updateSelectedObjects(years, pdata?.search_year));
 
             setMonth(pdata?.search_month);
-            setMonths(HelperFunctions.updateSelectedObjects(months, pdata?.search_month))
+            setMonths(HelperFunctions.updateSelectedObjects(months, pdata?.search_month));
 
-            setDesignation(HelperFunctions.updateSelectedArrObjects(designationData, pdata?.designationData, '_id'))
+            setDesignation(HelperFunctions.updateSelectedArrObjects(designationData, pdata?.designationData, '_id'));
             setSelectedDesignation(pdata?.designationData);
 
             setBranch(HelperFunctions.updateSelectedArrObjects(branchData, pdata?.branchData, '_id'))
@@ -141,13 +138,13 @@ const AttendanceFilter = (props) => {
         }
     }, [props?.filterParamData]);
 
+
     useFocusEffect(
         React.useCallback(() => {
             const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
             return () => {
                 backHandler.remove();
-
-            };
+            }; 
             return () => { };
         }, [])
     );
@@ -256,12 +253,12 @@ const AttendanceFilter = (props) => {
             <SafeAreaView style={styles.main}>
                 <View style={styles.main}>
                     <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                    <CustomHeader
+                   <CustomHeader hideUserIcon={true}
                         buttonText={t('Attendance')}
                         style={{ flexDirection: 'row' }}
                         iconStyle={{ height: 28, width: 28, borderRadius: 50 }}
                         icon={LOCAL_IMAGES.user}
-                        searchIcon={true}
+                        searchIcon={false}
                         backClick={props.backClick}
                     />
 

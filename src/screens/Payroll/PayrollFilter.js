@@ -59,7 +59,7 @@ const FilterPayroll = props => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const dispatch = useDispatch();
-    const { userDetails, token, needRefresh, masterData } = useSelector(state => state.project);
+    const { userDetails,companyData, token, needRefresh, masterData } = useSelector(state => state.project);
     const { t, i18n } = useTranslation();
 
     const [search, setSearchVal] = useState('');
@@ -111,7 +111,7 @@ const FilterPayroll = props => {
                 setSearchVal(pdata?.emp_name);
 
                 // clients
-                setclient_id(pdata?.client_id ? pdata?.client_id : []);
+                setclient_id(pdata?.client_id ? pdata?.client_id : []); 
                 setclient_ids(HelperFunctions.updateSelectedArrObjects(masterData?.clients, pdata?.client_id ? pdata?.client_id : [], '_id'));
 
                 setbranch_id(pdata?.branch_id ? pdata?.branch_id : []);
@@ -122,10 +122,8 @@ const FilterPayroll = props => {
 
                 setdesignation_id(pdata?.designation_id ? pdata?.designation_id : []);
                 setdesignation_ids(HelperFunctions.updateSelectedArrObjects(masterData?.designation, pdata?.designation_id ? pdata?.designation_id : [], '_id'));
-
                 setMonth(pdata?.search_month);
                 setMonths(HelperFunctions.updateSelectedObjects(months, pdata?.search_month ? pdata?.search_month :""))
-
                 setYear(pdata?.search_year);
                 setYears(HelperFunctions.updateSelectedObjects(years, pdata?.search_year ? pdata?.search_year : ""))
 
@@ -148,7 +146,7 @@ const FilterPayroll = props => {
         }
 
     }, [isFocused]);
-
+  
 
     useEffect(() => { }, []);
 
@@ -241,7 +239,7 @@ const FilterPayroll = props => {
         <SafeAreaView style={styles.main}>
             <View style={styles.main}>
                 <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                <CustomHeader
+               <CustomHeader hideUserIcon={true}
                     buttonText={t('Filterss')}
                     style={{ flexDirection: 'row' }}
                     iconStyle={{ height: 28, width: 28, borderRadius: 50 }}

@@ -64,7 +64,7 @@ const BillingList = props => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const dispatch = useDispatch();
-    const { userDetails, token } = useSelector(state => state.project);
+    const { userDetails,companyData, token } = useSelector(state => state.project);
 
     const { t, i18n } = useTranslation();
 
@@ -277,7 +277,7 @@ const saveFileToDownloads = async (fileName, base64Data) => {
         <SafeAreaView style={styles.main}>
             <View style={styles.main}>
                 <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                <CustomHeader
+               <CustomHeader hideUserIcon={true}
                     buttonText={t('Invoices')}
                     buttonTextStyle={{ lineHeight: 21 }}
                     style={{ flexDirection: 'row' }}

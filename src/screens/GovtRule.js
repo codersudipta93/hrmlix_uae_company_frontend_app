@@ -61,7 +61,7 @@ const GovtRule = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
-  const { userDetails, token, needRefresh } = useSelector(state => state.project);
+  const { userDetails,companyData, token, needRefresh } = useSelector(state => state.project);
   const { t, i18n } = useTranslation();
   const [loadingView, setloadingView] = useState(false);
   const [govtRules, setGovtRules] = useState("");
@@ -175,7 +175,7 @@ const GovtRule = props => {
     <SafeAreaView style={styles.main}>
       <View style={styles.main}>
         <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-        <CustomHeader
+       <CustomHeader hideUserIcon={true}
           buttonText={t('Govt. Rules')}
           style={{ flexDirection: 'row' }}
           iconStyle={{ height: 30, width: 30, borderRadius: 50 }}

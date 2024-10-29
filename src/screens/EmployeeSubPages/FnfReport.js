@@ -112,7 +112,7 @@ const FnfReport = props => {
         <SafeAreaView style={styles.main}>
             <View style={styles.main}>
                 <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                <CustomHeader
+               <CustomHeader hideUserIcon={true}
                     buttonText={t('FNF Report')}
                     style={{ flexDirection: 'row' }}
                     iconStyle={{ height: 30, width: 30, borderRadius: 50 }}

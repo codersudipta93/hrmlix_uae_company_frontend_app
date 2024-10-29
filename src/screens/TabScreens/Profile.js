@@ -60,7 +60,7 @@ const Profile = props => {
   const route = useRoute();
   const dispatch = useDispatch();
 
-  const {userDetails,token} = useSelector(state => state.project);
+  const {userDetails,companyData,token} = useSelector(state => state.project);
 
   const [menuName, setMenuName] = useState("");
 

@@ -57,7 +57,7 @@ const Splash = props => {
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle={'light-content'} backgroundColor={colors.secondary} />
+            <StatusBar barStyle={'dark-content'} backgroundColor={colors.secondary} />
             <Animatable.View style={styles.logoContainer} animation="zoomInUp">
                 <Image
                     style={styles.logo}

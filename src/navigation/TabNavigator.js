@@ -20,7 +20,8 @@ import {
   Employees,
   ShiftMaster,
   Attendance,
-  Profile
+  Profile,
+  MenuPage
 } from '../screens';
 import { colors, sizes, FontFamily } from '../constants/Theme';
 import { LOCAL_ICONS } from '../constants/PathConfig';
@@ -50,10 +51,10 @@ const TabArr = [
     activeIcon: LOCAL_ICONS.shift,
     component: ShiftMaster,
   },{
-    route: 'Profile',
-    label: 'Profile',
-    activeIcon: LOCAL_ICONS.profile,
-    component: Profile,
+    route: 'MenuPage',
+    label: 'Menu',
+    activeIcon: LOCAL_ICONS.menu,
+    component: MenuPage,
   },
 ];
 

@@ -58,7 +58,7 @@ const PayrollMaster = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
-  const { userDetails, token, needRefresh } = useSelector(state => state.project);
+  const { userDetails,companyData, token, needRefresh } = useSelector(state => state.project);
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
@@ -70,27 +70,28 @@ const PayrollMaster = props => {
 
 
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-      return () => {
-        backHandler.remove();
-      };
-      return () => { };
-    }, [])
-  );
+ // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  //     return () => {
+  //       backHandler.remove();
+  //     };
+  //     return () => { };
+  //   }, [])
+  // );
 
-  const handleBackButton = () => {
-    Alert.alert('Hold on!', 'Are you sure you want to go back?', [
-      {
-        text: 'Cancel',
-        onPress: () => null,
-        style: 'cancel',
-      },
-      { text: 'YES', onPress: () => BackHandler.exitApp() },
-    ]);
-    return true;
-  };
+  // const handleBackButton = () => {
+  //   Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+  //     {
+  //       text: 'Cancel',
+  //       onPress: () => null,
+  //       style: 'cancel',
+  //     },
+  //     { text: 'YES', onPress: () => BackHandler.exitApp() },
+  //   ]);
+  //   return true;
+  // };
+
 
 
 
@@ -98,13 +99,15 @@ const PayrollMaster = props => {
     <SafeAreaView style={styles.main}>
       <View style={styles.main}>
         <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-        <CustomHeader
+       <CustomHeader hideUserIcon={true}
           buttonText={t('Payroll')}
           buttonTextStyle={{ lineHeight: 21 }}
           style={{ flexDirection: 'row' }}
           iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
           icon={LOCAL_IMAGES.user}
           searchIcon={false}
+       
+       
         />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ marginTop: 18, paddingHorizontal: 12 }}>
@@ -122,9 +125,9 @@ const PayrollMaster = props => {
               </View>
             </Pressable>
 
-            <Pressable onPress={() => { props.navigation.navigate('IncentiveMaster') }} style={[styles.cardContainer, { backgroundColor: '#AAAAE2' }]}>
+            <Pressable onPress={() => { props.navigation.navigate('IncentiveMaster') }} style={[styles.cardContainer, { backgroundColor: '#DBDAFE' }]}>
               <View style={[styles.leftSection, {}]}>
-                <ImageBackground source={LOCAL_IMAGES.comsumptionBG} style={[styles.background, { width: 75, height: 80 }]}>
+                <ImageBackground source={LOCAL_IMAGES.attendanceCardBG3} style={[styles.background, { width: 75, height: 80 }]}>
                   <View style={styles.container}>
                     <Image source={LOCAL_ICONS.bulletPoint} style={{ height: 35, width: 37, objectFit: 'contain' }} />
                   </View>
@@ -161,9 +164,9 @@ const PayrollMaster = props => {
               </View>
             </Pressable>
 
-            <Pressable onPress={() => { props.navigation.navigate('Notice', { type: 'expiring' }) }} style={[styles.cardContainer, { backgroundColor: '#AAAAE2' }]}>
+            <Pressable onPress={() => { props.navigation.navigate('Notice', { type: 'expiring' }) }} style={[styles.cardContainer, { backgroundColor: '#DBDAFE' }]}>
               <View style={[styles.leftSection, {}]}>
-                <ImageBackground source={LOCAL_IMAGES.comsumptionBG} style={[styles.background, { width: 75, height: 80 }]}>
+                <ImageBackground source={LOCAL_IMAGES.attendanceCardBG3} style={[styles.background, { width: 75, height: 80 }]}>
                   <View style={styles.container}>
                     <Image source={LOCAL_ICONS.bulletPoint} style={{ height: 35, width: 37, objectFit: 'contain' }} />
                   </View>
@@ -214,10 +217,9 @@ const PayrollMaster = props => {
             </Pressable>
           </View>
         </ScrollView>
-
       </View>
     </SafeAreaView>
-  )
+  ) 
 }
 
 const styles = StyleSheet.create({

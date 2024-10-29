@@ -58,7 +58,7 @@ const CompanyBranch = props => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const dispatch = useDispatch();
-    const { userDetails, token, needRefresh } = useSelector(state => state.project);
+    const { userDetails,token, needRefresh } = useSelector(state => state.project);
 
     const { t, i18n } = useTranslation();
 
@@ -264,13 +264,13 @@ const CompanyBranch = props => {
         <SafeAreaView style={styles.main}>
             <View style={styles.main}>
                 <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                <CustomHeader
+               <CustomHeader 
+                    hideUserIcon={true}
                     buttonText={t('Company Branch')}
                     style={{ flexDirection: 'row' }}
                     iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
                     icon={LOCAL_IMAGES.user}
                     searchIcon={false}
-                    hideUserIcon={true}
                     buttonTextStyle={{lineHeight: 23 }}
                 />
 

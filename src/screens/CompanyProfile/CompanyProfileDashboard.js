@@ -59,6 +59,7 @@ import EditIcon from '../../assets/icons/EditIcon';
 import BootomSheet from '../../component/BootomSheet';
 
 const CompanyProfileDashboard = props => {
+
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
@@ -176,27 +177,29 @@ const CompanyProfileDashboard = props => {
   }
 
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-      return () => {
-        backHandler.remove();
-      };
-      return () => { };
-    }, [])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  //     return () => {
+  //       backHandler.remove();
+  //     };
+  //     return () => { };
+  //   }, [])
+  // );
 
-  const handleBackButton = () => {
-    Alert.alert('Hold on!', 'Are you sure you want to go back?', [
-      {
-        text: 'Cancel',
-        onPress: () => null,
-        style: 'cancel',
-      },
-      { text: 'YES', onPress: () => BackHandler.exitApp() },
-    ]);
-    return true;
-  };
+  // const handleBackButton = () => {
+  //   Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+  //     {
+  //       text: 'Cancel',
+  //       onPress: () => null,
+  //       style: 'cancel',
+  //     },
+  //     { text: 'YES', onPress: () => BackHandler.exitApp() },
+  //   ]);
+  //   return true;
+  // };
+
+
 
   const showDetails = (() => {
     setIsLoading(true)
@@ -223,11 +226,8 @@ const CompanyProfileDashboard = props => {
     <SafeAreaView style={styles.main}>
       <View style={styles.main}>
         <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-        <CustomHeader
+       <CustomHeader
           buttonText={t('Company Profile')}
-          backgroundColor={"#1E2538"}
-          headerTextColor={"#fff"}
-          backiconColor={"#fff"}
           style={{ flexDirection: 'row' }}
           iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
           icon={LOCAL_IMAGES.user}
@@ -236,12 +236,12 @@ const CompanyProfileDashboard = props => {
           buttonTextStyle={{lineHeight: 23 }}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{ backgroundColor: "#1E2538", paddingHorizontal: 12, width: '100%', borderBottomLeftRadius: 14, borderBottomRightRadius: 14 }}>
+          <View style={{ backgroundColor: "#1E2538", paddingHorizontal: 12, width: '100%', borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}>
             <View style={styles.Cardcontainer}>
               <Pressable style={{ position: 'relative' }} >
                 <Image
-                  style={styles.user}
-                  source={{ uri: companyData?.com_logo ? companyData?.com_logo : "https://uaedemo.hrmlix.com/assets/images/user.jpg" }}
+                  style={styles.user} 
+                  source={{ uri: companyData?.com_logo ? companyData?.com_logo : AllSourcePath?.API_IMG_URL_DEV + 'user.jpg' }}
                 />
                 <Pressable onPress={() => { openUploadModal('userimage') }} style={styles.editcontainer}>
                   <EditIcon />
@@ -252,7 +252,7 @@ const CompanyProfileDashboard = props => {
               </Pressable>
               <View style={{ marginLeft: 12 }}>
                 <Text style={styles.text}>{companyData?.establishment_name}</Text>
-                <Text style={styles.subtext}>ID: {companyData?.corporate_id}</Text>
+                <Text style={styles.subtext}>{companyData?.corporate_id ? "ID: " + companyData?.corporate_id  : ""}</Text>
               </View>
 
             </View>
@@ -283,7 +283,7 @@ const CompanyProfileDashboard = props => {
               <View style={styles.rightSection}>
                 <Text style={styles.cardText}>Establishment Details</Text>
               </View>
-            </Pressable>
+            </Pressable> 
 
             <Pressable onPress={() => { props.navigation.navigate('RegisteredOfficeAddress') }} style={[styles.cardContainer, { backgroundColor: '#DBDAFE' }]}>
               <View style={[styles.leftSection, {}]}>
@@ -308,7 +308,7 @@ const CompanyProfileDashboard = props => {
               <View style={styles.rightSection}>
                 <Text style={styles.cardText}>Communication Office Address</Text>
               </View>
-            </Pressable>
+            </Pressable> 
 
             <Pressable onPress={() => { props.navigation.navigate('CompanyBranch') }} style={[styles.cardContainer, { backgroundColor: '#DBDAFE' }]}>
               <View style={[styles.leftSection, {}]}>

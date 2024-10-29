@@ -53,9 +53,9 @@ const Signin = props => {
   const [languages, setLanguages] = useState([{ label: 'English', value: 'en', selected: true }, { label: 'Arabic', value: 'ar', selected: false }]);
   const [selectedLanguage, setLanguage] = useState("");
 
-  const [corporateId, setCorporateId] = useState('ivn123');
-  const [empId, setEmpId] = useState('user001');
-  const [password, setPassword] = useState('qwer1234');
+  const [corporateId, setCorporateId] = useState('');
+  const [empId, setEmpId] = useState('');
+  const [password, setPassword] = useState('');
   const [waitLoaderStatus, setWaitLoaderStatus] = useState(false);
   
   useEffect(() => {
@@ -125,27 +125,28 @@ const Signin = props => {
 
 
   //Back button functionality
-  useFocusEffect(
-    React.useCallback(() => {
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-      return () => {
-        backHandler.remove();
-      };
-      return () => { };
-    }, [])
-  );
+ // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  //     return () => {
+  //       backHandler.remove();
+  //     };
+  //     return () => { };
+  //   }, [])
+  // );
 
-  const handleBackButton = () => {
-    Alert.alert('Hold on!', 'Are you sure you want to go back?', [
-      {
-        text: 'Cancel',
-        onPress: () => null,
-        style: 'cancel',
-      },
-      { text: 'YES', onPress: () => BackHandler.exitApp() },
-    ]);
-    return true;
-  };
+  // const handleBackButton = () => {
+  //   Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+  //     {
+  //       text: 'Cancel',
+  //       onPress: () => null,
+  //       style: 'cancel',
+  //     },
+  //     { text: 'YES', onPress: () => BackHandler.exitApp() },
+  //   ]);
+  //   return true;
+  // };
+
 
 
   const _signin = () => {

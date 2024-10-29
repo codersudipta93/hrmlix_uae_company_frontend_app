@@ -61,7 +61,7 @@ const Employees = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
-  const { userDetails, token, needRefresh, masterData } = useSelector(state => state.project);
+  const { userDetails,companyData, token, needRefresh, masterData } = useSelector(state => state.project);
 
   const { t, i18n } = useTranslation();
 
@@ -320,7 +320,7 @@ const Employees = props => {
       })
   }
 
-  useFocusEffect(
+ useFocusEffect(
     React.useCallback(() => {
       const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
       return () => {
@@ -341,6 +341,7 @@ const Employees = props => {
     ]);
     return true;
   };
+
 
   const placeholderRenderList = ({ index, item }) => (
     <SkeletonLoader width={width} height={80} borderRadius={10} style={{ marginBottom: 6, }} />
@@ -375,12 +376,13 @@ const Employees = props => {
     <SafeAreaView style={styles.main}>
       <View style={styles.main}>
         <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-        <CustomHeader
+       <CustomHeader 
           buttonText={t('Employees')}
           style={{ flexDirection: 'row' }}
           iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
-          icon={LOCAL_IMAGES.user}
+          icon={{ uri: companyData?.com_logo ? companyData?.com_logo : AllSourcePath?.API_IMG_URL_DEV + 'user.jpg' }}
           searchIcon={false}
+          onPressUser={() => { props.navigation.navigate("CompanyProfileDashboard") }}
         />
 
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -486,8 +488,6 @@ const Employees = props => {
         </View>
       </Modal>
 
-
-
       <Modal
         animationType="fade"
         transparent={true}
@@ -504,7 +504,7 @@ const Employees = props => {
                 size={24}
                 color={'#8A8E9C'}
                 onPress={() => { setlinkModalVisibile(!linkModalVisibile) }}
-              />
+              /> 
             </View>
             <View style={[styles.radioContainer, { marginTop: 20,flexDirection:'column' }]}>
               <Text style={{ color: '#000', fontSize: sizes.h6,marginBottom:4,fontFamily: FontFamily.bold }}>Invite Link - </Text>

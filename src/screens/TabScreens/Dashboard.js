@@ -40,7 +40,7 @@ import { HelperFunctions } from '../../constants';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { getData, setData, deleteData } from '../../Service/localStorage';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { _setUserData, _setToken,_setcompanyData } from '../../Store/Reducers/ProjectReducer';
 import CustomHeader from '../../component/Header';
 import SideMenu from '../../component/SideMenu';
 
@@ -60,7 +60,7 @@ const Dashboard = props => {
   const route = useRoute();
   const dispatch = useDispatch();
 
-  const { userDetails, token } = useSelector(state => state.project);
+  const { userDetails,companyData, token } = useSelector(state => state.project);
 
   const { t, i18n } = useTranslation();
 
@@ -99,12 +99,14 @@ const Dashboard = props => {
     if (isFocused == true) {
       console.log(i18n.language);
       console.log(I18nManager.isRTL);
+      _getCompanyData();
       _getUpcommingBirthday();
       _getdashboardCardData();
       _getNewJoinEmpCount();
       _getAnnouncemnetData();
       _getWorkanniversary()
-      _getNoticeData()
+      _getNoticeData();
+
     }
   }, [isFocused]);
 
@@ -112,6 +114,26 @@ const Dashboard = props => {
   useEffect(() => {
     console.log(userDetails)
   }, []);
+
+
+  const _getCompanyData = (() => {
+    setdashboardCounterLoader(true)
+    postApi("company/get-company-data", {}, token)
+      .then((resp) => {
+        // console.log(resp?.attendance_summ)
+        if (resp?.status == 'success') {
+          dispatch(_setcompanyData(resp?.company_det));
+        } else {
+          //HelperFunctions.showToastMsg(resp.message);
+          _getCompanyData()
+        }
+      }).catch((err) => {
+        console.log(err);
+        _getCompanyData()
+        //setIsLoading(false)
+       // HelperFunctions.showToastMsg(err.message);
+      })
+  });
 
   const _getdashboardCardData = () => {
     setdashboardCounterLoader(true)
@@ -471,16 +493,17 @@ const Dashboard = props => {
     <SafeAreaView style={styles.main}>
       <View style={styles.main}>
         <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-        <CustomHeader
+       <CustomHeader 
           backClickHide={true}
           buttonText={t('dashboard')}
           style={{ flexDirection: 'row' }}
           iconStyle={{ height: 28, width: 28, borderRadius: 50 }}
-          icon={LOCAL_IMAGES.user}
-          searchIcon={true}
-          onPressUser={() => { openMenu() }}
+          icon={{ uri: companyData?.com_logo ? companyData?.com_logo : AllSourcePath?.API_IMG_URL_DEV + 'user.jpg' }}
+          searchIcon={false}
+          onPressUser={() => { props.navigation.navigate("CompanyProfileDashboard") }}
         />
 
+ 
         <ScrollView showsVerticalScrollIndicator={false}>
 
           {dashboardCounterLoader == true ?
@@ -838,7 +861,7 @@ const styles = StyleSheet.create({
 
   cardMain: {
     backgroundColor: '#FFE0BB', // Background color for the rectangle
-    position: 'relative',
+    position: 'relative', 
     width: '48%',
     borderRadius: 8,
     padding: 12

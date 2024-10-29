@@ -65,7 +65,7 @@ const EmployeeBankDetails = props => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const dispatch = useDispatch();
-    const { userDetails, token } = useSelector(state => state.project);
+    const { userDetails,companyData, token } = useSelector(state => state.project);
     const [isLoading, setIsLoading] = useState(false);
     const { t, i18n } = useTranslation();
 
@@ -151,7 +151,7 @@ const EmployeeBankDetails = props => {
         <SafeAreaView style={styles.main}>
             <View style={styles.main}>
                 <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                <CustomHeader
+               <CustomHeader hideUserIcon={true}
                     buttonText={t('Employee')}
                     buttonTextStyle={{ lineHeight: 21 }}
                     style={{ flexDirection: 'row' }}

@@ -63,7 +63,7 @@ const AnnouncementEdit = props => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const dispatch = useDispatch();
-    const { userDetails, token } = useSelector(state => state.project);
+    const { userDetails,companyData, token } = useSelector(state => state.project);
     const { t, i18n } = useTranslation();
 
     const [title, setTitle] = useState('');
@@ -205,12 +205,12 @@ const AnnouncementEdit = props => {
         <SafeAreaView style={styles.main}>
             <View style={styles.main}>
                 <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                <CustomHeader
+               <CustomHeader hideUserIcon={true}
                     buttonText={t('Announcement')}
                     style={{ flexDirection: 'row' }}
                     iconStyle={{ height: 28, width: 28, borderRadius: 50 }}
                     icon={LOCAL_IMAGES.user}
-                    searchIcon={true}
+                    searchIcon={false}
                 />
 
                 <ScrollView showsVerticalScrollIndicator={false}>

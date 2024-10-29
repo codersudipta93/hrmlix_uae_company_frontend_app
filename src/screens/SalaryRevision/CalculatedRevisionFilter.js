@@ -60,7 +60,7 @@ const CalculatedRevisionFilter = props => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const dispatch = useDispatch();
-    const { userDetails, token, needRefresh, masterData } = useSelector(state => state.project);
+    const { userDetails,companyData, token, needRefresh, masterData } = useSelector(state => state.project);
     const { t, i18n } = useTranslation();
 
     const [search, setSearchVal] = useState('');
@@ -207,7 +207,7 @@ const CalculatedRevisionFilter = props => {
         <SafeAreaView style={styles.main}>
             <View style={styles.main}>
                 <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                <CustomHeader
+               <CustomHeader hideUserIcon={true}
                     buttonText={t('Filter')}
                     style={{ flexDirection: 'row' }}
                     iconStyle={{ height: 28, width: 28, borderRadius: 50 }}

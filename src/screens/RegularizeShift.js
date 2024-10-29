@@ -65,7 +65,7 @@ import Loader from '../component/Loader.js';
 const RegularizeShift = props => {
 
     const dispatch = useDispatch();
-    const { userDetails, token } = useSelector(state => state.project);
+    const { userDetails,companyData, token } = useSelector(state => state.project);
     const isFocused = useIsFocused();
     const route = useRoute();
 
@@ -400,12 +400,12 @@ const RegularizeShift = props => {
         <SafeAreaView style={styles.main}>
             <View style={styles.main}>
                 <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                <CustomHeader
+               <CustomHeader hideUserIcon={true}
                     buttonText={t('Regularize')}
                     style={{ flexDirection: 'row' }}
                     iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
                     icon={LOCAL_IMAGES.user}
-                    searchIcon={true}
+                    searchIcon={false}
                 />
 
                 <ScrollView showsVerticalScrollIndicator={false}>

@@ -58,7 +58,8 @@ const Attendance = props => {
   const isFocused = useIsFocused();
   const route = useRoute();
   const dispatch = useDispatch();
-  const { userDetails, token, needRefresh } = useSelector(state => state.project);
+  const { userDetails,companyData, token, needRefresh } = useSelector(state => state.project);
+  
   const { t, i18n } = useTranslation();
   const BackgroundImage = require('../../assets/imgs/bg1.png');
   
@@ -71,7 +72,7 @@ const Attendance = props => {
 
 
 
-  useFocusEffect(
+ useFocusEffect(
     React.useCallback(() => {
       const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
       return () => {
@@ -95,16 +96,18 @@ const Attendance = props => {
 
 
 
+
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.main}>
         <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-        <CustomHeader
+       <CustomHeader 
           buttonText={t('Attendance')}
           style={{ flexDirection: 'row' }}
           iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
-          icon={LOCAL_IMAGES.user}
-          searchIcon={true}
+          icon={{ uri: companyData?.com_logo ? companyData?.com_logo : AllSourcePath?.API_IMG_URL_DEV + 'user.jpg' }}
+          searchIcon={false}
+          onPressUser={() => { props.navigation.navigate("CompanyProfileDashboard") }}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ marginTop: 18, paddingHorizontal: 12 }}>

@@ -78,7 +78,7 @@ const EmployeeDocuments = props => {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
 
-    const { userDetails, token } = useSelector(state => state.project);
+    const { userDetails,companyData, token } = useSelector(state => state.project);
 
     // Animation state
     const [animValue] = useState(new Animated.Value(1000)); // Start off-screen
@@ -738,7 +738,7 @@ const EmployeeDocuments = props => {
         <SafeAreaView style={styles.main}>
             <View style={styles.main}>
                 <StatusBar barStyle={'dark-content'} backgroundColor={colors.white} />
-                <CustomHeader
+               <CustomHeader hideUserIcon={true}
                     buttonText={props?.route?.params?.paramData?.name}
                     style={{ flexDirection: 'row' }}
                     iconStyle={{ height: 30, width: 30, borderRadius: 50 }}

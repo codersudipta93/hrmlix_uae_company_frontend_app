@@ -9,6 +9,7 @@ export {default as Attendance} from './TabScreens/Attendance.js';
 export {default as Employees} from './TabScreens/Employees';
 export {default as ShiftMaster} from './TabScreens/ShiftMaster.js';
 export {default as Profile} from './TabScreens/Profile';
+export {default as MenuPage} from './TabScreens/MenuPage';
 
 //Individual screen
 
