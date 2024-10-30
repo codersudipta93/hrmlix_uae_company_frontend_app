@@ -24,6 +24,7 @@ import {
   ConsumptionHistory,
   GovtRule,
   CompanyProfileDashboard,
+  CompanySettingsDashboard,
   ProfileAndPartnerdetails,
   EstablishmentDetails,
   RegisteredOfficeAddress,
@@ -113,6 +114,7 @@ function Navigator() {
         <Stack.Screen name="PurchaseHistory" component={PurchaseHistory} />
         <Stack.Screen name="ConsumptionHistory" component={ConsumptionHistory} />
         <Stack.Screen name="GovtRule" component={GovtRule} />
+        <Stack.Screen name="CompanySettingsDashboard" component={CompanySettingsDashboard} />
         <Stack.Screen name="CompanyProfileDashboard" component={CompanyProfileDashboard} />
         <Stack.Screen name="ProfileAndPartnerdetails" component={ProfileAndPartnerdetails} />
         <Stack.Screen name="EstablishmentDetails" component={EstablishmentDetails} />

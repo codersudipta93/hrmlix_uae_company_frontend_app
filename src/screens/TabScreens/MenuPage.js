@@ -190,13 +190,9 @@ const MenuPage = props => {
           iconStyle={{ height: 30, width: 30, borderRadius: 50 }}
           icon={{ uri: companyData?.com_logo ? companyData?.com_logo : AllSourcePath?.API_IMG_URL_DEV + 'user.jpg' }}
           searchIcon={false}
-         
-          
         />
 
         <ScrollView showsVerticalScrollIndicator={false}>
-
-
           <View style={{ paddingHorizontal: 14, flexDirection: 'column', justifyContent: 'space-between', marginTop: 12 }}>
             <Pressable 
             onPress={() => {
@@ -395,7 +391,7 @@ const MenuPage = props => {
 
             <Pressable
               onPress={() => {
-                props.navigation.navigate('CompanyProfileDashboard')
+                props.navigation.navigate('CompanySettingsDashboard')
               }}
               style={[styles.listCard, { paddingVertical: 12, marginBottom: 0, borderRadius: 8, marginTop: 8 }]}
             >
