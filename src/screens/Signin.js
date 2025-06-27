@@ -57,7 +57,7 @@ const Signin = props => {
   const [empId, setEmpId] = useState('user001');
   const [password, setPassword] = useState('qwer1234');
   const [waitLoaderStatus, setWaitLoaderStatus] = useState(false);
-  
+   
   useEffect(() => {
     getData('defaultLanguage').then((lngRes) => {
       console.log('default Language', lngRes);
@@ -291,7 +291,7 @@ const Signin = props => {
             setData("defaultLanguage", 'ar');
             RNRestart.Restart();
           } else {
-            console.log("else i ma call")
+            console.log("else i am call")
             i18n.changeLanguage('en');
             setIsRTL(false);
             I18nManager.forceRTL(false);
